@@ -214,3 +214,11 @@ hr {
 .friend-dark{
     background: #292929
 }
+
+.chat-box-tray-dark{
+    background: #121212;
+}
+.chat-box-tray-dark input{
+    background: #383838;
+    color:#ffffff;
+}

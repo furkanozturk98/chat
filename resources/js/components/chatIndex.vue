@@ -93,7 +93,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="">
-                                <div class="chat-box-tray">
+                                <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
                                     <i class="material-icons">sentiment_very_satisfied</i>
                                     <input type="text" placeholder="Type your message here...">
                                     <i class="material-icons">mic</i>
