@@ -2,7 +2,10 @@
 
 use App\Events\MyEvent;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\FacebookLoginController;
+use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\TwitterLoginController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -31,8 +34,8 @@ Route::get('/publish',function (){
     event(new MyEvent('hello world'));
 });
 
-Route::get('/login/google', [LoginController::class, 'redirectToProvider'])->name('google-login-redirect');
-Route::get('/login/google/callback', [LoginController::class, 'handleProviderCallback'])->name('google-login-callback');
+Route::get('/login/google', [GoogleLoginController::class, 'redirectToProvider'])->name('google-login-redirect');
+Route::get('/login/google/callback', [GoogleLoginController::class, 'handleProviderCallback'])->name('google-login-callback');
 
 Route::get('/login/facebook', [FacebookLoginController::class, 'redirectToProvider']);
 Route::get('/login/facebook/callback', [FacebookLoginController::class, 'handleProviderCallback']);

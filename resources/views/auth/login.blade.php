@@ -19,7 +19,7 @@
             <h4>Connect with</h4>
             <ul>
                 <li>
-                    <a href="" class="facebook">
+                    <a href="/login/facebook" class="facebook">
                         <span class="fa fa-facebook"></span>
                     </a>
                 </li>
