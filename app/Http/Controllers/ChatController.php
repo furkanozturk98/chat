@@ -5,21 +5,40 @@ namespace App\Http\Controllers;
 use App\Friend;
 use App\FriendRequestStatuses;
 use App\Http\Requests\AddFriendFormRequest;
+use App\Http\Resources\FriendRequestResource;
 use App\Http\Resources\FriendResource;
+use App\Models\FriendRequest;
 use App\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Throwable;
 
 class ChatController extends Controller
 {
-    public function getfriendList(){
+    /**
+     * @return AnonymousResourceCollection
+     */
+    public function getfriendList(): AnonymousResourceCollection
+    {
 
-        $friends = Friend::query()->where('user_id',auth()->id())->with('friend')->get();
+        $friends = Friend::query()
+            ->where('user_id',auth()->id())
+            ->with('friend')
+            ->get();
+
         return FriendResource::collection($friends);
     }
 
+    /**
+     * @param AddFriendFormRequest $request
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|JsonResponse
+     */
     public function friendRequest(AddFriendFormRequest $request)
     {
-        $user = User::query()->where('email',$request->email)->first();
+        $user = User::query()
+            ->where('email',$request->input('email'))
+            ->first();
 
         if(!isset($user)){
             return response()->json([
@@ -28,14 +47,16 @@ class ChatController extends Controller
             ],422);
         }
 
-        $request = Friend::query()->where('user_id',auth()->id())
-            ->where('friend_id', $user->id)->first();
+        $request = Friend::query()
+            ->where('user_id',auth()->id())
+            ->where('friend_id', $user->id)
+            ->first();
 
         if(!isset($request)){
             /** @var User $user */
-            return Friend::query()->create([
-                'user_id' => auth()->id(),
-                'friend_id' => $user->id,
+            return FriendRequest::query()->create([
+                'from' => auth()->id(),
+                'to' => $user->id,
                 'status' => FriendRequestStatuses::WAITING
             ]);
         }
@@ -47,33 +68,52 @@ class ChatController extends Controller
 
     }
 
-    public function getFriendRequests()
+    /**
+     * @return AnonymousResourceCollection
+     */
+    public function getFriendRequests(): AnonymousResourceCollection
     {
-        $friendRequests = Friend::query()
-            ->where('user_id', auth()->id())
-            ->orWhere('friend_id', auth()->id())
-            ->where('status', 1)
+        $friendRequests = FriendRequest::query()
+            ->where('from', auth()->id())
+            ->orWhere('to', auth()->id())
+            ->where('status', 0)
             ->get();
 
-        return FriendResource::collection($friendRequests);
+        return FriendRequestResource::collection($friendRequests);
 
     }
 
-    public function approve(Friend $friend){
-        $friend->status = FriendRequestStatuses::APPROVED;
-        $friend->save();
+    public function approve(FriendRequest $friendRequest){
+
+        /** @var FriendRequest $friendRequest */
+        $friendRequest->status = FriendRequestStatuses::APPROVED;
+
+        $friendRequest->save();
+
+        $room = \Str::random(5);
+
+        Friend::query()->insert([
+            [
+            'user_id' => $friendRequest->from,
+            'friend_id' => $friendRequest->to,
+            'room' => $room
+        ],[
+            'user_id' => $friendRequest->to,
+            'friend_id' => $friendRequest->from,
+            'room' => $room
+        ]]);
     }
 
-    public function reject(Friend $friend){
+    public function reject(FriendRequest $friendRequest){
         try{
-            $friend->delete();
+            $friendRequest->delete();
         }
         catch(Throwable $e){}
     }
 
-    public function cancel(Friend $friend){
+    public function cancel(FriendRequest $friendRequest){
         try{
-            $friend->delete();
+            $friendRequest->delete();
         }
         catch(Throwable $e){}
     }

@@ -22,10 +22,9 @@ Route::middleware('auth:api')->group(function() {
     Route::post('friend-request',[ChatController::class,'friendRequest']);
     Route::get('get-friend-requests',[ChatController::class,'getFriendRequests']);
 
-    Route::put('friend-request/approve/{friend}',[ChatController::class,'approve']);
-    Route::put('friend-request/reject/{friend}',[ChatController::class,'reject']);
-    Route::delete('friend-request/cancel/{friend}',[ChatController::class,'cancel']);
-
+    Route::put('friend-request/approve/{friendRequest}',[ChatController::class,'approve']);
+    Route::put('friend-request/reject/{friendRequest}',[ChatController::class,'reject']);
+    Route::delete('friend-request/cancel/{friendRequest}',[ChatController::class,'cancel']);
 
     Route::get('profile-setting',[ProfileSettingController::class,'index']);
     Route::post('profile-setting',[ProfileSettingController::class,'update']);
