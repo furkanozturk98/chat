@@ -40,7 +40,7 @@
             <span>or</span>
         </div>
 
-        <div class="form-group has-error">
+        <div class="form-group">
 
             <input type="email"
                    class="form-control @error('email') is-invalid @enderror"
@@ -65,7 +65,7 @@
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
         </div>
-        <p><a href="#">Lost your Password?</a></p>
+        <p><a href="{{route('password.request')}}">Lost your Password?</a></p>
     </form>
     <p class="text-center small">Don't have an account? <a href="{{route('register')}}">Sign up here!</a></p>
 </div>
