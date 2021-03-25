@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id
  * @property int $friend_id
  * @property int $status
+ * @property string $room_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\User $friend
@@ -26,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Friend whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Friend whereUserId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|Friend whereRoomId($value)
  */
 class Friend extends Model
 {
@@ -33,7 +35,8 @@ class Friend extends Model
         'id',
         'user_id',
         'friend_id',
-        'status'
+        'status',
+        'roomId'
     ];
 
     public function user(){

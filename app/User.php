@@ -34,6 +34,8 @@ use Illuminate\Notifications\Notifiable;
  * @mixin \Eloquent
  * @property string|null $api_token
  * @method static \Illuminate\Database\Eloquent\Builder|User whereApiToken($value)
+ * @property string|null $remember_token
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  */
 class User extends Authenticatable
 {

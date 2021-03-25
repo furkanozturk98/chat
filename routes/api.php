@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\ProfileSettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,15 +21,17 @@ Route::middleware('auth:api')->group(function() {
 
     Route::get('friend-list',[ChatController::class,'getFriendList']);
 
-    Route::post('friend-request',[ChatController::class,'friendRequest']);
-    Route::get('get-friend-requests',[ChatController::class,'getFriendRequests']);
+    Route::post('friend-request',[FriendRequestController::class,'friendRequest']);
+    Route::get('get-friend-requests',[FriendRequestController::class,'getFriendRequests']);
 
-    Route::put('friend-request/approve/{friendRequest}',[ChatController::class,'approve']);
-    Route::put('friend-request/reject/{friendRequest}',[ChatController::class,'reject']);
-    Route::delete('friend-request/cancel/{friendRequest}',[ChatController::class,'cancel']);
+    Route::put('friend-request/approve/{friendRequest}',[FriendRequestController::class,'approve']);
+    Route::put('friend-request/reject/{friendRequest}',[FriendRequestController::class,'reject']);
+    Route::delete('friend-request/cancel/{friendRequest}',[FriendRequestController::class,'cancel']);
 
     Route::get('profile-setting',[ProfileSettingController::class,'index']);
     Route::post('profile-setting',[ProfileSettingController::class,'update']);
 
+    Route::get('message/{roomId}',[MessageController::class,'index']);
+    Route::delete('message/delete/{message}',[MessageController::class,'destroy']);
 
 });

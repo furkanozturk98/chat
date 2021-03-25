@@ -22,6 +22,7 @@ class FriendResource extends JsonResource
             'id' => $this->id,
             'user' => $this->user,
             'friend' => $this->friend,
+            'roomId' => $this->room_id,
             'status' => $this->status,
             'created_at' => $this->created_at
         ];
