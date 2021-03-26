@@ -11,9 +11,9 @@
           alt=""
         >
         <div class="text" :class=" {'text-white' : nightMode}">
-          <h6>{{ friend.name }}</h6>
+          <h6>{{ friend.friend.name }}</h6>
           <p :class="{'text-muted' :!nightMode, 'text-light' :nightMode,}">
-            {{ friend.about }}
+            {{ friend.friend.about }}
           </p>
         </div>
         <span class="settings-tray--right" style="margin-left:220px">
@@ -119,63 +119,62 @@
 
         <edit-message-modal />
 
-        <div v-for="item in items" :key="item.id">
-          <div class="row no-gutters">
+        <div v-for="(item, index) in items" :key="index" class="row no-gutters">
+          <div
+            class="col-md-3"
+            :class="item.from === currentUser.id ?'offset-md-9':''"
+          >
             <div
-              class="col-md-3"
-              :class="item.from === currentUser.id ?'offset-md-9':''"
+              class="chat-bubble"
+              :class="item.from === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
             >
-              <div
-                class="chat-bubble"
-                :class="item.from === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
-              >
-                {{ item.message }}
+              {{ item.message }}
 
-                <span v-if="item.from === currentUser.id" style="float:right">
-                  <a
-                    id="dropdownMenu3"
-                    role="button"
-                    data-toggle="dropdown"
-                    style=" cursor: pointer"
-                  >
-                    <i class="bi bi-chevron-down" />
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+              <span v-if="item.from === currentUser.id" style="float:right">
+                <a
+                  id="dropdownMenu3"
+                  role="button"
+                  data-toggle="dropdown"
+                  style=" cursor: pointer"
+                >
+                  <i class="bi bi-chevron-down" />
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
-                      <button
-                        class="dropdown-item edit-message"
-                        type="button"
-                        @click="showEditMessageModal(item.id)"
-                      >Edit Message</button>
+                    <button
+                      class="dropdown-item edit-message"
+                      type="button"
+                      @click="showEditMessageModal(item)"
+                    >Edit Message</button>
 
-                      <button
-                        class="dropdown-item delete-message"
-                        type="button"
-                        @click="deleteMessage(item.id)"
-                      >Delete
-                        Message</button>
-                    </div>
-                  </a>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="">
-            <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
-              <i class="material-icons">sentiment_very_satisfied</i>
-              <input type="text" placeholder="Type your message here...">
-              <i class="material-icons">mic</i>
-              <i class="material-icons">send</i>
+                    <button
+                      class="dropdown-item delete-message"
+                      type="button"
+                      @click="deleteMessage(item.id)"
+                    >Delete
+                      Message</button>
+                  </div>
+                </a>
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="">
+          <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
+            <i class="material-icons">sentiment_very_satisfied</i>
+            <input type="text" placeholder="Type your message here...">
+            <i class="material-icons">mic</i>
+            <i class="material-icons">send</i>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div v-else>
+
+  <div v-else style="margin-top:20%;margin-left:25%" class="alert alert-info">
     Select a friend or a group to start chatting.
   </div>
 </template>
@@ -197,6 +196,7 @@ export default {
 
     mounted() {
         this.$eventHub.$on('friendClick',this.fetch);
+        this.$eventHub.$on('nightModeOn',this.nightModeOn);
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
     },
 
@@ -204,14 +204,30 @@ export default {
         async fetch(item){
             const response = await this.$http.get('/api/message/'+item.roomId);
             this.items = response.data.data;
-            this.friend = item.friend;
+            this.friend = item;
         },
 
-        showEditMessageModal(id) {
-            this.$eventHub.$emit('showEditMessageModal', id);
+        nightModeOn() {
+
+            if (this.nightMode === true) {
+                this.nightMode = false;
+                localStorage.setItem('nightMode', false);
+            } else {
+                this.nightMode = true;
+                localStorage.setItem('nightMode', true);
+            }
         },
 
-        deleteMessage(id){
+        showEditMessageModal(item) {
+            const data = {
+                id: item.id,
+                message: item.message
+            };
+
+            this.$eventHub.$emit('showEditMessageModal', data);
+        },
+
+        async deleteMessage(id){
 
             this.$bvModal.msgBoxConfirm('Please confirm that you want to delete selected message.', {
                 title: 'Please Confirm',
@@ -225,28 +241,28 @@ export default {
                 centered: true
             })
                 .then(value => {
+                    if(value){
+                        this.$http.delete('api/message/delete/'+ id)
+                       .then(() => {
+                           Vue.$toast.open({
+                               message: 'Message deleted successfully.',
+                               type: 'success',
+                               position: 'top-right',
+                               duration: 1000
+                           });
 
-                    this.$http.delete('api/message/delete/'+ id)
-                        .then(() => {
-                            Vue.$toast.open({
-                                message: 'Message deleted successfully.',
-                                type: 'success',
-                                position: 'top-right',
-                                duration: 1000
-                            });
+                           this.fetch(this.friend)
+                       })
+                       .catch(() => {
+                           Vue.$toast.open({
+                               message: 'An error occurred.',
+                               type: 'error',
+                               position: 'top-right',
+                               duration: 1000
+                           });
+                       })
+                    }
 
-                            this.fetch();
-
-                            this.$mount();
-                        })
-                        .catch(() => {
-                            Vue.$toast.open({
-                                message: 'An error occurred.',
-                                type: 'error',
-                                position: 'top-right',
-                                duration: 1000
-                            });
-                        })
                 });
 
         }

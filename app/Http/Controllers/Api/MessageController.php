@@ -69,7 +69,7 @@ class MessageController extends Controller
     {
 
         try {
-           // $message->delete();
+            $message->delete();
         } catch (\Exception $e) {}
 
         return response(200);

@@ -29,45 +29,53 @@
 import Form from 'form-backend-validation';
 
 export default {
-name: 'EditMessageModal',
+    name: 'EditMessageModal',
 
-    data(){
+    data() {
         return {
             form: new Form({
                     message: null
                 },
             ),
+            id: null
         }
     },
 
-    mounted(){
-        this.$eventHub.$on('showEditMessageModal',this.showEditMessageModal);
+    mounted() {
+        this.$eventHub.$on('showEditMessageModal', this.showEditMessageModal);
     },
 
     methods: {
 
-        showEditMessageModal(){
+        showEditMessageModal(data) {
             this.$refs['edit-message'].show();
+            this.form.message = data.message;
+            this.id = data.id;
         },
 
         async submit() {
-           /* await this.form.post('/api/friend-request');
+            await this.form.put('/api/messages/' + this.id)
+                .then(() => {
 
-            this.$refs['add-person'].hide();
+                    Vue.$toast.open({
+                        message: 'Message is edited successfully',
+                        type: 'success',
+                        position: 'top-right',
+                        duration: 600
+                    });
 
-            this.getFriendRequests();
+                    this.fetch(this.friend)
+                })
+                .catch(() => {
+                    Vue.$toast.open({
+                        message: 'An error occurred.',
+                        type: 'error',
+                        position: 'top-right',
+                        duration: 1000
+                    });
+                });
 
-            Vue.$toast.open({
-                message: 'Friend Request is sent!',
-                type: 'success',
-                position: 'top-right',
-                duration: 600
-            });*/
-        },
-
-        async getFriendRequests() {
-          /*  const response = await this.$http.get('/api/get-friend-requests');
-            this.friendRequest = response.data.data;*/
+            this.$refs['edit-message'].hide();
         },
 
         resetModal() {

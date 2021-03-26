@@ -164,7 +164,6 @@
             async getFriends(){
                 const response = await this.$http.get('/api/friend-list');
                 this.items = response.data.data;
-                console.log(this.items);
             },
 
             async friendClick(item){

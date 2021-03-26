@@ -238,6 +238,8 @@ export default {
 
         nightModeOn() {
 
+            this.$eventHub.$emit('nightModeOn');
+
             if (this.nightMode === true) {
                 this.nightMode = false;
                 localStorage.setItem('nightMode', false);
