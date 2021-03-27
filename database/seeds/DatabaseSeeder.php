@@ -1,5 +1,8 @@
 <?php
 
+use Database\Seeders\FriendRequestSeeder;
+use Database\Seeders\FriendSeeder;
+use Database\Seeders\MessageSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -11,6 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         $this->call(UserSeeder::class);
+         $this->call([
+             UserSeeder::class,
+             FriendRequestSeeder::class,
+             FriendSeeder::class,
+             MessageSeeder::class
+         ]);
     }
 }

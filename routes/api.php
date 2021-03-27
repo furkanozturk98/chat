@@ -32,6 +32,7 @@ Route::middleware('auth:api')->group(function() {
     Route::post('profile-setting',[ProfileSettingController::class,'update']);
 
     Route::get('message/{roomId}',[MessageController::class,'index']);
+    Route::put('message/update/{message}',[MessageController::class,'update']);
     Route::delete('message/delete/{message}',[MessageController::class,'destroy']);
 
 });

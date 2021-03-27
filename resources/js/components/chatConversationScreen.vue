@@ -119,7 +119,9 @@
 
         <edit-message-modal />
 
-        <div v-for="(item, index) in items" :key="index" class="row no-gutters">
+        <message-list :key="messageListKey" :items="items" :current-user="currentUser" />
+
+        <div v-for="item in items" :key="item.id" class="row no-gutters">
           <div
             class="col-md-3"
             :class="item.from === currentUser.id ?'offset-md-9':''"
@@ -158,6 +160,7 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
     <div class="row">
@@ -181,9 +184,11 @@
 
 <script>
 import EditMessageModal from './modals/editMessageModal';
+import MessageList from './messageList';
+
 export default {
     name: 'ChatConversationScreen',
-    components: { EditMessageModal },
+    components: {MessageList, EditMessageModal },
     props: ['currentUser'],
 
     data (){
@@ -191,12 +196,14 @@ export default {
             items : [],
             friend: null,
             nightMode: false,
+            messageListKey: 0,
         }
     },
 
     mounted() {
         this.$eventHub.$on('friendClick',this.fetch);
         this.$eventHub.$on('nightModeOn',this.nightModeOn);
+        this.$eventHub.$on('messageEdited',this.fetch);
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
     },
 
@@ -218,53 +225,8 @@ export default {
             }
         },
 
-        showEditMessageModal(item) {
-            const data = {
-                id: item.id,
-                message: item.message
-            };
-
-            this.$eventHub.$emit('showEditMessageModal', data);
-        },
-
-        async deleteMessage(id){
-
-            this.$bvModal.msgBoxConfirm('Please confirm that you want to delete selected message.', {
-                title: 'Please Confirm',
-                size: 'sm',
-                buttonSize: 'sm',
-                okVariant: 'danger',
-                okTitle: 'YES',
-                cancelTitle: 'NO',
-                footerClass: 'p-2',
-                hideHeaderClose: false,
-                centered: true
-            })
-                .then(value => {
-                    if(value){
-                        this.$http.delete('api/message/delete/'+ id)
-                       .then(() => {
-                           Vue.$toast.open({
-                               message: 'Message deleted successfully.',
-                               type: 'success',
-                               position: 'top-right',
-                               duration: 1000
-                           });
-
-                           this.fetch(this.friend)
-                       })
-                       .catch(() => {
-                           Vue.$toast.open({
-                               message: 'An error occurred.',
-                               type: 'error',
-                               position: 'top-right',
-                               duration: 1000
-                           });
-                       })
-                    }
-
-                });
-
+        forceRerender() {
+            this.messageListKey += 1;
         }
     }
 

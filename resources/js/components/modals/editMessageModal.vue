@@ -37,7 +37,7 @@ export default {
                     message: null
                 },
             ),
-            id: null
+            data: null
         }
     },
 
@@ -50,11 +50,11 @@ export default {
         showEditMessageModal(data) {
             this.$refs['edit-message'].show();
             this.form.message = data.message;
-            this.id = data.id;
+            this.data = data;
         },
 
         async submit() {
-            await this.form.put('/api/messages/' + this.id)
+            await this.form.put('/api/message/update/' + this.data.id)
                 .then(() => {
 
                     Vue.$toast.open({
@@ -64,7 +64,7 @@ export default {
                         duration: 600
                     });
 
-                    this.fetch(this.friend)
+                    this.$eventHub.$emit('messageEdited',this.data);
                 })
                 .catch(() => {
                     Vue.$toast.open({

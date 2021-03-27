@@ -41,5 +41,54 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'api_token' => Str::random(60),
         ]);
+
+        User::query()->create([
+            'name' => 'Jon Doe4',
+            'email' => 'test4@test.com',
+            'password' => Hash::make('password'),
+            'api_token' => Str::random(60),
+        ]);
+
+        User::query()->create([
+            'name' => 'Jon Doe5',
+            'email' => 'test5@test.com',
+            'password' => Hash::make('password'),
+            'api_token' => Str::random(60),
+        ]);
+
+        User::query()->create([
+            'name' => 'Jon Doe6',
+            'email' => 'test6@test.com',
+            'password' => Hash::make('password'),
+            'api_token' => Str::random(60),
+        ]);
+
+        User::query()->create([
+            'name' => 'Jon Doe7',
+            'email' => 'test7@test.com',
+            'password' => Hash::make('password'),
+            'api_token' => Str::random(60),
+        ]);
+
+        User::query()->create([
+            'name' => 'Jon Doe8',
+            'email' => 'test8@test.com',
+            'password' => Hash::make('password'),
+            'api_token' => Str::random(60),
+        ]);
+
+        User::query()->create([
+            'name' => 'Jon Doe9',
+            'email' => 'test9@test.com',
+            'password' => Hash::make('password'),
+            'api_token' => Str::random(60),
+        ]);
+
+        User::query()->create([
+            'name' => 'Jon Doe10',
+            'email' => 'test10@test.com',
+            'password' => Hash::make('password'),
+            'api_token' => Str::random(60),
+        ]);
     }
 }
