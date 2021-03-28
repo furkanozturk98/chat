@@ -1,40 +1,42 @@
 <template>
-  <div v-for="item in items" :key="item.id" class="row no-gutters">
-    <div
-      class="col-md-3"
-      :class="item.from === currentUser.id ? '':'offset-md-9'"
-    >
+  <div>
+    <div v-for="item in items" :key="item.id" class="row no-gutters">
       <div
-        class="chat-bubble"
-        :class="item.from === currentUser.id ? 'chat-bubble--left': 'chat-bubble--right'"
+        class="col-md-3"
+        :class="item.from === currentUser.id ? 'offset-md-9':''"
       >
-        {{ item.message }}
+        <div
+          class="chat-bubble"
+          :class="item.from === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
+        >
+          {{ item.message }}
 
-        <span v-if="item.from === currentUser.id" style="float:right">
-          <a
-            id="dropdownMenu3"
-            role="button"
-            data-toggle="dropdown"
-            style=" cursor: pointer"
-          >
-            <i class="bi bi-chevron-down" />
-            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+          <span v-if="item.from === currentUser.id" style="float:right">
+            <a
+              id="dropdownMenu3"
+              role="button"
+              data-toggle="dropdown"
+              style=" cursor: pointer"
+            >
+              <i class="bi bi-chevron-down" />
+              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
-              <button
-                class="dropdown-item edit-message"
-                type="button"
-                @click="showEditMessageModal(item)"
-              >Edit Message</button>
+                <button
+                  class="dropdown-item edit-message"
+                  type="button"
+                  @click="showEditMessageModal(item)"
+                >Edit Message</button>
 
-              <button
-                class="dropdown-item delete-message"
-                type="button"
-                @click="deleteMessage(item.id)"
-              >Delete
-                Message</button>
-            </div>
-          </a>
-        </span>
+                <button
+                  class="dropdown-item delete-message"
+                  type="button"
+                  @click="deleteMessage(item.id)"
+                >Delete
+                  Message</button>
+              </div>
+            </a>
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -42,8 +44,12 @@
 
 <script>
 export default {
-name: 'MessageList',
+    name: 'MessageList',
     props: ['items', 'currentUser'],
+
+    mounted(){
+        this.$eventHub.$on('messageEdited',this.messageEdited);
+    },
 
     methods: {
         showEditMessageModal(item) {
@@ -51,7 +57,19 @@ name: 'MessageList',
             this.$eventHub.$emit('showEditMessageModal', item);
         },
 
-        async deleteMessage(id){
+        messageEdited(data){
+            this.items.forEach(item => {
+                if(item.id === data.id){
+                   item.message = data.message;
+                }
+            })
+        },
+
+        messageDeleted(id){
+            this.items = this.items.filter(item => item.id !== id);
+        },
+
+        async deleteMessage(id) {
 
             this.$bvModal.msgBoxConfirm('Please confirm that you want to delete selected message.', {
                 title: 'Please Confirm',
@@ -65,8 +83,8 @@ name: 'MessageList',
                 centered: true
             })
                 .then(value => {
-                    if(value){
-                        this.$http.delete('api/message/delete/'+ id)
+                    if (value) {
+                        this.$http.delete('api/message/delete/' + id)
                             .then(() => {
                                 Vue.$toast.open({
                                     message: 'Message deleted successfully.',
@@ -75,7 +93,8 @@ name: 'MessageList',
                                     duration: 1000
                                 });
 
-                                this.fetch(this.friend)
+                                this.messageDeleted(id);
+                                //this.$eventHub.$emit('messageDeleted',id);
                             })
                             .catch(() => {
                                 Vue.$toast.open({

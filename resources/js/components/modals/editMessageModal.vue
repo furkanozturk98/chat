@@ -54,6 +54,11 @@ export default {
         },
 
         async submit() {
+            const data = {
+                'id' : this.data.id,
+                'message' : this.form.message
+            }
+
             await this.form.put('/api/message/update/' + this.data.id)
                 .then(() => {
 
@@ -64,7 +69,7 @@ export default {
                         duration: 600
                     });
 
-                    this.$eventHub.$emit('messageEdited',this.data);
+                    this.$eventHub.$emit('messageEdited',data);
                 })
                 .catch(() => {
                     Vue.$toast.open({

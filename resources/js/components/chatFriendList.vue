@@ -157,18 +157,17 @@
         },
 
         mounted() {
-            this.getFriends();
+            this.fetch();
         },
 
         methods: {
-            async getFriends(){
+            async fetch(){
                 const response = await this.$http.get('/api/friend-list');
                 this.items = response.data.data;
             },
 
             async friendClick(item){
                 this.$eventHub.$emit('friendClick',item);
-                console.log(item);
             }
         }
     }

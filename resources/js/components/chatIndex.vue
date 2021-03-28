@@ -98,7 +98,7 @@
         </div>
       </div>
 
-<!--      <div class="col-md-9">
+      <!--      <div class="col-md-9">
         <div class="settings-tray" :class="{'settings-tray-dark': nightMode}">
           <div
             class="friend-drawer no-gutters"
@@ -134,8 +134,8 @@
 
         <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
           <div class="overflow-auto" style="height:600px;">-->
-            <chat-conversation-screen :current-user="currentUser" />
-<!--          </div>
+      <chat-conversation-screen :current-user="currentUser" />
+      <!--          </div>
 
           <div class="row">
             <div class="col-12">
@@ -151,7 +151,6 @@
           </div>
 
         </div>-->
-      </div>
     </div>
   </div>
 </template>

@@ -1,9 +1,10 @@
 <template>
-  <div v-if="friend" class="col-md-9">
+  <div v-if="conversation" class="col-md-9">
     <div class="settings-tray" :class="{'settings-tray-dark': nightMode}">
       <div
         class="friend-drawer no-gutters"
         :class="{ 'friend-drawer--grey' : !nightMode, 'friend-drawer--dark' : nightMode }"
+        style="margin-bottom:-13px"
       >
         <img
           class="profile-image"
@@ -11,12 +12,13 @@
           alt=""
         >
         <div class="text" :class=" {'text-white' : nightMode}">
-          <h6>{{ friend.friend.name }}</h6>
+          <h6>{{ conversation.friend.name }}</h6>
           <p :class="{'text-muted' :!nightMode, 'text-light' :nightMode,}">
-            {{ friend.friend.about }}
+            {{ conversation.friend.about }}
           </p>
         </div>
-        <span class="settings-tray--right" style="margin-left:220px">
+
+        <span v-if="groupConversation" class="settings-tray--right" style="margin-left:220px">
           <a id="dropdownMenu2" role="button" data-toggle="dropdown">
             <i class="material-icons">menu</i>
 
@@ -24,11 +26,43 @@
               <button
                 class="dropdown-item group-member-list"
                 type="button"
-                data-toggle="modal"
-                data-target="#groupMemberList"
+                @click=""
               >Group Member List</button>
             </div>
           </a>
+        </span>
+
+        <span v-if="conversation" class="settings-tray--right" style="margin-left:220px">
+
+          <a
+            id="dropdownMenu3"
+            role="button"
+            data-toggle="dropdown"
+            style=" cursor: pointer"
+          >
+            <i class="material-icons">menu</i>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
+              <button
+                class="dropdown-item edit-message"
+                type="button"
+                @click="block(conversation.friend.id)"
+              >Block</button>
+            </div>
+          </a>
+
+          <b-dropdown
+            ref="dropdown"
+            right
+            size="lg"
+            variant="link"
+            toggle-class="text-decoration-none"
+            no-caret
+          >
+            <b-dropdown-item @click="block(conversation.friend.id)">
+              <b-icon icon="person-lines-fill" aria-hidden="true" />
+              Block
+            </b-dropdown-item>
+          </b-dropdown>
         </span>
       </div>
     </div>
@@ -120,49 +154,9 @@
         <edit-message-modal />
 
         <message-list :key="messageListKey" :items="items" :current-user="currentUser" />
-
-        <div v-for="item in items" :key="item.id" class="row no-gutters">
-          <div
-            class="col-md-3"
-            :class="item.from === currentUser.id ?'offset-md-9':''"
-          >
-            <div
-              class="chat-bubble"
-              :class="item.from === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
-            >
-              {{ item.message }}
-
-              <span v-if="item.from === currentUser.id" style="float:right">
-                <a
-                  id="dropdownMenu3"
-                  role="button"
-                  data-toggle="dropdown"
-                  style=" cursor: pointer"
-                >
-                  <i class="bi bi-chevron-down" />
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-
-                    <button
-                      class="dropdown-item edit-message"
-                      type="button"
-                      @click="showEditMessageModal(item)"
-                    >Edit Message</button>
-
-                    <button
-                      class="dropdown-item delete-message"
-                      type="button"
-                      @click="deleteMessage(item.id)"
-                    >Delete
-                      Message</button>
-                  </div>
-                </a>
-              </span>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
+
     <div class="row">
       <div class="col-12">
         <div class="">
@@ -188,30 +182,40 @@ import MessageList from './messageList';
 
 export default {
     name: 'ChatConversationScreen',
-    components: {MessageList, EditMessageModal },
-    props: ['currentUser'],
+    components: { MessageList, EditMessageModal },
+    props: ['currentUser',],
 
     data (){
         return {
             items : [],
-            friend: null,
+            conversation: null,
+            groupConversation: null,
             nightMode: false,
             messageListKey: 0,
         }
     },
 
     mounted() {
-        this.$eventHub.$on('friendClick',this.fetch);
+        this.$eventHub.$on('friendClick',this.friendClicked);
         this.$eventHub.$on('nightModeOn',this.nightModeOn);
-        this.$eventHub.$on('messageEdited',this.fetch);
+        //this.$eventHub.$on('messageEdited',this.fetch);
+        //this.$eventHub.$on('messageDeleted',this.fetch);
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
     },
 
     methods: {
-        async fetch(item){
-            const response = await this.$http.get('/api/message/'+item.roomId);
+        async fetch(){
+
+            const response = await this.$http.get('/api/message/'+ this.conversation.roomId);
             this.items = response.data.data;
-            this.friend = item;
+
+            this.forceRerender();
+        },
+
+        friendClicked(conversation){
+            this.conversation = conversation
+
+            this.fetch();
         },
 
         nightModeOn() {
@@ -227,6 +231,19 @@ export default {
 
         forceRerender() {
             this.messageListKey += 1;
+        },
+
+        toggleConversationMenuDropdown() {
+            this.$refs['dropdown'].show();
+           /* this.show = !this.show;
+
+            if (this.show) this.$refs['dropdown'].show();
+            else this.$refs['dropdown'].hide()*/
+
+        },
+
+        block(id){
+
         }
     }
 
