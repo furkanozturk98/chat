@@ -19,6 +19,13 @@ class MessageController extends Controller
      */
     public function index(string $roomId)
     {
+        Message::query()
+            ->where('room_id',$roomId)
+            ->where('to', auth()->id())
+            ->update([
+                'status' => MessageStatuses::READ
+            ]);
+
         $messages = Message::query()
             ->where('room_id',$roomId)
             ->get();

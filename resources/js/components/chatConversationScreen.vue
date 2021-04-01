@@ -153,7 +153,7 @@
 
         <edit-message-modal />
 
-        <message-list :key="messageListKey" :items="items" :current-user="currentUser" />
+        <message-list :key="messageListKey" :items="items" :current-user="currentUser" :selected-friend="conversation.friend" />
       </div>
     </div>
 
@@ -171,7 +171,7 @@
     </div>
   </div>
 
-  <div v-else style="margin-top:20%;margin-left:25%" class="alert alert-info">
+  <div v-else style="margin-top:20%;margin-left:25%">
     Select a friend or a group to start chatting.
   </div>
 </template>
@@ -198,18 +198,14 @@ export default {
     mounted() {
         this.$eventHub.$on('friendClick',this.friendClicked);
         this.$eventHub.$on('nightModeOn',this.nightModeOn);
-        //this.$eventHub.$on('messageEdited',this.fetch);
-        //this.$eventHub.$on('messageDeleted',this.fetch);
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
+
     },
 
     methods: {
         async fetch(){
-
             const response = await this.$http.get('/api/message/'+ this.conversation.roomId);
             this.items = response.data.data;
-
-            this.forceRerender();
         },
 
         friendClicked(conversation){

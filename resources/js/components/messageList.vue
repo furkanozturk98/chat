@@ -45,10 +45,12 @@
 <script>
 export default {
     name: 'MessageList',
-    props: ['items', 'currentUser'],
+    props: ['items', 'currentUser', 'selectedFriend'],
 
     mounted(){
         this.$eventHub.$on('messageEdited',this.messageEdited);
+
+        this.$eventHub.$on('messageReceived',this.messageReceived);
     },
 
     methods: {
@@ -63,6 +65,12 @@ export default {
                    item.message = data.message;
                 }
             })
+        },
+
+        messageReceived(message){
+            if(this.selectedFriend && message.from === this.selectedFriend.id){
+                this.items.push(message);
+            }
         },
 
         messageDeleted(id){

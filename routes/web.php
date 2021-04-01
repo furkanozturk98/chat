@@ -1,11 +1,14 @@
 <?php
 
+use App\Events\messageSend;
 use App\Events\MyEvent;
+use App\Friend;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FacebookLoginController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\TwitterLoginController;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -31,7 +34,16 @@ Route::get('/test',function (){
 });
 
 Route::get('/publish',function (){
-    event(new MyEvent('hello world'));
+    /*event(new MyEvent('hello world'));*/
+
+    $message = \App\Models\Message::create([
+        'from' => 6,
+        'to'   => 1,
+        'message' => 'selam aaa',
+        'room_id' => 'asdasd',
+        'status' => \App\MessageStatuses::UNREAD
+    ]);
+    broadcast(new messageSend($message));
 });
 
 Route::get('/login/google', [GoogleLoginController::class, 'redirectToProvider'])->name('google-login-redirect');

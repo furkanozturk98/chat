@@ -9,6 +9,7 @@
             {{ item.friend.about }}
           </p>
         </div>
+        <span v-if="item.unread" class="badge badge-success unread" style="padding: 7px">{{ item.unread }}</span>
         <span class="time text-muted small">13:21</span> <!-- last message send  -->
       </div>
     </div>
@@ -158,6 +159,7 @@
 
         mounted() {
             this.fetch();
+
         },
 
         methods: {

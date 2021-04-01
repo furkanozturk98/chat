@@ -19,6 +19,7 @@ class Messages extends Migration
             $table->unsignedBigInteger('to');
             $table->string('room_id');
             $table->text('message');
+            $table->unsignedTinyInteger('status')->nullable();
             $table->timestamps();
 
             $table->foreign('from')->references('id')->on('users');

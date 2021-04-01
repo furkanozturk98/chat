@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\messageSend;
 use App\Friend;
 use App\Http\Resources\FriendResource;
+use App\MessageStatuses;
+use App\Models\Message;
+use App\User;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ChatController extends Controller
@@ -20,6 +24,19 @@ class ChatController extends Controller
             ->with('friend')
             ->get();
 
+        $unReadIds = Message::query()->select(\DB::raw('`from` as sender_id, count(`from`) as messages_count'))
+            ->where('to',auth()->id())
+            ->where('status', MessageStatuses::UNREAD)
+            ->groupBy('from')
+            ->get();
+
+        $friends->map(function($friend) use($unReadIds){
+            $friendUnread = $unReadIds->where('sender_id', $friend->friend_id)->first();
+
+            $friend->unread = $friendUnread ? $friendUnread->messages_count : 0;
+        });
+
         return FriendResource::collection($friends);
     }
+
 }

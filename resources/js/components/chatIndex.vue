@@ -177,14 +177,23 @@ export default {
             show: false,
             friendRequests: null,
             nightMode: false,
+            selectedFriend: null,
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
     },
 
     mounted() {
+            window.Echo.private(`messages.${this.currentUser.id}`)
+                .listen('messageSend', (e) => {
+                    this.$eventHub.$emit('messageReceived', e.message);
+                    console.log(e.message);
+                });
+
         this.getFriendRequests();
 
         this.$eventHub.$on('refreshFriendRequests', this.getFriendRequests);
+
+        this.$eventHub.$on('friendClick', this.friendClick);
 
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
 
@@ -247,6 +256,10 @@ export default {
                 localStorage.setItem('nightMode', true);
             }
         },
+
+        friendClick(item){
+            this.selectedFriend = item.friend;
+        }
 
     }
 }

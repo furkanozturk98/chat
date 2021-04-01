@@ -35,7 +35,7 @@ class Message extends Model
         'id',
         'from',
         'to',
-        'roomId',
+        'room_id',
         'message'
     ];
 
