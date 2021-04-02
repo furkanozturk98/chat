@@ -19,6 +19,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => Hash::make('password'),
             'api_token' => Str::random(60),
+            'image' => 'profile.jpg'
         ]);
 
         User::query()->create([
@@ -26,6 +27,7 @@ class UserSeeder extends Seeder
             'email' => 'test@test.com',
             'password' => Hash::make('password'),
             'api_token' => Str::random(60),
+            'image' => 'profile.jpg'
         ]);
 
         User::query()->create([
@@ -33,6 +35,7 @@ class UserSeeder extends Seeder
             'email' => 'test2@test.com',
             'password' => Hash::make('password'),
             'api_token' => Str::random(60),
+            'image' => 'profile.jpg'
         ]);
 
         User::query()->create([
@@ -40,6 +43,7 @@ class UserSeeder extends Seeder
             'email' => 'test3@test.com',
             'password' => Hash::make('password'),
             'api_token' => Str::random(60),
+            'image' => 'profile.jpg'
         ]);
 
         User::query()->create([
@@ -47,6 +51,7 @@ class UserSeeder extends Seeder
             'email' => 'test4@test.com',
             'password' => Hash::make('password'),
             'api_token' => Str::random(60),
+            'image' => 'profile.jpg'
         ]);
 
         User::query()->create([
@@ -54,6 +59,7 @@ class UserSeeder extends Seeder
             'email' => 'test5@test.com',
             'password' => Hash::make('password'),
             'api_token' => Str::random(60),
+            'image' => 'profile.jpg'
         ]);
 
         User::query()->create([
@@ -61,6 +67,7 @@ class UserSeeder extends Seeder
             'email' => 'test6@test.com',
             'password' => Hash::make('password'),
             'api_token' => Str::random(60),
+            'image' => 'profile.jpg'
         ]);
 
         User::query()->create([
@@ -68,6 +75,7 @@ class UserSeeder extends Seeder
             'email' => 'test7@test.com',
             'password' => Hash::make('password'),
             'api_token' => Str::random(60),
+            'image' => 'profile.jpg'
         ]);
 
         User::query()->create([
@@ -75,6 +83,7 @@ class UserSeeder extends Seeder
             'email' => 'test8@test.com',
             'password' => Hash::make('password'),
             'api_token' => Str::random(60),
+            'image' => 'profile.jpg'
         ]);
 
         User::query()->create([
@@ -82,6 +91,7 @@ class UserSeeder extends Seeder
             'email' => 'test9@test.com',
             'password' => Hash::make('password'),
             'api_token' => Str::random(60),
+            'image' => 'profile.jpg'
         ]);
 
         User::query()->create([
@@ -89,6 +99,7 @@ class UserSeeder extends Seeder
             'email' => 'test10@test.com',
             'password' => Hash::make('password'),
             'api_token' => Str::random(60),
+            'image' => 'profile.jpg'
         ]);
     }
 }

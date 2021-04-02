@@ -47,6 +47,7 @@ class FacebookLoginController extends Controller
             'name'     => $user->getName(),
             'password' => bcrypt(Str::random()),
             'api_token' => Str::random(60),
+            'image' => 'profile.jpg'
         ]);
 
         Auth::login($user);

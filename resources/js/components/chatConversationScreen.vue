@@ -171,9 +171,14 @@
     </div>
   </div>
 
-  <div v-else style="margin-top:20%;margin-left:25%">
-    Select a friend or a group to start chatting.
+  <div v-else class="col-md-9">
+    <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
+      <div style="height:1000px;color:white;padding-top:25%;padding-left:35%">
+        Select a friend or a group to start chatting.
+      </div>
+    </div>
   </div>
+
 </template>
 
 <script>

@@ -9,7 +9,7 @@ use App\Repositories\ProfileSettingRepository;
 class ProfileSettingController extends Controller
 {
 
-    private $profileSettingRepository;
+    private ProfileSettingRepository $profileSettingRepository;
 
     public function __construct(ProfileSettingRepository $profileSettingRepository){
         $this->profileSettingRepository = $profileSettingRepository;

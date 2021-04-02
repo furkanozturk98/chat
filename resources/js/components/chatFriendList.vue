@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div style="height: 700px;">
     <div v-for="item in items" @click="friendClick(item)">
       <div class="friend-drawer friend-drawer--onhover" :class="{'friend-dark' : nightMode}">
-        <img class="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt="">
+        <img class="profile-image" :src="'images/'+item.friend.image" alt="">
         <div class="text" :class=" {'text-white' : nightMode}">
           <h6>{{ item.friend.name }}</h6>
           <p :class="{'text-muted' :!nightMode, 'text-light' :nightMode,}">

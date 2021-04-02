@@ -36,11 +36,13 @@ Route::get('/test',function (){
 Route::get('/publish',function (){
     /*event(new MyEvent('hello world'));*/
 
+    $roomId = \App\Models\Message::where('from',6)->where('to',1)->first()->room_id;
+
     $message = \App\Models\Message::create([
         'from' => 6,
         'to'   => 1,
         'message' => 'selam aaa',
-        'room_id' => 'asdasd',
+        'room_id' => $roomId,
         'status' => \App\MessageStatuses::UNREAD
     ]);
     broadcast(new messageSend($message));

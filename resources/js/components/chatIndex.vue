@@ -5,15 +5,23 @@
     <profile-settings-modal :current-user="currentUser" />
 
     <div class="row no-gutters">
-      <div class="col-md-3 border-right">
+      <div class="col-md-3 border-right" :class="{'friend-dark': nightMode}">
         <div class="settings-tray" :class="{'settings-tray-dark': nightMode}">
           <img
             class="profile-image"
-            src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg"
+            :src="'images/'+currentUser.image"
             alt="Profile img"
           >
-          <span class="settings-tray--right">
+          <span
+            :class="{'text-white': nightMode}"
+          >
+            {{ currentUser.name }}
+          </span>
 
+          <span
+            class="
+            settings-tray--right"
+          >
             <i class="material-icons" @click="showAddPersonModal">person_add</i>
             <i class="material-icons" @click="toggleDropDown">menu</i>
 
@@ -54,6 +62,7 @@
             <a
               id="friend-tab"
               class="nav-link active"
+              :style="[nightMode ? '' : {'background-color':'white'}]"
               data-toggle="tab"
               href="#friend"
               role="tab"
@@ -65,6 +74,7 @@
             <a
               id="group-tab"
               class="nav-link"
+              :style="[nightMode ? '' : {'background-color':'white'}]"
               data-toggle="tab"
               href="#group"
               role="tab"
@@ -80,16 +90,16 @@
           </div>
 
           <div id="group" class="tab-pane fade" role="tabpanel" aria-labelledby="group-tab">
-            <div class="messages overflow-auto" style="height:80%;">
-              <div class="friend-drawer friend-drawer--onhover">
+            <div class="messages overflow-auto" style="height: 700px;">
+              <div class="friend-drawer friend-drawer--onhover" :class="{'friend-dark' : nightMode}">
                 <img
                   class="profile-image"
                   src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg"
                   alt=""
                 >
-                <div class="text">
+                <div class="text" :class=" {'text-white' : nightMode}">
                   <h6>Family Group</h6>
-                  <p class="text-muted" />
+                  <p :class="{'text-muted' :!nightMode, 'text-light' :nightMode,}" />
                 </div>
                 <span class="time text-muted small">13:21</span>
               </div>
@@ -152,6 +162,7 @@
 
         </div>-->
     </div>
+  </div>
   </div>
 </template>
 
@@ -264,3 +275,10 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.nav-tabs .nav-link.active{
+    background: #292929;
+    color: #3490dc;
+}
+</style>
