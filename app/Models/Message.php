@@ -36,7 +36,8 @@ class Message extends Model
         'from',
         'to',
         'room_id',
-        'message'
+        'message',
+        'status'
     ];
 
     public function from(){

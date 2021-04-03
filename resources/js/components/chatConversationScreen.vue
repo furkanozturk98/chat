@@ -8,7 +8,7 @@
       >
         <img
           class="profile-image"
-          src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg"
+          :src="'images/'+conversation.friend.image"
           alt=""
         >
         <div class="text" :class=" {'text-white' : nightMode}">
@@ -70,90 +70,95 @@
     <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
       <div class="overflow-auto" style="height:600px;">
         <!--
-    <div class="row no-gutters">
-      <div class="col-md-3">
-        <div class="chat-bubble chat-bubble&#45;&#45;left">
-          <div class="chat-buble-name">
-            Robo Cop
-          </div> &lt;!&ndash; show only in groups &ndash;&gt;
-          Hello dude!
-          <span style="float:right">
-            <a
-              id="dropdownMenu2"
-              role="button"
-              data-toggle="dropdown"
-              style=" cursor: pointer"
-            >
-              <i class="bi bi-chevron-down" />
-              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <div class="row no-gutters">
+              <div class="col-md-3">
+                <div class="chat-bubble chat-bubble&#45;&#45;left">
+                  <div class="chat-buble-name">
+                    Robo Cop
+                  </div> &lt;!&ndash; show only in groups &ndash;&gt;
+                  Hello dude!
+                  <span style="float:right">
+                    <a
+                      id="dropdownMenu2"
+                      role="button"
+                      data-toggle="dropdown"
+                      style=" cursor: pointer"
+                    >
+                      <i class="bi bi-chevron-down" />
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
-                <button
-                  class="dropdown-item edit-message"
-                  type="button"
-                  data-toggle="modal"
-                  data-target="#editMessage"
-                >Edit Message</button>
+                        <button
+                          class="dropdown-item edit-message"
+                          type="button"
+                          data-toggle="modal"
+                          data-target="#editMessage"
+                        >Edit Message</button>
 
-                <button
-                  class="dropdown-item delete-message"
-                  type="button"
-                  data-toggle="modal"
-                  data-target="#deleteMessage"
-                >Delete
-                  Message</button>
+                        <button
+                          class="dropdown-item delete-message"
+                          type="button"
+                          data-toggle="modal"
+                          data-target="#deleteMessage"
+                        >Delete
+                          Message</button>
+                      </div>
+                    </a>
+                  </span>
+                  <div class="chat-buble-time">
+                    15:52
+                  </div>
+                </div>
               </div>
-            </a>
-          </span>
-          <div class="chat-buble-time">
-            15:52
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row no-gutters">
-      <div class="col-md-3 offset-md-9">
-        <div class="chat-bubble chat-bubble&#45;&#45;right">
-          <div class="chat-buble-name">
-            Robo Cop
-          </div> &lt;!&ndash; show only in groups &ndash;&gt;
-          Hello dude!
-          <span style="float:right">
-            <a
-              id="dropdownMenu3"
-              role="button"
-              data-toggle="dropdown"
-              style=" cursor: pointer"
-            >
-              <i class="bi bi-chevron-down" />
-              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            </div>
+            <div class="row no-gutters">
+              <div class="col-md-3 offset-md-9">
+                <div class="chat-bubble chat-bubble&#45;&#45;right">
+                  <div class="chat-buble-name">
+                    Robo Cop
+                  </div> &lt;!&ndash; show only in groups &ndash;&gt;
+                  Hello dude!
+                  <span style="float:right">
+                    <a
+                      id="dropdownMenu3"
+                      role="button"
+                      data-toggle="dropdown"
+                      style=" cursor: pointer"
+                    >
+                      <i class="bi bi-chevron-down" />
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
-                <button
-                  class="dropdown-item edit-message"
-                  type="button"
-                  data-toggle="modal"
-                  data-target="#editMessage"
-                >Edit Message</button>
+                        <button
+                          class="dropdown-item edit-message"
+                          type="button"
+                          data-toggle="modal"
+                          data-target="#editMessage"
+                        >Edit Message</button>
 
-                <button
-                  class="dropdown-item delete-message"
-                  type="button"
-                  data-toggle="modal"
-                  data-target="#deleteMessage"
-                >Delete
-                  Message</button>
+                        <button
+                          class="dropdown-item delete-message"
+                          type="button"
+                          data-toggle="modal"
+                          data-target="#deleteMessage"
+                        >Delete
+                          Message</button>
+                      </div>
+                    </a>
+                  </span>
+                  <div class="chat-buble-time">
+                    15:52
+                  </div>
+                </div>
               </div>
-            </a>
-          </span>
-          <div class="chat-buble-time">
-            15:52
-          </div>
-        </div>
-      </div>
-    </div>-->
+            </div>-->
 
         <edit-message-modal />
 
-        <message-list :key="messageListKey" :items="items" :current-user="currentUser" :selected-friend="conversation.friend" />
+        <message-list
+          :key="messageListKey"
+          :items="items"
+          :current-user="currentUser"
+          :selected-friend="conversation.friend"
+        />
       </div>
     </div>
 
@@ -162,9 +167,9 @@
         <div class="">
           <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
             <i class="material-icons">sentiment_very_satisfied</i>
-            <input type="text" placeholder="Type your message here...">
-            <i class="material-icons">mic</i>
-            <i class="material-icons">send</i>
+                <input type="text"  v-model="form.message" placeholder="Type your message here...">
+              <a @click="sendMessage"><i class="material-icons" >send</i></a>
+
           </div>
         </div>
       </div>
@@ -178,42 +183,51 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
 import EditMessageModal from './modals/editMessageModal';
 import MessageList from './messageList';
+import Form from 'form-backend-validation';
 
 export default {
     name: 'ChatConversationScreen',
     components: { MessageList, EditMessageModal },
     props: ['currentUser',],
 
-    data (){
+    data() {
         return {
-            items : [],
+            items: [],
             conversation: null,
             groupConversation: null,
             nightMode: false,
             messageListKey: 0,
+            form: new Form({
+                message: null,
+            })
         }
     },
 
     mounted() {
-        this.$eventHub.$on('friendClick',this.friendClicked);
-        this.$eventHub.$on('nightModeOn',this.nightModeOn);
+        this.$eventHub.$on('friendClick', this.friendClicked);
+        this.$eventHub.$on('nightModeOn', this.nightModeOn);
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
 
     },
 
     methods: {
-        async fetch(){
-            const response = await this.$http.get('/api/message/'+ this.conversation.roomId);
+
+        async sendMessage() {
+
+            await this.form.post('/api/message/send/' + this.conversation.roomId + '/to/' + this.conversation.friend.id);
+        },
+
+        async fetch() {
+            const response = await this.$http.get('/api/message/' + this.conversation.roomId);
             this.items = response.data.data;
         },
 
-        friendClicked(conversation){
+        friendClicked(conversation) {
             this.conversation = conversation
 
             this.fetch();
@@ -236,14 +250,14 @@ export default {
 
         toggleConversationMenuDropdown() {
             this.$refs['dropdown'].show();
-           /* this.show = !this.show;
+            /* this.show = !this.show;
 
-            if (this.show) this.$refs['dropdown'].show();
-            else this.$refs['dropdown'].hide()*/
+             if (this.show) this.$refs['dropdown'].show();
+             else this.$refs['dropdown'].hide()*/
 
         },
 
-        block(id){
+        block(id) {
 
         }
     }

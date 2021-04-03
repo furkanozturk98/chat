@@ -7,6 +7,7 @@ use App\Http\Requests\MessageEditFormRequest;
 use App\Http\Resources\MessageResource;
 use App\MessageStatuses;
 use App\Models\Message;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -37,12 +38,23 @@ class MessageController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     * @param string $roomId
+     * @param User $user
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,string $roomId,User $user)
     {
-        //
+        Message::query()
+            ->create([
+                'from' => auth()->id(),
+                'to' => $user->id,
+                'room_id' => $roomId,
+                'message' => $request->input('message'),
+                'status' => \App\MessageStatuses::UNREAD
+            ]);
+
+        return response(200);
     }
 
     /**
