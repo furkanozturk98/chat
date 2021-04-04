@@ -156,7 +156,8 @@
         data (){
             return {
                 items : [],
-                selectedFriendId: null
+                selectedFriendId: null,
+                selectedItem: null
             }
         },
 
@@ -176,6 +177,15 @@
             async friendClick(item){
                 this.$eventHub.$emit('friendClick',item);
 
+                if(this.selectedItem === null){
+                    this.selectedItem = item;
+                }
+
+                if(this.selectedFriendId !== item.friend.id &&  this.selectedItem.unread !== 0){
+                    this.selectedItem.unread = 0;
+                }
+
+                this.selectedItem = item;
                 this.selectedFriendId = item.friend.id;
             },
 

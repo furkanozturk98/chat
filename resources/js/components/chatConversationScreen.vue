@@ -217,6 +217,10 @@ export default {
     methods: {
 
         async sendMessage() {
+            if(this.form.message === null){
+                return;
+            }
+
             const message = this.form.message;
             await this.form.post('/api/message/send/' + this.conversation.roomId + '/to/' + this.conversation.friend.id);
 

@@ -100,7 +100,7 @@
                     duration: 600
                 });
 
-                this.$emit('profileImageUpdated',response.data.image);
+                this.$eventHub.$emit('profileImageUpdated',response.data.image);
             },
 
             onFileChange(e) {

@@ -9,7 +9,7 @@
         <div class="settings-tray" :class="{'settings-tray-dark': nightMode}">
           <img
             class="profile-image"
-            :src="'images/'+currentUser.image"
+            :src="'images/'+currentUser.image+'?rand='+rand"
             alt="Profile img"
           >
           <span
@@ -189,7 +189,8 @@ export default {
             friendRequests: null,
             nightMode: false,
             selectedFriend: null,
-            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            rand: 1
         }
     },
 
@@ -275,7 +276,10 @@ export default {
         },
 
         profileImageUpdated(newImage){
+            console.log(newImage)
+
             this.currentUser.image = newImage;
+            this.rand = Date.now();
         }
 
     }

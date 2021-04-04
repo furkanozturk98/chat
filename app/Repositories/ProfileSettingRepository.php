@@ -39,6 +39,10 @@ class ProfileSettingRepository
 
     public function removeOldImage($oldImage)
     {
+        if($oldImage === 'profile.jpg'){
+            return;
+        }
+
         $path = public_path() . '/images/' . $oldImage;
 
         if (file_exists($path)) {
