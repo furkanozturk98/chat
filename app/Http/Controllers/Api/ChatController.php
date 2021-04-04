@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Events\messageSend;
+use App\Http\Controllers\Controller;
 use App\Friend;
 use App\Http\Resources\FriendResource;
 use App\MessageStatuses;
 use App\Models\Message;
-use App\User;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ChatController extends Controller

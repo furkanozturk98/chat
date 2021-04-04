@@ -206,6 +206,8 @@ export default {
 
         this.$eventHub.$on('friendClick', this.friendClick);
 
+        this.$eventHub.$on('profileImageUpdated', this.profileImageUpdated);
+
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
 
     },
@@ -270,6 +272,10 @@ export default {
 
         friendClick(item){
             this.selectedFriend = item.friend;
+        },
+
+        profileImageUpdated(newImage){
+            this.currentUser.image = newImage;
         }
 
     }

@@ -25,7 +25,7 @@ class AddFriendFormRequest extends FormRequest
     {
         return [
             'email' => [
-                'required',
+                'required','email',
             ],
         ];
     }

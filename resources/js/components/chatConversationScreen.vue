@@ -167,9 +167,8 @@
         <div class="">
           <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
             <i class="material-icons">sentiment_very_satisfied</i>
-                <input type="text"  v-model="form.message" placeholder="Type your message here...">
-              <a @click="sendMessage"><i class="material-icons" >send</i></a>
-
+            <input v-model="form.message" type="text" placeholder="Type your message here...">
+            <a @click="sendMessage"><i class="material-icons">send</i></a>
           </div>
         </div>
       </div>
@@ -218,8 +217,19 @@ export default {
     methods: {
 
         async sendMessage() {
-
+            const message = this.form.message;
             await this.form.post('/api/message/send/' + this.conversation.roomId + '/to/' + this.conversation.friend.id);
+
+            const lastItem = this.items[this.items.length - 1]
+            const data = {
+                'id': lastItem.id + 1,
+                'from':   this.currentUser.id,
+                'to': this.conversation.friend.id,
+                message,
+                'room_id': this.conversation.roomId,
+            };
+
+            this.items.push(data);
         },
 
         async fetch() {

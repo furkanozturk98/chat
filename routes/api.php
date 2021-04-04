@@ -1,9 +1,10 @@
 <?php
 
+
+use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\FriendRequestController;
 use App\Http\Controllers\Api\MessageController;
-use App\Http\Controllers\ChatController;
-use App\Http\Controllers\FriendRequestController;
-use App\Http\Controllers\ProfileSettingController;
+use App\Http\Controllers\Api\ProfileSettingController;
 use Illuminate\Support\Facades\Route;
 
 /*

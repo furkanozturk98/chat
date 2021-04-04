@@ -9,7 +9,9 @@
             {{ item.friend.about }}
           </p>
         </div>
-        <span v-if="item.unread" class="badge badge-success unread" style="padding: 7px">{{ item.unread }}</span>
+
+        <span v-if="item.unread && selectedFriendId !== item.friend.id" class="badge badge-success unread" style="padding: 7px">{{ item.unread }}</span>
+
         <span class="time text-muted small">13:21</span> <!-- last message send  -->
       </div>
     </div>
@@ -153,12 +155,15 @@
 
         data (){
             return {
-                items : []
+                items : [],
+                selectedFriendId: null
             }
         },
 
         mounted() {
             this.fetch();
+
+            this.$eventHub.$on('messageReceived',this.messageReceived);
 
         },
 
@@ -170,6 +175,16 @@
 
             async friendClick(item){
                 this.$eventHub.$emit('friendClick',item);
+
+                this.selectedFriendId = item.friend.id;
+            },
+
+            messageReceived(message){
+                this.items.forEach(item => {
+                    if(item.friend.id === message.from){
+                        item.unread += 1;
+                    }
+                });
             }
         }
     }

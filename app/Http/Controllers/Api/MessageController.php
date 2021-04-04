@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\messageSend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MessageEditFormRequest;
 use App\Http\Resources\MessageResource;
@@ -45,7 +46,7 @@ class MessageController extends Controller
      */
     public function store(Request $request,string $roomId,User $user)
     {
-        Message::query()
+        $message = Message::query()
             ->create([
                 'from' => auth()->id(),
                 'to' => $user->id,
@@ -53,6 +54,8 @@ class MessageController extends Controller
                 'message' => $request->input('message'),
                 'status' => \App\MessageStatuses::UNREAD
             ]);
+
+        broadcast(new messageSend($message));
 
         return response(200);
     }

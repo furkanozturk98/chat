@@ -89,7 +89,7 @@
 
             async submit() {
 
-                await this.form.post('/api/profile-setting');
+                const response = await this.form.post('/api/profile-setting');
 
                 this.$refs['profile-settings'].hide();
 
@@ -99,6 +99,8 @@
                     position: 'top-right',
                     duration: 600
                 });
+
+                this.$emit('profileImageUpdated',response.data.image);
             },
 
             onFileChange(e) {
