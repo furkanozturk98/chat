@@ -14,7 +14,7 @@ class ChatController extends Controller
     /**
      * @return AnonymousResourceCollection
      */
-    public function getfriendList(): AnonymousResourceCollection
+    public function index(): AnonymousResourceCollection
     {
 
         /** @var Friend $friend */

@@ -1,6 +1,7 @@
 <template>
   <div>
     <add-friend-modal :current-user="currentUser" />
+    <create-group-modal :current-user="currentUser" />
     <friend-request-modal :current-user="currentUser" />
     <profile-settings-modal :current-user="currentUser" />
 
@@ -29,6 +30,10 @@
               <b-dropdown-item @click="showFriendRequestsModal">
                 <b-icon icon="person-lines-fill" aria-hidden="true" />
                 Friend requests
+              </b-dropdown-item>
+              <b-dropdown-item @click="showGroupInvitesModal">
+                <b-icon icon="person-lines-fill" aria-hidden="true" />
+                Group Invites
               </b-dropdown-item>
               <b-dropdown-item @click="showProfileSettingsModal">
                 <b-icon icon="gear-fill" aria-hidden="true" />
@@ -68,6 +73,7 @@
               role="tab"
               aria-controls="friend"
               aria-selected="true"
+              @click="handleFriendsTabClick"
             >Friends</a>
           </li>
           <li class="nav-item">
@@ -80,7 +86,14 @@
               role="tab"
               aria-controls="group"
               aria-selected="false"
+              @click="handleGroupsTabClick"
             >Groups</a>
+          </li>
+
+          <li v-show="visibleSaveButton" role="presentation" class="nav-item ml-auto">
+            <button class="btn btn-primary btn-sm float-right mr-2 mt-1" @click="showCreateGroupModal">
+              <b-icon icon="person-plus-fill" aria-hidden="true" />
+            </button>
           </li>
         </ul>
 
@@ -140,29 +153,10 @@
               </a>
             </span>
           </div>
-        </div>
-
-        <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
-          <div class="overflow-auto" style="height:600px;">-->
-      <chat-conversation-screen :current-user="currentUser" />
-      <!--          </div>
-
-          <div class="row">
-            <div class="col-12">
-              <div class="">
-                <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
-                  <i class="material-icons">sentiment_very_satisfied</i>
-                  <input type="text" placeholder="Type your message here...">
-                  <i class="material-icons">mic</i>
-                  <i class="material-icons">send</i>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>-->
+
+      <chat-conversation-screen :current-user="currentUser" />
     </div>
-  </div>
   </div>
 </template>
 
@@ -173,10 +167,20 @@ import ChatConversationScreen from './chatConversationScreen';
 import FriendRequestModal from './modals/friendRequestsModal';
 import ProfileSettingsModal from './modals/profileSettingsModal';
 import AddFriendModal from './modals/addFriendModal';
+import CreateGroupModal from './modals/CreateGroupModal';
 
 export default {
     name: 'ChatIndex',
-    components: { ProfileSettingsModal, ChatConversationScreen, ChatFriendList, FriendRequestModal, AddFriendModal },
+
+    components: {
+        ProfileSettingsModal,
+        ChatConversationScreen,
+        ChatFriendList,
+        FriendRequestModal,
+        AddFriendModal,
+        CreateGroupModal
+    },
+
     props: ['currentUser'],
 
     data() {
@@ -187,10 +191,12 @@ export default {
             ),
             show: false,
             friendRequests: null,
+            groupInvites: null,
             nightMode: false,
             selectedFriend: null,
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            rand: 1
+            rand: 1,
+            visibleSaveButton: false
         }
     },
 
@@ -201,7 +207,15 @@ export default {
                     console.log(e.message);
                 });
 
+        window.Echo.private(`group.messages.${this.currentUser.id}`)
+            .listen('messageSend', (e) => {
+                this.$eventHub.$emit('groupMessageReceived', e.message);
+                console.log(e.message);
+            });
+
         this.getFriendRequests();
+
+        //this.getGroupInvites();
 
         this.$eventHub.$on('refreshFriendRequests', this.getFriendRequests);
 
@@ -219,7 +233,7 @@ export default {
 
             this.$refs['add-person'].hide();
 
-            this.getFriendRequests();
+            await this.getFriendRequests();
         },
 
         resetModal() {
@@ -249,6 +263,14 @@ export default {
             this.$eventHub.$emit('showFriendRequestsModal', this.friendRequest);
         },
 
+        showGroupInvitesModal() {
+            this.$eventHub.$emit('showGroupInvitesModal', this.groupInvites);
+        },
+
+        showCreateGroupModal(){
+            this.$eventHub.$emit('showCreateGroupModal');
+        },
+
         showProfileSettingsModal() {
             this.$eventHub.$emit('showProfileSettingsModal');
         },
@@ -256,6 +278,11 @@ export default {
         async getFriendRequests() {
             const response = await this.$http.get('/api/get-friend-requests');
             this.friendRequest = response.data.data;
+        },
+
+        async getGroupInvites() {
+            const response = await this.$http.get('/api/get-group-invites');
+            this.groupInvites = response.data.data;
         },
 
         nightModeOn() {
@@ -276,11 +303,17 @@ export default {
         },
 
         profileImageUpdated(newImage){
-            console.log(newImage)
-
             this.currentUser.image = newImage;
             this.rand = Date.now();
-        }
+        },
+
+        handleFriendsTabClick(){
+            this.visibleSaveButton = false;
+        },
+
+        handleGroupsTabClick(){
+            this.visibleSaveButton = true;
+        },
 
     }
 }

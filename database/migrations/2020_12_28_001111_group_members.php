@@ -17,7 +17,7 @@ class GroupMembers extends Migration
             $table->id();
             $table->foreignId('group_id')->constrained();
             $table->foreignId('member_id')->constrained("users");
-            $table->tinyInteger('isAdmin')->default(0);
+            $table->tinyInteger('is_admin')->default(0);
             $table->timestamps();
         });
     }

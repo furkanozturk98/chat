@@ -3,6 +3,8 @@
 
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\FriendRequestController;
+use App\Http\Controllers\Api\GroupController;
+use App\Http\Controllers\Api\GroupInviteController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ProfileSettingController;
 use Illuminate\Support\Facades\Route;
@@ -20,14 +22,23 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function() {
 
-    Route::get('friend-list',[ChatController::class,'getFriendList']);
+    Route::get('friend-list',[ChatController::class,'index']);
 
-    Route::post('friend-request',[FriendRequestController::class,'friendRequest']);
-    Route::get('get-friend-requests',[FriendRequestController::class,'getFriendRequests']);
-
+    Route::get('get-friend-requests',[FriendRequestController::class,'index']);
+    Route::post('friend-request',[FriendRequestController::class,'store']);
     Route::put('friend-request/approve/{friendRequest}',[FriendRequestController::class,'approve']);
     Route::put('friend-request/reject/{friendRequest}',[FriendRequestController::class,'reject']);
     Route::delete('friend-request/cancel/{friendRequest}',[FriendRequestController::class,'cancel']);
+
+    Route::get('get-groups',[GroupController::class,'index']);
+    Route::post('group',[GroupController::class,'store']);
+    Route::put('group',[GroupController::class,'update']);
+
+    Route::get('get-group-invites',[GroupInviteController::class,'index']);
+    Route::post('group-invite',[GroupInviteController::class,'store']);
+    Route::put('group-invite/approve/{groupInvite}',[GroupInviteController::class,'approve']);
+    Route::put('group-invite/reject/{groupInvite}',[GroupInviteController::class,'reject']);
+    Route::delete('group-invite/cancel/{groupInvite}',[GroupInviteController::class,'cancel']);
 
     Route::get('profile-setting',[ProfileSettingController::class,'index']);
     Route::post('profile-setting',[ProfileSettingController::class,'update']);

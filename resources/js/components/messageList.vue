@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="messageDisplay">
     <div v-for="item in items" :key="item.id" class="row no-gutters">
       <div
         class="col-md-3"
@@ -47,6 +47,18 @@ export default {
     name: 'MessageList',
     props: ['items', 'currentUser', 'selectedFriend'],
 
+    watch : {
+        items: {
+            handler (val, oldVal) {
+                let self = this;
+                setTimeout(function(){
+                    self.scrollToBottom();
+                }, 1000);
+
+            }
+        }
+    },
+
     mounted(){
         this.$eventHub.$on('messageEdited',this.messageEdited);
 
@@ -54,6 +66,12 @@ export default {
     },
 
     methods: {
+
+        scrollToBottom() {
+            let element = document.getElementById('messageDisplay');
+            element.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        },
+
         showEditMessageModal(item) {
 
             this.$eventHub.$emit('showEditMessageModal', item);
@@ -102,7 +120,6 @@ export default {
                                 });
 
                                 this.messageDeleted(id);
-                                //this.$eventHub.$emit('messageDeleted',id);
                             })
                             .catch(() => {
                                 Vue.$toast.open({

@@ -67,7 +67,7 @@
       </div>
     </div>
 
-    <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
+    <div  class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
       <div class="overflow-auto" style="height:600px;">
         <!--
             <div class="row no-gutters">
@@ -167,7 +167,7 @@
         <div class="">
           <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
             <i class="material-icons">sentiment_very_satisfied</i>
-            <input v-model="form.message" type="text" placeholder="Type your message here...">
+            <input v-model="form.message" type="text" placeholder="Type your message here..." @keyup.enter="sendMessage">
             <a @click="sendMessage"><i class="material-icons">send</i></a>
           </div>
         </div>

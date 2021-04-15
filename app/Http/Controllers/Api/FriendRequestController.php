@@ -15,12 +15,28 @@ use Throwable;
 
 class FriendRequestController extends Controller
 {
+
+    /**
+     * @return AnonymousResourceCollection
+     */
+    public function index(): AnonymousResourceCollection
+    {
+        $friendRequests = FriendRequest::query()
+            ->where('from', auth()->id())
+            ->orWhere('to', auth()->id())
+            ->where('status', 0)
+            ->get();
+
+        return FriendRequestResource::collection($friendRequests);
+
+    }
+
     /**
      * @param AddFriendFormRequest $request
      *
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|JsonResponse
      */
-    public function friendRequest(AddFriendFormRequest $request)
+    public function store(AddFriendFormRequest $request)
     {
         $user = User::query()
             ->where('email',$request->input('email'))
@@ -39,7 +55,6 @@ class FriendRequestController extends Controller
             ->first();
 
         if(!isset($request)){
-            /** @var User $user */
             return FriendRequest::query()->create([
                 'from' => auth()->id(),
                 'to' => $user->id,
@@ -54,24 +69,8 @@ class FriendRequestController extends Controller
 
     }
 
-    /**
-     * @return AnonymousResourceCollection
-     */
-    public function getFriendRequests(): AnonymousResourceCollection
-    {
-        $friendRequests = FriendRequest::query()
-            ->where('from', auth()->id())
-            ->orWhere('to', auth()->id())
-            ->where('status', 0)
-            ->get();
-
-        return FriendRequestResource::collection($friendRequests);
-
-    }
-
     public function approve(FriendRequest $friendRequest){
 
-        /** @var FriendRequest $friendRequest */
         $friendRequest->status = FriendRequestStatuses::APPROVED;
 
         $friendRequest->save();
