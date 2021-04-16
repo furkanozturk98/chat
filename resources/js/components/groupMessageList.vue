@@ -3,15 +3,18 @@
     <div v-for="item in items" :key="item.id" class="row no-gutters">
       <div
         class="col-md-3"
-        :class="item.sender !== currentUser.id ? 'offset-md-9':''"
+        :class="item.sender.id === currentUser.id ? 'offset-md-9':''"
       >
         <div
           class="chat-bubble"
-          :class="item.sender !== currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
+          :class="item.sender.id === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
         >
+          <div v-show="item.sender.id !== currentUser.id" class="chat-buble-name">
+            {{ item.sender.name }}
+          </div>
           {{ item.message }}
 
-          <span v-if="item.sender !== currentUser.id" style="float:right">
+          <span v-if="item.sender.id === currentUser.id" style="float:right">
             <a
               id="dropdownMenu3"
               role="button"

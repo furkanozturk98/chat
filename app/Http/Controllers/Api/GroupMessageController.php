@@ -23,6 +23,13 @@ class GroupMessageController extends Controller
      */
     public function index(Group $group)
     {
+        GroupMessageStatus::query()
+            ->where('group_id', $group->id)
+            ->where('member_id', auth()->id())
+            ->update([
+                'status' => MessageStatuses::READ
+            ]);
+
         $messages = GroupMessage::query()
             ->where('group_id', $group->id)
             ->get();

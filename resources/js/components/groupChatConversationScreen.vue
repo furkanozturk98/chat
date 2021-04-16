@@ -207,9 +207,8 @@ export default {
             const lastItem = this.items[this.items.length - 1]
             const data = {
                 'id': lastItem.id + 1,
-                'group_id': this.groupConversation.id,
-                'sender':   this.currentUser.id,
-                'content': message,
+                'sender':   this.currentUser,
+                'message': message,
             };
 
             this.items.push(data);

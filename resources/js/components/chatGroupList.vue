@@ -7,7 +7,9 @@
           <h6>{{ item.name }}</h6>
           <p :class="{'text-muted' :!nightMode, 'text-light' :nightMode,}" />
         </div>
-        <span class="time text-muted small">13:21</span>
+          <span v-if="item.unread && selectedGroupId !== item.id" class="badge badge-success unread" style="padding: 7px">{{ item.unread }}</span>
+
+          <span class="time text-muted small">13:21</span>
       </div>
     </div>
   </div>
