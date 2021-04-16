@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GroupCreateFormRequest;
 use App\Http\Resources\GroupResource;
+use App\MessageStatuses;
 use App\Models\Group;
 use App\Models\GroupMember;
+use App\Models\GroupMessage;
+use App\Models\GroupMessageStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -15,7 +18,7 @@ class GroupController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return GroupResource
+     * @return AnonymousResourceCollection
      */
     public function index()
     {
@@ -28,7 +31,17 @@ class GroupController extends Controller
             ->whereIn('id', $groupIds)
             ->get();
 
-        return new GroupResource($groups);
+        $groups->map(function($group) {
+            $count = GroupMessageStatus::query()
+                ->where('group_id',auth()->id())
+                ->where('member_id',auth()->id())
+                ->where('status', MessageStatuses::UNREAD)
+                ->count();
+
+            $group->unread = $count;
+        });
+
+        return GroupResource::collection($groups);
     }
 
     /**
@@ -44,8 +57,15 @@ class GroupController extends Controller
             'created_by' => $request->user()->id
         ];
 
+        /** @var Group $group */
         $group = Group::query()
             ->create($attributes);
+
+        GroupMember::query()
+            ->create([
+                'group_id' => $group->id,
+                'member_id' => $request->user()->id
+            ]);
 
         return new GroupResource($group);
     }

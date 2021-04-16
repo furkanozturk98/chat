@@ -73,7 +73,6 @@ export default {
         },
 
         showEditMessageModal(item) {
-
             this.$eventHub.$emit('showEditMessageModal', item);
         },
 
@@ -136,7 +135,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-</style>

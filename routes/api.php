@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\FriendRequestController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\GroupInviteController;
+use App\Http\Controllers\Api\GroupMessageController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ProfileSettingController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,9 @@ Route::middleware('auth:api')->group(function() {
     Route::get('get-groups',[GroupController::class,'index']);
     Route::post('group',[GroupController::class,'store']);
     Route::put('group',[GroupController::class,'update']);
+
+    Route::get('group-messages/{group}',[GroupMessageController::class,'index']);
+    Route::post('group-message',[GroupMessageController::class,'store']);
 
     Route::get('get-group-invites',[GroupInviteController::class,'index']);
     Route::post('group-invite',[GroupInviteController::class,'store']);

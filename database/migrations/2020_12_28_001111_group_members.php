@@ -15,7 +15,7 @@ class GroupMembers extends Migration
     {
         Schema::create('group_members', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('group_id')->constrained();
+            $table->foreignId('group_id')->constrained("groups");
             $table->foreignId('member_id')->constrained("users");
             $table->tinyInteger('is_admin')->default(0);
             $table->timestamps();

@@ -16,6 +16,7 @@ class Group extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('image')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
         });

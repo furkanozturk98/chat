@@ -15,7 +15,7 @@ class GroupMessages extends Migration
     {
         Schema::create('group_messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('group_id')->constrained();
+            $table->foreignId('group_id')->constrained("groups");
             $table->foreignId('sender')->constrained("group_members");
             $table->string("content")->nullable();
             $table->timestamps();

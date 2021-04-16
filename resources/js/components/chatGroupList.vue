@@ -1,10 +1,67 @@
 <template>
-
+  <div class="messages overflow-auto" style="height: 700px;">
+    <div v-for="item in items" @click="groupClick(item)">
+      <div class="friend-drawer friend-drawer--onhover" :class="{'friend-dark' : nightMode}">
+        <img class="profile-image" :src="'images/'+item.image" alt="">
+        <div class="text" :class=" {'text-white' : nightMode}">
+          <h6>{{ item.name }}</h6>
+          <p :class="{'text-muted' :!nightMode, 'text-light' :nightMode,}" />
+        </div>
+        <span class="time text-muted small">13:21</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-    name: "chatGroupList"
+    name: 'ChatGroupList',
+    props : ['nightMode'],
+
+    data (){
+        return {
+            items : [],
+            selectedGroupId: null,
+            selectedItem: null
+        }
+    },
+
+    mounted() {
+        this.fetch();
+
+        this.$eventHub.$on('groupMessageReceived',this.groupMessageReceived);
+
+    },
+
+    methods: {
+        async fetch(){
+            const response = await this.$http.get('/api/get-groups');
+            this.items = response.data.data;
+        },
+
+        async groupClick(item){
+            this.$eventHub.$emit('groupClick',item);
+
+            if(this.selectedItem === null){
+                this.selectedItem = item;
+            }
+
+            if(this.selectedGroupId !== item.id &&  this.selectedItem.unread !== 0){
+                this.selectedItem.unread = 0;
+            }
+
+            this.selectedItem = item;
+            this.selectedGroupId = item.id;
+        },
+
+        groupMessageReceived(message){
+            this.items.forEach(item => {
+                if(item.friend.id === message.from){
+                    item.unread += 1;
+                }
+            });
+        }
+    }
 }
 </script>
 

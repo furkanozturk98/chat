@@ -18,22 +18,7 @@
           </p>
         </div>
 
-        <span v-if="groupConversation" class="settings-tray--right" style="margin-left:220px">
-          <a id="dropdownMenu2" role="button" data-toggle="dropdown">
-            <i class="material-icons">menu</i>
-
-            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-              <button
-                class="dropdown-item group-member-list"
-                type="button"
-                @click=""
-              >Group Member List</button>
-            </div>
-          </a>
-        </span>
-
         <span v-if="conversation" class="settings-tray--right" style="margin-left:220px">
-
           <a
             id="dropdownMenu3"
             role="button"
@@ -174,14 +159,6 @@
       </div>
     </div>
   </div>
-
-  <div v-else class="col-md-9">
-    <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
-      <div style="height:1000px;color:white;padding-top:25%;padding-left:35%">
-        Select a friend or a group to start chatting.
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -209,6 +186,7 @@ export default {
 
     mounted() {
         this.$eventHub.$on('friendClick', this.friendClicked);
+        this.$eventHub.$on('groupClick', this.groupClicked);
         this.$eventHub.$on('nightModeOn', this.nightModeOn);
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
 
@@ -247,6 +225,10 @@ export default {
             this.fetch();
         },
 
+        groupClicked() {
+            this.conversation = null;
+        },
+
         nightModeOn() {
 
             if (this.nightMode === true) {
@@ -260,15 +242,6 @@ export default {
 
         forceRerender() {
             this.messageListKey += 1;
-        },
-
-        toggleConversationMenuDropdown() {
-            this.$refs['dropdown'].show();
-            /* this.show = !this.show;
-
-             if (this.show) this.$refs['dropdown'].show();
-             else this.$refs['dropdown'].hide()*/
-
         },
 
         block(id) {
