@@ -4,6 +4,7 @@
       ref="friend-requests"
       title="Friend Requests"
       size="lg"
+      hide-footer
     >
       <div v-if="friendRequests && friendRequests.length > 0">
         <div v-for="friendRequest in friendRequests">
@@ -56,77 +57,119 @@
 </template>
 
 <script>
-    export default {
-        name: 'FriendRequests',
-        props : ['currentUser'],
+export default {
+    name: 'FriendRequests',
+    props: ['currentUser'],
 
-        data(){
-            return {
-                friendRequests : null
-            }
+    data() {
+        return {
+            friendRequests: null
+        }
+    },
+
+    mounted() {
+        this.$eventHub.$on('showFriendRequestsModal', this.showFriendRequestsModal);
+
+    },
+
+    methods: {
+        showFriendRequestsModal(friendRequests) {
+            this.friendRequests = friendRequests;
+
+            this.$refs['friend-requests'].show();
         },
 
-        mounted() {
-            this.$eventHub.$on('showFriendRequestsModal',this.showFriendRequestsModal);
+        cancel(id) {
+            this.$bvModal.msgBoxConfirm('Please confirm that you want to cancel this friend request.', {
+                title: 'Please Confirm',
+                size: 'sm',
+                buttonSize: 'sm',
+                okVariant: 'danger',
+                okTitle: 'YES',
+                cancelTitle: 'NO',
+                footerClass: 'p-2',
+                hideHeaderClose: false,
+                centered: true
+            })
+                .then(value => {
+                    if (value) {
+                        this.$http.delete('/api/friend-request/cancel/' + id);
 
+                        this.$eventHub.$emit('refreshFriendRequests');
+
+                        this.$refs['friend-requests'].hide();
+
+                        Vue.$toast.open({
+                            message: 'Friend Request Canceled!',
+                            type: 'success',
+                            position: 'top-right',
+                            duration: 1000
+                        });
+                    }
+                });
         },
 
-        methods: {
-            showFriendRequestsModal(friendRequests) {
-                this.friendRequests = friendRequests;
+        approve(id) {
+            this.$bvModal.msgBoxConfirm('Please confirm that you want to approve this friend request.', {
+                title: 'Please Confirm',
+                size: 'sm',
+                buttonSize: 'sm',
+                okVariant: 'danger',
+                okTitle: 'YES',
+                cancelTitle: 'NO',
+                footerClass: 'p-2',
+                hideHeaderClose: false,
+                centered: true
+            })
+                .then(value => {
+                    if (value) {
+                        this.$http.put('/api/friend-request/approve/' + id);
 
-                this.$refs['friend-requests'].show();
-            },
+                        this.$eventHub.$emit('refreshFriendRequests');
 
-            cancel(id){
-                this.$http.delete('/api/friend-request/cancel/'+id);
+                        this.$refs['friend-requests'].hide()
 
-                this.$eventHub.$emit('refreshFriendRequests');
-
-                this.$refs['friend-requests'].hide();
-
-                Vue.$toast.open({
-                    message: 'Friend Request Canceled!',
-                    type: 'success',
-                    position: 'top-right',
-                    duration: 1000
+                        Vue.$toast.open({
+                            message: 'Friend Request Approved!',
+                            type: 'success',
+                            position: 'top-right',
+                            duration: 1000
+                        });
+                    }
                 });
-            },
+        },
 
-            approve(id){
-                this.$http.put('/api/friend-request/approve/'+id);
+        reject(id) {
+            this.$bvModal.msgBoxConfirm('Please confirm that you want to reject this friend request.', {
+                title: 'Please Confirm',
+                size: 'sm',
+                buttonSize: 'sm',
+                okVariant: 'danger',
+                okTitle: 'YES',
+                cancelTitle: 'NO',
+                footerClass: 'p-2',
+                hideHeaderClose: false,
+                centered: true
+            })
+                .then(value => {
+                    if (value) {
+                        this.$http.put('/api/friend-request/reject/' + id);
 
-                this.$eventHub.$emit('refreshFriendRequests');
+                        this.$eventHub.$emit('refreshFriendRequests');
 
-                this.$refs['friend-requests'].hide()
+                        this.$refs['friend-requests'].hide()
 
-                Vue.$toast.open({
-                    message: 'Friend Request Approved!',
-                    type: 'success',
-                    position: 'top-right',
-                    duration: 1000
+                        Vue.$toast.open({
+                            message: 'Friend Request Rejected!',
+                            type: 'success',
+                            position: 'top-right',
+                            duration: 1000
+                        });
+                    }
                 });
-
-            },
-
-            reject(id){
-                this.$http.put('/api/friend-request/reject/'+id);
-
-                this.$eventHub.$emit('refreshFriendRequests');
-
-                this.$refs['friend-requests'].hide()
-
-                Vue.$toast.open({
-                    message: 'Friend Request Rejected!',
-                    type: 'success',
-                    position: 'top-right',
-                    duration: 1000
-                });
-
-            }
-
         }
     }
+}
 </script>
 
 <style scoped>

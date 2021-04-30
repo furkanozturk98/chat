@@ -4,7 +4,7 @@
 namespace App;
 
 
-class MessageStatuses
+final class MessageStatuses
 {
     const UNREAD = 0;
     const READ = 1;
