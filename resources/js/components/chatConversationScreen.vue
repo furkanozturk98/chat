@@ -202,9 +202,10 @@ export default {
             const message = this.form.message;
             await this.form.post('/api/message/send/' + this.conversation.roomId + '/to/' + this.conversation.friend.id);
 
-            const lastItem = this.items[this.items.length - 1]
+            const lastItem = this.items[this.items.length - 1];
+
             const data = {
-                'id': lastItem.id + 1,
+                'id': lastItem ? lastItem.id + 1 : 1,
                 'from':   this.currentUser.id,
                 'to': this.conversation.friend.id,
                 message,

@@ -15,14 +15,14 @@
               alt=""
             >
             <div class="text">
-              <h6 v-if="friendRequest.from.id === 1">
+              <h6 v-if="friendRequest.from.id === currentUser.id">
                 {{ friendRequest.to.name }}
               </h6>
               <h6 v-else>
                 {{ friendRequest.from.name }}
               </h6>
 
-              <p v-if="friendRequest.from.id === 1" class="text-muted">
+              <p v-if="friendRequest.from.id === currentUser.id" class="text-muted">
                 {{ friendRequest.to.about }}
               </p>
               <p v-else class="text-muted">
@@ -30,7 +30,7 @@
               </p>
             </div>
             <span class="ml-5">
-              <div v-if="friendRequest.from.id === 1">
+              <div v-if="friendRequest.from.id === currentUser.id">
                 <button class="btn btn-outline-secondary" @click="cancel(friendRequest.id)">Cancel</button>
               </div>
 

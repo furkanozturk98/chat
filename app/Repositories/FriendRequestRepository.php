@@ -17,9 +17,9 @@ class FriendRequestRepository
     public function index(): Collection
     {
         return FriendRequest::query()
+            ->where('status', FriendRequestStatuses::WAITING)
             ->where('from', auth()->id())
             ->orWhere('to', auth()->id())
-            ->where('status', 0)
             ->get();
     }
 
