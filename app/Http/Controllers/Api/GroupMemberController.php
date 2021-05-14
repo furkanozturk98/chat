@@ -31,10 +31,21 @@ class GroupMemberController extends Controller
      *
      * @param Request $request
      * @param GroupMember $groupMember
-     * @return FriendRequestResource
+     * @return FriendRequestResource|\Illuminate\Http\JsonResponse
      */
     public function store(Request $request, GroupMember $groupMember)
     {
+
+        $count = FriendRequest::query()
+            ->where('from',auth()->id())
+            ->where('to', $groupMember->member_id)
+            ->count();
+
+        if($count > 0){
+            return \response()->json([
+                'error' => 'Already a friendship request is sent to this user'
+            ],422);
+        }
 
         $data = FriendRequest::query()->create([
             'from' => auth()->id(),

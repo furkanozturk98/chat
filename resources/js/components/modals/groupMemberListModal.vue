@@ -1,48 +1,48 @@
 <template>
-  <div>
-    <b-modal
-      ref="group-member-list"
-      title="Group Members"
-      size="lg"
-      hide-footer
-    >
-      <div v-for="member in members">
-        <div class="friend-drawer ">
-          <img
-            class="profile-image"
-            :src="'images/'+member.member.image"
-            alt=""
-          >
-          <div class="text" style="width:60%">
-            <h6>
-              {{ member.member.name }}
-            </h6>
+    <div>
+        <b-modal
+            ref="group-member-list"
+            title="Group Members"
+            size="lg"
+            hide-footer
+        >
+            <div v-for="member in members">
+                <div class="friend-drawer ">
+                    <img
+                        class="profile-image"
+                        :src="'images/'+member.member.image"
+                        alt=""
+                    >
+                    <div class="text" style="width:60%">
+                        <h6>
+                            {{ member.member.name }}
+                        </h6>
 
-            <p class="text-muted">
-              {{ member.member.about }}
-            </p>
-          </div>
-          <span class="ml-3">
+                        <p class="text-muted">
+                            {{ member.member.about }}
+                        </p>
+                    </div>
+                    <span class="ml-3">
             <button
-              v-if="member.type === 0 && currentMember.type === 2 && (member.member.id !== currentMember.member.id)"
-              class="btn btn-outline-success"
-              @click="makeAdmin(member.id)"
+                v-if="member.type === 0 && currentMember.type === 2 && (member.member.id !== currentMember.member.id)"
+                class="btn btn-outline-success"
+                @click="makeAdmin(member.id)"
             >Make Admin</button>
             <button v-if="!isFriend(member.member.id)" class="btn btn-outline-success" @click="addFriend(member.id)"><b-icon
-              icon="person-plus-fill"
+                icon="person-plus-fill"
             /></button>
             <button
-              v-if="(currentMember.type === 2 && member.type === 0) || (currentMember.type === 1 && member.type === 0) || (currentMember.type === 2 && member.type === 1) || (member.member.id === currentMember.member.id)"
-              class="btn btn-outline-danger"
-              @click="remove(member.id, member.group.id)"
+                v-if="(currentMember.type === 2 && member.type === 0) || (currentMember.type === 1 && member.type === 0) || (currentMember.type === 2 && member.type === 1) || (member.member.id === currentMember.member.id)"
+                class="btn btn-outline-danger"
+                @click="remove(member.id, member.group.id)"
             ><b-icon
-              icon="x-circle"
+                icon="x-circle"
             /></button>
           </span>
-        </div>
-      </div>
-    </b-modal>
-  </div>
+                </div>
+            </div>
+        </b-modal>
+    </div>
 </template>
 
 <script>
@@ -109,16 +109,35 @@ export default {
                 .then(value => {
                     if (value) {
 
-                        this.$http.post('/api/group-member/add-friend/' + memberId);
 
-                        this.$refs['group-member-list'].hide();
+                        this.$http.post('/api/group-member/add-friend/' + memberId)
+                            .then((response) => {
 
-                        Vue.$toast.open({
-                            message: 'Friend Request is sent!',
-                            type: 'success',
-                            position: 'top-right',
-                            duration: 1000
-                        });
+                                this.$refs['group-member-list'].hide();
+
+                                Vue.$toast.open({
+                                    message: 'Friend Request is sent!',
+                                    type: 'success',
+                                    position: 'top-right',
+                                    duration: 1000
+                                });
+
+                            })
+                            .catch((error) => {
+                                if (error.response.status == 422){
+                                    this.$bvModal.msgBoxOk('You already sent a friendship request to this user', {
+                                        title: 'Error',
+                                        size: 'sm',
+                                        buttonSize: 'sm',
+                                        okVariant: 'danger',
+                                        headerClass: 'p-2 border-bottom-0',
+                                        footerClass: 'p-2 border-top-0',
+                                        centered: true
+                                    })
+                                }
+                            })
+
+
 
                     }
                 });
