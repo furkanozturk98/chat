@@ -27,6 +27,13 @@ class FriendRequestRepository
     {
         $user = $this->getUser($request);
 
+        if(auth()->user()->email === $request->input('email')){
+            return response()->json([
+                'message' => "The given data was invalid.",
+                'errors' => ['email' => ['You cannot send friend request to yourself'] ]
+            ],422);
+        }
+
         if(!$this->checkUserIsValid($user)){
             return response()->json([
                 'message' => "The given data was invalid.",

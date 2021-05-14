@@ -1,5 +1,7 @@
 <template>
   <div v-if="groupConversation" class="col-md-9">
+    <add-group-member-modal :selected-group="groupConversation.id" />
+    <group-member-list-modal :selected-group="groupConversation.id" :current-member="currentMember" :members="groupMembers" />
     <div class="settings-tray" :class="{'settings-tray-dark': nightMode}">
       <div
         class="friend-drawer no-gutters"
@@ -28,8 +30,15 @@
             <i class="material-icons">menu</i>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
               <button
+                v-if="currentMember.type !== 0"
                 class="dropdown-item group-member-list"
                 type="button"
+                @click="showAddGroupMemberModal"
+              >Add Group Member</button>
+              <button
+                class="dropdown-item group-member-list"
+                type="button"
+                @click="showGroupMemberListModal"
               >Group Member List</button>
             </div>
           </a>
@@ -44,15 +53,20 @@
           >
             <b-dropdown-item>
               <b-icon icon="person-lines-fill" aria-hidden="true" />
+              Add Group Member
+            </b-dropdown-item>
+            <b-dropdown-item>
+              <b-icon icon="person-lines-fill" aria-hidden="true" />
               Group Member List
             </b-dropdown-item>
           </b-dropdown>
+
         </span>
       </div>
     </div>
 
     <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
-      <div class="overflow-auto" style="height:600px;">
+      <div class="overflow-auto" style="height:630px;">
         <!--
                     <div class="row no-gutters">
                       <div class="col-md-3">
@@ -164,18 +178,26 @@
 import GroupMessageList from './groupMessageList';
 import EditMessageModal from './modals/editMessageModal';
 import Form from 'form-backend-validation';
-
+import AddGroupMemberModal from './modals/addGroupMemberModal';
+import GroupMemberListModal from './modals/groupMemberListModal'
 export default {
     name: 'GroupChatConversationScreen',
-    components: { GroupMessageList, EditMessageModal },
+    components: {
+        AddGroupMemberModal,
+        GroupMessageList,
+        EditMessageModal,
+        GroupMemberListModal
+    },
     props: ['currentUser',],
 
     data() {
         return {
             items: [],
             groupConversation: null,
+            groupMembers: null,
             nightMode: false,
             messageListKey: 0,
+            currentMember: null,
             form: new Form({
                 message: null,
                 group_id: null
@@ -188,12 +210,26 @@ export default {
         this.$eventHub.$on('friendClick', this.friendClicked);
         this.$eventHub.$on('nightModeOn', this.nightModeOn);
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
-
     },
     methods: {
         async fetch() {
             const response = await this.$http.get('/api/group-messages/' + this.groupConversation.id);
             this.items = response.data.data;
+        },
+
+        async getGroupMembers(){
+            const response = await this.$http.get('/api/group-member/' + this.groupConversation.id);
+            this.groupMembers = response.data.data;
+
+            for(let i=0;i< this.groupMembers.length; i++)
+            {
+                if(this.groupMembers[i].member.id === this.currentUser.id){
+                    console.log(this.currentUser);
+                    this.currentMember = this.groupMembers[i];
+                    console.log(this.currentMember);
+                }
+            }
+
         },
 
         async sendMessage() {
@@ -207,8 +243,8 @@ export default {
             const lastItem = this.items[this.items.length - 1]
             const data = {
                 'id': lastItem.id + 1,
-                'sender':   this.currentUser,
-                'message': message,
+                'sender':   this.currentUser.id,
+                message,
             };
 
             this.items.push(data);
@@ -218,6 +254,8 @@ export default {
             this.groupConversation = groupConversation
 
             this.fetch();
+
+            this.getGroupMembers();
         },
 
         friendClicked() {
@@ -233,6 +271,14 @@ export default {
                 localStorage.setItem('nightMode', true);
             }
         },
+
+        showAddGroupMemberModal(){
+            this.$eventHub.$emit('showAddGroupMemberModal');
+        },
+
+        showGroupMemberListModal(){
+            this.$eventHub.$emit('showGroupMemberListModal',this.groupConversation);
+        }
     }
 }
 </script>

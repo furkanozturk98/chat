@@ -2,8 +2,12 @@
 
 namespace App\Http\Resources;
 
+use App\Models\GroupInvite;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin GroupInvite
+ */
 class GroupInviteResource extends JsonResource
 {
     /**
@@ -14,6 +18,13 @@ class GroupInviteResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'from' => $this->fromUser,
+            'to' => $this->toUser,
+            'group' => $this->group,
+            'status' => $this->status,
+            'created_at' => $this->created_at
+        ];
     }
 }

@@ -46,7 +46,7 @@
                    class="form-control @error('email') is-invalid @enderror"
                    name="email" placeholder="Email"
                    value="{{ old('email') }}"
-                   required="required">
+                   >
 
             @error('email')
             <span class="invalid-feedback" role="alert">
@@ -60,7 +60,7 @@
                    class="form-control @error('password') is-invalid @enderror"
                    name="password"
                    placeholder="Password"
-                   required="required">
+                   >
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>

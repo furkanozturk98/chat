@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\GroupInvite
@@ -26,6 +28,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|GroupInvite whereTo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|GroupInvite whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read User $fromUser
+ * @property-read User $toUser
+ * @property-read \App\Models\Group $group
  */
 class GroupInvite extends Model
 {
@@ -37,4 +42,19 @@ class GroupInvite extends Model
         'group_id',
         'status'
     ];
+
+    public function fromUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'from');
+    }
+
+    public function toUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class,'to');
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class,'group_id');
+    }
 }

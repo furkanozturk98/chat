@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\GroupMemberTypes;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GroupCreateFormRequest;
 use App\Http\Resources\GroupResource;
@@ -54,7 +55,8 @@ class GroupController extends Controller
     {
         $attributes = [
             'name' => $request->input('name'),
-            'created_by' => $request->user()->id
+            'created_by' => $request->user()->id,
+            'image' => 'group.png'
         ];
 
         /** @var Group $group */
@@ -64,7 +66,8 @@ class GroupController extends Controller
         GroupMember::query()
             ->create([
                 'group_id' => $group->id,
-                'member_id' => $request->user()->id
+                'member_id' => $request->user()->id,
+                'type' => GroupMemberTypes::SUPER_ADMIN,
             ]);
 
         return new GroupResource($group);

@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\FriendRequestController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\GroupInviteController;
+use App\Http\Controllers\Api\GroupMemberController;
 use App\Http\Controllers\Api\GroupMessageController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ProfileSettingController;
@@ -39,10 +40,16 @@ Route::middleware('auth:api')->group(function() {
     Route::post('group-message',[GroupMessageController::class,'store']);
 
     Route::get('get-group-invites',[GroupInviteController::class,'index']);
-    Route::post('group-invite',[GroupInviteController::class,'store']);
+    Route::post('group-invite/{group}',[GroupInviteController::class,'store']);
     Route::put('group-invite/approve/{groupInvite}',[GroupInviteController::class,'approve']);
     Route::put('group-invite/reject/{groupInvite}',[GroupInviteController::class,'reject']);
     Route::delete('group-invite/cancel/{groupInvite}',[GroupInviteController::class,'cancel']);
+
+    Route::get('group-member/{group}',[GroupMemberController::class,'show']);
+    Route::post('group-member/add-friend/{groupMember}',[GroupMemberController::class,'store']);
+    Route::put('group-member/make-admin/{groupMember}',[GroupMemberController::class,'update']);
+    Route::delete('group-member/remove/{groupMember}',[GroupMemberController::class,'destroy']);
+
 
     Route::get('profile-setting',[ProfileSettingController::class,'index']);
     Route::post('profile-setting',[ProfileSettingController::class,'update']);

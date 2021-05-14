@@ -52,8 +52,8 @@
       </div>
     </div>
 
-    <div  class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
-      <div class="overflow-auto" style="height:600px;">
+    <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
+      <div class="overflow-auto" style="height:630px;">
         <!--
             <div class="row no-gutters">
               <div class="col-md-3">
@@ -149,12 +149,10 @@
 
     <div class="row">
       <div class="col-12">
-        <div class="">
-          <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
-            <i class="material-icons">sentiment_very_satisfied</i>
-            <input v-model="form.message" type="text" placeholder="Type your message here..." @keyup.enter="sendMessage">
-            <a @click="sendMessage"><i class="material-icons">send</i></a>
-          </div>
+        <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
+          <i class="material-icons">sentiment_very_satisfied</i>
+          <input v-model="form.message" type="text" placeholder="Type your message here..." @keyup.enter="sendMessage">
+          <a @click="sendMessage"><i class="material-icons">send</i></a>
         </div>
       </div>
     </div>

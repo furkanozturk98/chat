@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\GroupInviteStatuses;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\sendGroupInviteFormRequest;
+use App\Http\Requests\groupInviteFormRequest;
 use App\Http\Resources\GroupInviteResource;
+use App\Models\Group;
 use App\Models\GroupInvite;
 use App\Models\GroupMember;
 use App\User;
@@ -24,22 +25,23 @@ class GroupInviteController extends Controller
      */
     public function index()
     {
-        $friendRequests = GroupInvite::query()
+        $groupInvites = GroupInvite::query()
             ->where('from', auth()->id())
             ->orWhere('to', auth()->id())
             ->where('status', 0)
             ->get();
 
-        return GroupInviteResource::collection($friendRequests);
+        return GroupInviteResource::collection($groupInvites);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param sendGroupInviteFormRequest $request
+     * @param GroupInviteFormRequest $request
+     * @param Group $group
      * @return Builder|Model|JsonResponse
      */
-    public function store(sendGroupInviteFormRequest $request)
+    public function store(GroupInviteFormRequest $request, Group $group)
     {
         $user = User::query()
             ->where('email',$request->input('email'))
@@ -61,6 +63,7 @@ class GroupInviteController extends Controller
             return GroupInvite::query()->create([
                 'from' => auth()->id(),
                 'to' => $user->id,
+                'group_id' => $group->id,
                 'status' => GroupInviteStatuses::WAITING
             ]);
         }
@@ -71,7 +74,8 @@ class GroupInviteController extends Controller
         ],422);
     }
 
-    public function approve(GroupInviteFormRequest $groupInvite){
+    public function approve(GroupInvite $groupInvite)
+    {
 
         $groupInvite->status = GroupInviteStatuses::APPROVED;
 
@@ -83,14 +87,16 @@ class GroupInviteController extends Controller
             ]);
     }
 
-    public function reject(GroupInvite $groupInvite){
+    public function reject(GroupInvite $groupInvite)
+    {
         try{
             $groupInvite->delete();
         }
         catch(Throwable $e){}
     }
 
-    public function cancel(GroupInvite $groupInvite){
+    public function cancel(GroupInvite $groupInvite)
+    {
         try{
             $groupInvite->delete();
         }

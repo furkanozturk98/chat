@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $group_id
  * @property int $member_id
- * @property int $is_admin
+ * @property int $type
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMember newModelQuery()
@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMember whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read User $user
+ * @property-read \App\Models\Group $group
+ * @property-read User $member
  */
 class GroupMember extends Model
 {
@@ -34,10 +36,14 @@ class GroupMember extends Model
     protected $fillable = [
         'group_id',
         'member_id',
-        'is_admin'
+        'type'
     ];
 
-    public function user(){
+    public function member(){
         return $this->belongsTo(User::class, 'member_id');
+    }
+
+    public function group(){
+        return $this->belongsTo(Group::class, 'group_id');
     }
 }

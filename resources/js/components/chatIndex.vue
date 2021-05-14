@@ -3,6 +3,7 @@
     <add-friend-modal :current-user="currentUser" />
     <create-group-modal :current-user="currentUser" />
     <friend-request-modal :current-user="currentUser" />
+    <group-invites-modal :current-user="currentUser" />
     <profile-settings-modal :current-user="currentUser" />
 
     <div class="row no-gutters">
@@ -155,7 +156,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -170,6 +170,7 @@ import ProfileSettingsModal from './modals/profileSettingsModal';
 import AddFriendModal from './modals/addFriendModal';
 import CreateGroupModal from './modals/CreateGroupModal';
 import ChatGroupList from './chatGroupList';
+import GroupInvitesModal from './modals/groupInvitesModal';
 
 export default {
     name: 'ChatIndex',
@@ -182,7 +183,8 @@ export default {
         ChatFriendList,
         FriendRequestModal,
         AddFriendModal,
-        CreateGroupModal
+        CreateGroupModal,
+        GroupInvitesModal
     },
 
     props: ['currentUser'],
@@ -220,7 +222,7 @@ export default {
 
         this.getFriendRequests();
 
-        //this.getGroupInvites();
+        this.getGroupInvites();
 
         this.$eventHub.$on('refreshFriendRequests', this.getFriendRequests);
 

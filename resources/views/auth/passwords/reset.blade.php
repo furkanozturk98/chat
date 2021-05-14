@@ -21,7 +21,7 @@
                    class="form-control @error('email') is-invalid @enderror"
                    name="email" placeholder="Email"
                    value="{{ old('email') }}"
-                   required="required">
+                   >
 
             @error('email')
             <span class="invalid-feedback" role="alert">
@@ -36,7 +36,6 @@
                        type="password"
                        class="form-control @error('password') is-invalid @enderror"
                        name="password" placeholder="Password"
-                       required
                        autocomplete="new-password">
 
                 @error('password')
@@ -51,7 +50,6 @@
                        type="password"
                        class="form-control"
                        name="password_confirmation" placeholder="Password Confirmation"
-                       required
                        autocomplete="new-password">
         </div>
 

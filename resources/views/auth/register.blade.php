@@ -22,7 +22,7 @@
                    class="form-control @error('name') is-invalid @enderror"
                    name="name"
                    placeholder="Name"
-                   value="{{ old('name') }}" required autocomplete="name" autofocus>
+                   value="{{ old('name') }}" autocomplete="name" autofocus>
 
             @error('name')
                 <span class="invalid-feedback" role="alert">
@@ -38,7 +38,7 @@
                    class="form-control @error('email') is-invalid @enderror"
                    name="email"
                    placeholder="Email"
-                   value="{{ old('email') }}" required autocomplete="email">
+                   value="{{ old('email') }}" autocomplete="email">
 
             @error('email')
                 <span class="invalid-feedback" role="alert">
@@ -54,7 +54,7 @@
                        class="form-control @error('password') is-invalid @enderror"
                        name="password"
                        placeholder="Password"
-                       required autocomplete="new-password">
+                       autocomplete="new-password">
 
                 @error('password')
                 <span class="invalid-feedback" role="alert">
@@ -69,7 +69,7 @@
                        type="password"
                        class="form-control"
                        placeholder="Confirm Password"
-                       name="password_confirmation" required autocomplete="new-password">
+                       name="password_confirmation" autocomplete="new-password">
         </div>
 
 

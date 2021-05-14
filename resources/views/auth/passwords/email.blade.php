@@ -25,7 +25,7 @@
                    class="form-control @error('email') is-invalid @enderror"
                    name="email" placeholder="Email"
                    value="{{ old('email') }}"
-                   required="required">
+                   >
 
             @error('email')
             <span class="invalid-feedback" role="alert">
