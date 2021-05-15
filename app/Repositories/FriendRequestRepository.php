@@ -17,38 +17,39 @@ class FriendRequestRepository
     public function index(): Collection
     {
         return FriendRequest::query()
-            ->where('status', FriendRequestStatuses::WAITING)
-            ->where('from', auth()->id())
-            ->orWhere('to', auth()->id())
-            ->get();
+            ->where('status', '=',FriendRequestStatuses::WAITING)
+            ->where(function ($query) {
+                $query->where('from', auth()->id())
+                    ->orWhere('to', auth()->id());
+            })->get();
     }
 
     public function store($request): FriendRequestResource|JsonResponse
     {
         $user = $this->getUser($request);
 
-        if(auth()->user()->email === $request->input('email')){
+        if (auth()->user()->email === $request->input('email')) {
             return response()->json([
                 'message' => "The given data was invalid.",
-                'errors' => ['email' => ['You cannot send friend request to yourself'] ]
-            ],422);
+                'errors' => ['email' => ['You cannot send friend request to yourself']]
+            ], 422);
         }
 
-        if(!$this->checkUserIsValid($user)){
+        if (!$this->checkUserIsValid($user)) {
             return response()->json([
                 'message' => "The given data was invalid.",
-                'errors' => ['email' => ['The email is not exist.Please enter an exist email.'] ]
-            ],422);
+                'errors' => ['email' => ['The email is not exist.Please enter an exist email.']]
+            ], 422);
         }
 
-        if($this->checkFriendIsExist($user)){
+        if ($this->checkFriendIsExist($user)) {
             return response()->json([
                 'message' => "The user of this email is already your friend.",
-                'errors' => ['email' => ['The user of this email is already your friend'] ]
-            ],422);
+                'errors' => ['email' => ['The user of this email is already your friend']]
+            ], 422);
         }
 
-        if(!$this->checkFriendRequestIsExist($user)){
+        if (!$this->checkFriendRequestIsExist($user)) {
             $data = FriendRequest::query()->create([
                 'from' => auth()->id(),
                 'to' => $user->id,
@@ -59,34 +60,34 @@ class FriendRequestRepository
         }
         return response()->json([
             'message' => "Already a friendship request send to this email.",
-            'errors' => ['email' => ['Already a friendship request send to this email.'] ]
-        ],422);
+            'errors' => ['email' => ['Already a friendship request send to this email.']]
+        ], 422);
     }
 
     public function getUser($request): User|null
     {
         return User::query()
-            ->where('email',$request->input('email'))
+            ->where('email', $request->input('email'))
             ->first();
     }
 
     public function checkUserIsValid($user): bool
     {
-       if(isset($user)){
-           return true;
-       }
+        if (isset($user)) {
+            return true;
+        }
 
-       return false;
+        return false;
     }
 
     public function checkFriendIsExist($user): bool
     {
         $friend = Friend::query()
-            ->where('user_id',auth()->user()->id)
-            ->where('friend_id',$user->id)
+            ->where('user_id', auth()->user()->id)
+            ->where('friend_id', $user->id)
             ->first();
 
-        if(isset($friend)){
+        if (isset($friend)) {
             return true;
         }
 
@@ -96,32 +97,38 @@ class FriendRequestRepository
     public function checkFriendRequestIsExist($user): bool
     {
         $data = FriendRequest::query()
-            ->where('from',auth()->id())
+            ->where('from', auth()->id())
             ->where('to', $user->id)
             ->first();
 
-        if(isset($data)){
+        if (isset($data)) {
             return true;
         }
 
         return false;
     }
 
-    public function approve($friendRequest): bool
+    public function approve($friendRequest): Friend|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
     {
         $friendRequest->status = FriendRequestStatuses::APPROVED;
         $friendRequest->save();
         $room = \Str::random(5);
 
-        return Friend::query()->insert([
-            [
+        $first = Friend::query()
+            ->create([
                 'user_id' => $friendRequest->from,
                 'friend_id' => $friendRequest->to,
                 'room_id' => $room
-            ],[
+            ]);
+
+        $second = Friend::query()
+            ->create([
                 'user_id' => $friendRequest->to,
                 'friend_id' => $friendRequest->from,
                 'room_id' => $room
-            ]]);
+            ]);
+
+
+        return $second;
     }
 }

@@ -36,7 +36,7 @@ class Friend extends Model
         'user_id',
         'friend_id',
         'status',
-        'roomId'
+        'room_id'
     ];
 
     public function user(){

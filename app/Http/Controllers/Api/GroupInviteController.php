@@ -6,6 +6,7 @@ use App\GroupInviteStatuses;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\groupInviteFormRequest;
 use App\Http\Resources\GroupInviteResource;
+use App\Http\Resources\GroupMemberResource;
 use App\Models\Group;
 use App\Models\GroupInvite;
 use App\Models\GroupMember;
@@ -81,10 +82,13 @@ class GroupInviteController extends Controller
 
         $groupInvite->save();
 
-        GroupMember::query()->insert([
+        $groupMember = GroupMember::query()
+            ->create([
                 'group_id' => $groupInvite->group_id,
                 'member_id' => $groupInvite->to,
             ]);
+
+        return new GroupMemberResource($groupMember);
     }
 
     public function reject(GroupInvite $groupInvite)

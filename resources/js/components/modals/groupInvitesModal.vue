@@ -122,9 +122,7 @@ name: 'GroupInvitesModal',
             })
                 .then(value => {
                     if (value) {
-                        this.$http.put('/api/group-invite/approve/' + id);
-
-                        this.$eventHub.$emit('refreshGroupInvites');
+                        this.approveRequest(id);
 
                         this.$refs['group-invites'].hide()
 
@@ -136,6 +134,13 @@ name: 'GroupInvitesModal',
                         });
                     }
                 });
+        },
+
+        async approveRequest(id){
+            const response = await this.$http.put('/api/group-invite/approve/' + id);
+            console.log(response.data.data.group)
+
+            this.$eventHub.$emit('groupInviteApproved', response.data.data.group);
         },
 
         reject(id) {

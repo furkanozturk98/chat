@@ -26,7 +26,7 @@ class GroupController extends Controller
         $groupIds = GroupMember::query()
             ->where('member_id', auth()->id())
             ->get()
-            ->pluck(['id']);
+            ->pluck(['group_id']);
 
         $groups = Group::query()
             ->whereIn('id', $groupIds)

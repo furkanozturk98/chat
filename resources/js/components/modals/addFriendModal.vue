@@ -51,23 +51,28 @@ name: 'AddFriendModal',
         },
 
         async submit() {
-            await this.form.post('/api/friend-request');
+            try {
+                const response = await this.form.post('/api/friend-request');
 
-            this.$refs['add-person'].hide();
+                this.$refs['add-person'].hide();
 
-            this.getFriendRequests();
+                this.$eventHub.$emit('friendRequestSent', response.data);
 
-            Vue.$toast.open({
-                message: 'Friend Request is sent!',
-                type: 'success',
-                position: 'top-right',
-                duration: 600
-            });
-        },
-
-        async getFriendRequests() {
-            const response = await this.$http.get('/api/get-friend-requests');
-            this.friendRequest = response.data.data;
+                Vue.$toast.open({
+                    message: 'Friend Request is sent!',
+                    type: 'success',
+                    position: 'top-right',
+                    duration: 600
+                });
+            }
+            catch (e) {
+                Vue.$toast.open({
+                    message: 'An error occurred!',
+                    type: 'error',
+                    position: 'top-right',
+                    duration: 600
+                });
+            }
         },
 
         resetModal() {

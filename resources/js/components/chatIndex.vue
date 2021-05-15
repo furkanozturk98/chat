@@ -224,12 +224,12 @@ export default {
 
         this.getGroupInvites();
 
-        this.$eventHub.$on('refreshFriendRequests', this.getFriendRequests);
-
         this.$eventHub.$on('friendClick', this.friendClick);
         this.$eventHub.$on('groupClick', this.groupClick);
 
         this.$eventHub.$on('profileImageUpdated', this.profileImageUpdated);
+
+        this.$eventHub.$on('friendRequestSent', this.getFriendRequests);
 
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
 

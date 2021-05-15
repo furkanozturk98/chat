@@ -7,7 +7,7 @@
       hide-footer
     >
       <div v-if="friendRequests && friendRequests.length > 0">
-        <div v-for="friendRequest in friendRequests">
+        <div v-for="friendRequest in friendRequests" :key="friendRequest.id">
           <div class="friend-drawer ">
             <img
               class="profile-image"
@@ -57,18 +57,24 @@
 </template>
 
 <script>
+import Form from 'form-backend-validation';
+
 export default {
     name: 'FriendRequests',
     props: ['currentUser'],
 
     data() {
         return {
-            friendRequests: null
+            friendRequests: [],
+            form: new Form({},
+            ),
         }
     },
 
     mounted() {
         this.$eventHub.$on('showFriendRequestsModal', this.showFriendRequestsModal);
+
+        this.$eventHub.$on('friendRequestSent', this.updateFriendRequests);
 
     },
 
@@ -77,6 +83,10 @@ export default {
             this.friendRequests = friendRequests;
 
             this.$refs['friend-requests'].show();
+        },
+
+        updateFriendRequests(data){
+          this.friendRequests.push(data);
         },
 
         cancel(id) {
@@ -109,7 +119,7 @@ export default {
                 });
         },
 
-        approve(id) {
+        async approve(id) {
             this.$bvModal.msgBoxConfirm('Please confirm that you want to approve this friend request.', {
                 title: 'Please Confirm',
                 size: 'sm',
@@ -123,9 +133,7 @@ export default {
             })
                 .then(value => {
                     if (value) {
-                        this.$http.put('/api/friend-request/approve/' + id);
-
-                        this.$eventHub.$emit('refreshFriendRequests');
+                       this.approveRequest(id);
 
                         this.$refs['friend-requests'].hide()
 
@@ -137,6 +145,13 @@ export default {
                         });
                     }
                 });
+        },
+
+        async approveRequest(id){
+            const response = await this.form.put('/api/friend-request/approve/' + id);
+            console.log(response.data)
+
+            this.$eventHub.$emit('friendRequestApproved', response.data);
         },
 
         reject(id) {
