@@ -7,6 +7,7 @@ use App\GroupMemberTypes;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FriendRequestResource;
 use App\Http\Resources\GroupMemberResource;
+use App\Http\Resources\GroupResource;
 use App\Models\FriendRequest;
 use App\Models\Group;
 use App\Models\GroupMember;
@@ -89,7 +90,7 @@ class GroupMemberController extends Controller
      * Remove the specified resource from storage.
      *
      * @param GroupMember $groupMember
-     * @return Response
+     * @return GroupMemberResource
      * @throws \Exception
      */
     public function destroy(GroupMember $groupMember)
@@ -100,21 +101,19 @@ class GroupMemberController extends Controller
 
         $groupId = $groupMember->group_id;
 
-        if($memberCount === 1){
+        $model = $groupMember;
 
-            $groupMember->delete();
+        if($memberCount === 1){
 
             Group::query()
                 ->where('id', $groupId)
                 ->forceDelete();
 
 
-            return \response()->noContent();
+            return new GroupMemberResource($model);
         }
 
         if($memberCount !== 1  && $groupMember->type === GroupMemberTypes::SUPER_ADMIN){
-
-            $groupMember->delete();
 
             GroupMember::query()
                 ->where('group_id', $groupMember->group_id)
@@ -126,6 +125,6 @@ class GroupMemberController extends Controller
 
         $groupMember->delete();
 
-        return \response()->noContent();
+        return new GroupMemberResource($model);
     }
 }

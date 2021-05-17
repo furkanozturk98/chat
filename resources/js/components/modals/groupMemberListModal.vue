@@ -109,7 +109,6 @@ export default {
                 .then(value => {
                     if (value) {
 
-
                         this.$http.post('/api/group-member/add-friend/' + memberId)
                             .then((response) => {
 
@@ -124,7 +123,7 @@ export default {
 
                             })
                             .catch((error) => {
-                                if (error.response.status == 422){
+                                if (error.response.status === 422){
                                     this.$bvModal.msgBoxOk('You already sent a friendship request to this user', {
                                         title: 'Error',
                                         size: 'sm',
@@ -136,8 +135,6 @@ export default {
                                     })
                                 }
                             })
-
-
 
                     }
                 });
@@ -157,16 +154,31 @@ export default {
             })
                 .then(value => {
                     if (value) {
-                        this.$http.delete('/api/group-member/remove/' + memberId);
 
-                        this.$refs['group-member-list'].hide();
+                        this.$http.delete('/api/group-member/remove/' + memberId)
+                            .then((response) => {
 
-                        Vue.$toast.open({
-                            message: 'User is removed from the group',
-                            type: 'success',
-                            position: 'top-right',
-                            duration: 1000
-                        });
+                                console.log(response.data.data);
+
+                                this.$refs['group-member-list'].hide();
+
+                                this.$eventHub.$emit('groupMemberRemove', response.data.data);
+
+                                Vue.$toast.open({
+                                    message: 'User is removed from the group',
+                                    type: 'success',
+                                    position: 'top-right',
+                                    duration: 1000
+                                });
+                            })
+                            .catch((error) => {
+                                Vue.$toast.open({
+                                    message: 'An error occurred!',
+                                    type: 'error',
+                                    position: 'top-right',
+                                    duration: 600
+                                });
+                            })
 
                     }
                 });

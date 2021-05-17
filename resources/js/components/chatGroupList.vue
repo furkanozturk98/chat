@@ -18,31 +18,21 @@
 <script>
 export default {
     name: 'ChatGroupList',
-    props : ['nightMode'],
+    props : ['nightMode', 'items'],
 
     data (){
         return {
-            items : [],
+            //items : [],
             selectedGroupId: null,
             selectedItem: null
         }
     },
 
     mounted() {
-        this.fetch();
-
         this.$eventHub.$on('groupMessageReceived',this.groupMessageReceived);
-
-        this.$eventHub.$on('groupInviteApproved',this.groupInviteApproved);
-
     },
 
     methods: {
-        async fetch(){
-            const response = await this.$http.get('/api/get-groups');
-            this.items = response.data.data;
-        },
-
         async groupClick(item){
             this.$eventHub.$emit('groupClick',item);
 
@@ -66,9 +56,6 @@ export default {
             });
         },
 
-        groupInviteApproved(group){
-            this.items.push(group);
-        }
     }
 }
 </script>

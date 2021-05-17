@@ -49,7 +49,7 @@ body {
 }
 .search-box .input-wrapper {
     background: #fff;
-    border-radius: 10px;
+    border-radius: 2px;
 }
 .search-box .input-wrapper i {
     color: grey;
@@ -59,7 +59,7 @@ body {
 
 input {
     border: none;
-    border-radius: 10px;
+    border-radius: 4px;
     width: 80%;
 }
 input::placeholder {

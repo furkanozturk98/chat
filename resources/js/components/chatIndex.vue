@@ -62,7 +62,7 @@
         <div class="search-box" :class="{'search-box-dark': nightMode }">
           <div class="input-wrapper" :class="{'input-wrapper-dark': nightMode}">
             <i class="material-icons">search</i>
-            <input placeholder="Search here" type="text">
+            <input v-model="search" type="text" placeholder="Search here">
           </div>
         </div>
 
@@ -103,11 +103,11 @@
 
         <div id="myTabContent" class="tab-content">
           <div id="friend" class="tab-pane fade show active" role="tabpanel" aria-labelledby="friend-tab">
-            <chat-friend-list :night-mode="nightMode" />
+            <chat-friend-list :night-mode="nightMode" :items="filteredItems" />
           </div>
 
           <div id="group" class="tab-pane fade" role="tabpanel" aria-labelledby="group-tab">
-            <chat-group-list :night-mode="nightMode" />
+            <chat-group-list :night-mode="nightMode" :items="filteredItems" />
           </div>
         </div>
       </div>
@@ -203,7 +203,24 @@ export default {
             groupSelected: null,
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             rand: 1,
-            visibleSaveButton: false
+            visibleSaveButton: false,
+            search: '',
+            friends: [],
+            groups: []
+        }
+    },
+
+    computed: {
+        filteredItems() {
+            if(this.visibleSaveButton){
+                return this.groups
+                    .filter(item => item.name.toLowerCase().includes(this.search.toLocaleLowerCase()))
+                    .sort((a, b) => a['name'] > b['name'] ? 1 : -1);
+            }
+
+            return this.friends
+                .filter(item => item.friend.name.toLowerCase().includes(this.search.toLocaleLowerCase()))
+                .sort((a, b) => a['name'] > b['name'] ? 1 : -1);
         }
     },
 
@@ -220,6 +237,9 @@ export default {
                 console.log(e.message);
             });
 
+        this.getFriends();
+        this.getGroups();
+
         this.getFriendRequests();
 
         this.getGroupInvites();
@@ -230,6 +250,10 @@ export default {
         this.$eventHub.$on('profileImageUpdated', this.profileImageUpdated);
 
         this.$eventHub.$on('friendRequestSent', this.getFriendRequests);
+
+        this.$eventHub.$on('friendRequestApproved',this.friendRequestApproved);
+        this.$eventHub.$on('groupInviteApproved',this.groupInviteApproved);
+        this.$eventHub.$on('groupMemberRemove',this.groupMemberRemove);
 
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
 
@@ -242,6 +266,36 @@ export default {
             this.$refs['add-person'].hide();
 
             await this.getFriendRequests();
+        },
+
+        async getFriends(){
+            const response = await this.$http.get('/api/friend-list');
+            this.friends = response.data.data;
+        },
+
+        friendRequestApproved(friend){
+            this.friends.push(friend);
+        },
+
+        async getGroups(){
+            const response = await this.$http.get('/api/get-groups');
+            this.groups = response.data.data;
+        },
+
+        groupInviteApproved(group){
+            this.groups.push(group);
+        },
+
+        groupMemberRemove(groupMember){
+            for( let i = 0; i < this.groups.length; i++){
+
+                if ( groupMember.member.id === this.currentUser.id && this.groups[i].id === groupMember.group.id) {
+
+                    this.groups.splice(i, 1);
+                    i--;
+                }
+
+            }
         },
 
         resetModal() {

@@ -1,6 +1,6 @@
 <template>
   <div style="height: 700px;">
-    <div v-for="item in items" :key="item" @click="friendClick(item)">
+    <div v-for="item in items" :key="item.id" @click="friendClick(item)">
       <div class="friend-drawer friend-drawer--onhover" :class="{'friend-dark' : nightMode}">
         <img class="profile-image" :src="'images/'+item.friend.image" alt="">
         <div class="text" :class=" {'text-white' : nightMode}">
@@ -21,30 +21,21 @@
 <script>
     export default {
         name: 'ChatFriendList',
-        props : ['nightMode'],
+        props : ['nightMode', 'items'],
 
         data (){
             return {
-                items : [],
+                //items : [],
                 selectedFriendId: null,
                 selectedItem: null
             }
         },
 
         mounted() {
-            this.fetch();
-
             this.$eventHub.$on('messageReceived',this.messageReceived);
-
-            this.$eventHub.$on('friendRequestApproved',this.friendRequestApproved);
         },
 
         methods: {
-            async fetch(){
-                const response = await this.$http.get('/api/friend-list');
-                this.items = response.data.data;
-            },
-
             async friendClick(item){
                 this.$eventHub.$emit('friendClick',item);
 
@@ -68,9 +59,6 @@
                 });
             },
 
-            friendRequestApproved(friend){
-                this.items.push(friend);
-            }
         }
     }
 </script>
