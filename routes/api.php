@@ -37,6 +37,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('group-messages/{group}', [GroupMessageController::class,'index']);
     Route::post('group-message', [GroupMessageController::class,'store']);
+    Route::put('group-message/{groupMessage}', [GroupMessageController::class,'update']);
+    Route::delete('group-message/{groupMessage}', [GroupMessageController::class,'destroy']);
 
     Route::get('get-group-invites', [GroupInviteController::class,'index']);
     Route::post('group-invite/{group}', [GroupInviteController::class,'store']);

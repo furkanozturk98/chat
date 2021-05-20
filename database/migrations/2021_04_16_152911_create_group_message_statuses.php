@@ -15,9 +15,12 @@ class CreateGroupMessageStatuses extends Migration
     {
         Schema::create('group_message_statuses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('group_id')->constrained("groups");
-            $table->foreignId('member_id')->constrained("group_members");
-            $table->foreignId('message_id')->constrained("group_messages");
+            $table->foreignId('group_id')->constrained("groups")->onDelete('cascade');
+            ;
+            $table->foreignId('member_id')->constrained("group_members")->onDelete('cascade');
+            ;
+            $table->foreignId('message_id')->constrained("group_messages")->onDelete('cascade');
+            ;
             $table->unsignedTinyInteger('status')->nullable();
             $table->timestamps();
         });

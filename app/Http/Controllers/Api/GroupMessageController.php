@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Events\groupMessageSend;
 use App\Events\messageSend;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GroupMessageEditFormRequest;
+use App\Http\Requests\MessageEditFormRequest;
 use App\Http\Resources\GroupMessageResource;
 use App\Http\Resources\GroupResource;
 use App\MessageStatuses;
@@ -94,23 +96,25 @@ class GroupMessageController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param GroupMessage $groupMessage
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(GroupMessageEditFormRequest $request, GroupMessage $groupMessage)
     {
-        //
+        $groupMessage->update($request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param GroupMessage $groupMessage
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(GroupMessage $groupMessage)
     {
-        //
+        $groupMessage->forceDelete();
+
+        return response(200);
     }
 }

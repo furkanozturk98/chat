@@ -149,7 +149,7 @@
                       </div>
                     </div>-->
 
-        <edit-message-modal />
+        <edit-group-message-modal />
 
         <group-message-list
           :key="messageListKey"
@@ -176,7 +176,7 @@
 
 <script>
 import GroupMessageList from './groupMessageList';
-import EditMessageModal from './modals/editMessageModal';
+import EditGroupMessageModal from './modals/editGroupMessageModal';
 import Form from 'form-backend-validation';
 import AddGroupMemberModal from './modals/addGroupMemberModal';
 import GroupMemberListModal from './modals/groupMemberListModal';
@@ -186,7 +186,7 @@ export default {
     components: {
         AddGroupMemberModal,
         GroupMessageList,
-        EditMessageModal,
+        EditGroupMessageModal,
         GroupMemberListModal,
     },
     props: ['currentUser',],
