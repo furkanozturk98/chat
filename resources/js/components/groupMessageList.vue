@@ -26,6 +26,7 @@
                 role="button"
                 data-toggle="dropdown"
                 style=" cursor: pointer"
+
               >
                 <i class="bi bi-chevron-down" />
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu2">

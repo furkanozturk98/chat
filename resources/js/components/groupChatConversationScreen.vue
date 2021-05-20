@@ -164,8 +164,18 @@
       <div class="col-12">
         <div class="">
           <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
-            <i class="material-icons">sentiment_very_satisfied</i>
-            <input v-model="form.message" type="text" placeholder="Type your message here..." @keyup.enter="sendMessage">
+            <emoji-picker :data="data" @emoji:picked="handleEmojiPicked" />
+
+            <input
+              ref="input"
+              v-model="form.message"
+              type="text"
+              placeholder="Type your message here..."
+              class="message"
+              @keyup.enter="sendMessage"
+              @input="updateBody($event.target.value)"
+              @click="handleEditorClick"
+            >
             <a @click="sendMessage"><i class="material-icons">send</i></a>
           </div>
         </div>
@@ -180,6 +190,7 @@ import EditGroupMessageModal from './modals/editGroupMessageModal';
 import Form from 'form-backend-validation';
 import AddGroupMemberModal from './modals/addGroupMemberModal';
 import GroupMemberListModal from './modals/groupMemberListModal';
+import data from '@zaichaopan/emoji-picker/data/emojis.json';
 
 export default {
     name: 'GroupChatConversationScreen',
@@ -200,10 +211,12 @@ export default {
             messageListKey: 0,
             currentMember: null,
             form: new Form({
-                message: null,
+                message: '',
                 group_id: null,
                 member_id: null
             }),
+
+            data,
         }
     },
 
@@ -273,6 +286,22 @@ export default {
 
         showGroupMemberListModal(){
             this.$eventHub.$emit('showGroupMemberListModal',this.groupConversation);
+        },
+
+        updateBody(text) {
+            this.form.message = text;
+        },
+        handleEmojiPicked(emoji) {
+            this.form.message = `${
+                this.form.message
+            } ${emoji}`;
+            this.updateBody(this.form.message);
+        },
+        handleEditorClick() {
+            this.focusEditor();
+        },
+        focusEditor() {
+            this.$refs.input.focus();
         }
     }
 }

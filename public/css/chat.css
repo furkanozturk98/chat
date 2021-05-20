@@ -166,7 +166,7 @@ hr {
     bottom: 0;
     width: 75%;
 }
-.chat-box-tray input {
+.chat-box-tray .message {
     margin: 0 10px;
     padding: 6px 2px;
 }
@@ -218,7 +218,7 @@ hr {
 .chat-box-tray-dark{
     background: #121212;
 }
-.chat-box-tray-dark input{
+.chat-box-tray-dark .message{
     background: #383838;
     color:#ffffff;
 }

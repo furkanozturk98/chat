@@ -28,8 +28,8 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "@zaichaopan/emoji-picker": "^0.1.7",
         "bootstrap-vue": "^2.19.0",
-        "emoji-mart-vue-fast": "^10.0.1",
         "form-backend-validation": "^2.4.0",
         "vue-toast-notification": "^0.6.0"
     }

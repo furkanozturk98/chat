@@ -16,6 +16,9 @@ import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
 Vue.use(VueToast);
 
+import EmojiPicker from '@zaichaopan/emoji-picker';
+Vue.use(EmojiPicker);
+
 Vue.component('chat-index', require('./components/chatIndex.vue').default);
 
 window.eventHub = new Vue();
