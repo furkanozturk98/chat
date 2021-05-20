@@ -33,6 +33,14 @@ class ChatController extends Controller
             $friendUnread = $unReadIds->where('sender_id', $friend->friend_id)->first();
 
             $friend->unread = $friendUnread ? $friendUnread->messages_count : 0;
+
+            $lastMessage = Message::query()
+                ->whereIn('from',[$friend->friend_id, auth()->id()])
+                ->whereIn('to',[$friend->friend_id, auth()->id()])
+                ->latest()
+                ->first();
+
+            $friend->lastMessage = isset($lastMessage->created_at) ? $lastMessage->created_at : null;
         });
 
         return FriendResource::collection($friends);

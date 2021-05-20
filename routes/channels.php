@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\GroupMember;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -15,4 +16,14 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('messages.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
+});
+
+Broadcast::channel('groupMessages.{groupId}', function ($user, $groupId) {
+
+    $isMember = GroupMember::query()
+        ->where('member_id', $user->id)
+        ->where('group_id', $groupId)
+        ->get();
+
+    return isset($isMember);
 });

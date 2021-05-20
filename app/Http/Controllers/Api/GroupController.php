@@ -40,6 +40,13 @@ class GroupController extends Controller
                 ->count();
 
             $group->unread = $count;
+
+            $lastMessage = GroupMessage::query()
+                ->where('group_id',$group->id)
+                ->latest()
+                ->first();
+
+            $group->lastMessage = isset($lastMessage->created_at) ? $lastMessage->created_at : null;
         });
 
         return GroupResource::collection($groups);

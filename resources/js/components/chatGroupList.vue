@@ -9,7 +9,7 @@
         </div>
         <span v-if="item.unread && selectedGroupId !== item.id" class="badge badge-success unread" style="padding: 7px">{{ item.unread }}</span>
 
-        <span class="time text-muted small">13:21</span>
+        <span class="time text-muted small">{{ item.last_message }}</span>
       </div>
     </div>
   </div>
@@ -50,7 +50,7 @@ export default {
 
         groupMessageReceived(message){
             this.items.forEach(item => {
-                if(item.friend.id === message.from){
+                if(item.id === message.group_id){
                     item.unread += 1;
                 }
             });

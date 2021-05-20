@@ -20,8 +20,11 @@ class GroupMessageResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'sender' => $this->user,
-            'message' => $this->content
+            'sender' => $this->member->member,
+            'type' => $this->member->type,
+            'group' => $this->member->group,
+            'message' => $this->content,
+            'created_at' => $this->created_at->format('Y-m-d H:i')
         ];
     }
 }

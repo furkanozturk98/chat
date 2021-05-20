@@ -107,7 +107,7 @@
           </div>
 
           <div id="group" class="tab-pane fade" role="tabpanel" aria-labelledby="group-tab">
-            <chat-group-list :night-mode="nightMode" :items="filteredItems" />
+            <chat-group-list v-if="visibleSaveButton" :night-mode="nightMode" :items="filteredItems" />
           </div>
         </div>
       </div>
@@ -231,12 +231,6 @@ export default {
                 console.log(e.message);
             });
 
-        window.Echo.private(`group.messages.${this.currentUser.id}`)
-            .listen('messageSend', (e) => {
-                this.$eventHub.$emit('groupMessageReceived', e.message);
-                console.log(e.message);
-            });
-
         this.getFriends();
         this.getGroups();
 
@@ -278,8 +272,21 @@ export default {
         },
 
         async getGroups(){
-            const response = await this.$http.get('/api/get-groups');
+            const response = await this.$http.get('/api/get-groups')
             this.groups = response.data.data;
+
+            await this.listenGroups();
+        },
+
+        listenGroups(){
+
+            for (let i=0; i < this.groups.length; i++){
+                 window.Echo.private(`groupMessages.${this.groups[i].id}`)
+                .listen('groupMessageSend', (e) => {
+                    this.$eventHub.$emit('groupMessageReceived', e.message);
+                    console.log(e.message);
+                });
+            }
         },
 
         groupInviteApproved(group){

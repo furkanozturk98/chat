@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\groupMessageSend;
 use App\Events\messageSend;
 use App\Events\MyEvent;
 use App\Friend;
@@ -8,6 +9,7 @@ use App\Http\Controllers\FacebookLoginController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\TwitterLoginController;
+use App\Models\GroupMessage;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +48,17 @@ Route::get('/publish',function (){
         'status' => \App\MessageStatuses::UNREAD
     ]);
     broadcast(new messageSend($message));
+});
+
+Route::get('/groupMessage',function (){
+    /*event(new MyEvent('hello world'));*/
+
+    $message = GroupMessage::create([
+        'group_id' => 3,
+        'sender'   => 6,
+        'content' => 'aaaaaa',
+    ]);
+    broadcast(new groupMessageSend($message));
 });
 
 Route::get('/login/google', [GoogleLoginController::class, 'redirectToProvider'])->name('google-login-redirect');

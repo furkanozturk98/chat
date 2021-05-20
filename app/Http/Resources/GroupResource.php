@@ -22,7 +22,8 @@ class GroupResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'image' => $this->image,
-            'unread' => $this->unread
+            'unread' => $this->unread,
+            'last_message' => isset($this->lastMessage) ? $this->lastMessage->format('Y-m-d H:i') : null
         ];
     }
 }

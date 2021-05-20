@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessage whereSender($value)
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessage whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read User $user
+ * @property-read GroupMember $member
  */
 class GroupMessage extends Model
 {
@@ -37,8 +37,8 @@ class GroupMessage extends Model
         'content'
     ];
 
-    public function user(){
-        return $this->belongsTo(User::class, 'sender');
+    public function member(){
+        return $this->belongsTo(GroupMember::class, 'sender');
     }
 
 }

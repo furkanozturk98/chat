@@ -12,7 +12,7 @@
 
         <span v-if="item.unread && selectedFriendId !== item.friend.id" class="badge badge-success unread" style="padding: 7px">{{ item.unread }}</span>
 
-        <span class="time text-muted small">13:21</span> <!-- last message send  -->
+        <span class="time text-muted small">{{ item.last_message }}</span> <!-- last message send  -->
       </div>
     </div>
   </div>

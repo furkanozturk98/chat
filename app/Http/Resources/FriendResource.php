@@ -25,7 +25,8 @@ class FriendResource extends JsonResource
             'roomId' => $this->room_id,
             'status' => $this->status,
             'created_at' => $this->created_at,
-            'unread' => $this->unread
+            'unread' => $this->unread,
+            'last_message' => isset($this->lastMessage) ? $this->lastMessage->format('Y-m-d H:i') : null
         ];
     }
 }

@@ -2,43 +2,50 @@
   <div id="messageDisplay">
     <div v-for="item in items" :key="item.id" class="row no-gutters">
       <div
-        class="col-md-3"
-        :class="item.sender.id === currentUser.id ? 'offset-md-9':''"
+          class="col-md-3"
+          :class="item.sender.id === currentUser.id ? 'offset-md-9':''"
       >
         <div
-          class="chat-bubble"
-          :class="item.sender.id === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
+            class="chat-bubble"
+            :class="item.sender.id === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
         >
-          <div v-show="item.sender.id !== currentUser.id" class="chat-buble-name">
-            {{ item.sender.name }}
-          </div>
-          {{ item.message }}
-
-          <span v-if="item.sender.id === currentUser.id" style="float:right">
+          <div class="row">
+            <div class="col-9">
+              <div v-show="item.sender.id !== currentUser.id" class="chat-buble-name">
+                <b>{{ item.sender.name }}</b>
+              </div>
+              {{ item.message }}
+              <br>
+              <div style="font-size: 10px">
+                {{ item.created_at }}
+              </div>
+            </div>
+            <div v-if="item.sender.id === currentUser.id" style="float:right;margin-top:10px" class="col-3">
             <a
-              id="dropdownMenu3"
-              role="button"
-              data-toggle="dropdown"
-              style=" cursor: pointer"
+                id="dropdownMenu3"
+                role="button"
+                data-toggle="dropdown"
+                style=" cursor: pointer"
             >
               <i class="bi bi-chevron-down" />
               <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
                 <button
-                  class="dropdown-item edit-message"
-                  type="button"
-                  @click="showEditMessageModal(item)"
+                    class="dropdown-item edit-message"
+                    type="button"
+                    @click="showEditMessageModal(item)"
                 >Edit Message</button>
 
                 <button
-                  class="dropdown-item delete-message"
-                  type="button"
-                  @click="deleteMessage(item.id)"
+                    class="dropdown-item delete-message"
+                    type="button"
+                    @click="deleteMessage(item.id)"
                 >Delete
                   Message</button>
               </div>
             </a>
-          </span>
+          </div>
+          </div>
         </div>
       </div>
     </div>
@@ -47,58 +54,59 @@
 
 <script>
 export default {
-name: 'GroupMessageList',
-    props: ['items', 'currentUser', 'selectedGroup'],
+  name: 'GroupMessageList',
+  props: ['items', 'currentUser', 'selectedGroup'],
 
-    watch : {
-        items: {
-            handler (val, oldVal) {
-                let self = this;
-                setTimeout(()=> {
-                    self.scrollToBottom();
-                }, 1000);
+  watch: {
+    items: {
+      handler(val, oldVal) {
+        let self = this;
+        setTimeout(() => {
+          self.scrollToBottom();
+        }, 1000);
 
-            }
-        }
-    },
-
-    mounted(){
-        this.$eventHub.$on('messageEdited',this.groupMessageEdited);
-
-        this.$eventHub.$on('messageReceived',this.groupMessageReceived);
-    },
-
-    methods: {
-        scrollToBottom() {
-            let element = document.getElementById('messageDisplay');
-            element.scrollIntoView({ behavior: 'smooth', block: 'end' });
-        },
-
-        showEditMessageModal(item) {
-            this.$eventHub.$emit('showEditMessageModal', item);
-        },
-
-        groupMessageEdited(data) {
-            this.items.forEach(item => {
-                if (item.id === data.id) {
-                    item.message = data.message;
-                }
-            })
-        },
-
-        groupMessageReceived(message) {
-            if (this.selectedFriend && message.from === this.selectedFriend.id) {
-                this.items.push(message);
-            }
-        },
-
-        messageDeleted(id) {
-            this.items = this.items.filter(item => item.id !== id);
-        },
-
-        async deleteMessage(id) {
-
-        }
+      }
     }
+  },
+
+  mounted() {
+    this.$eventHub.$on('groupMessageEdited', this.groupMessageEdited);
+
+    this.$eventHub.$on('groupMessageReceived', this.groupMessageReceived);
+  },
+
+  methods: {
+    scrollToBottom() {
+      let element = document.getElementById('messageDisplay');
+      element.scrollIntoView({behavior: 'smooth', block: 'end'});
+    },
+
+    showEditMessageModal(item) {
+      this.$eventHub.$emit('showEditGroupMessageModal', item);
+    },
+
+    groupMessageEdited(data) {
+      this.items.forEach(item => {
+        if (item.id === data.id) {
+          item.message = data.message;
+        }
+      })
+    },
+
+    groupMessageReceived(message) {
+      console.log(this.message);
+      if (message.group.id === this.selectedGroup) {
+        this.items.push(message);
+      }
+    },
+
+    messageDeleted(id) {
+      this.items = this.items.filter(item => item.id !== id);
+    },
+
+    async deleteMessage(id) {
+
+    }
+  }
 }
 </script>

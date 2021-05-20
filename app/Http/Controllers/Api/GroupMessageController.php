@@ -45,11 +45,12 @@ class GroupMessageController extends Controller
      */
     public function store(Request $request)
     {
+
         /** @var GroupMessage $message */
         $message = GroupMessage::query()
             ->create([
                 'group_id' => $request->input('group_id'),
-                'sender' => auth()->id(),
+                'sender' => $request->input('member_id'),
                 'content' => $request->input('message'),
             ]);
 
@@ -67,7 +68,7 @@ class GroupMessageController extends Controller
                 'status' => MessageStatuses::UNREAD
             ];
         }
-
+//burda patlıyor
         GroupMessageStatus::query()
             ->insert($data);
 
