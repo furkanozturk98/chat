@@ -36,16 +36,15 @@ class GroupMemberController extends Controller
      */
     public function store(Request $request, GroupMember $groupMember)
     {
-
         $count = FriendRequest::query()
-            ->where('from',auth()->id())
+            ->where('from', auth()->id())
             ->where('to', $groupMember->member_id)
             ->count();
 
-        if($count > 0){
+        if ($count > 0) {
             return \response()->json([
                 'error' => 'Already a friendship request is sent to this user'
-            ],422);
+            ], 422);
         }
 
         $data = FriendRequest::query()->create([
@@ -77,13 +76,31 @@ class GroupMemberController extends Controller
      *
      * @param Request $request
      * @param GroupMember $groupMember
-     * @return Response
+     * @return GroupMemberResource
      */
     public function update(Request $request, GroupMember $groupMember)
     {
         $groupMember->update([
             'type' => GroupMemberTypes::ADMIN
         ]);
+
+        return new GroupMemberResource($groupMember);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param GroupMember $groupMember
+     * @return GroupMemberResource|Response
+     */
+    public function dismiss(Request $request, GroupMember $groupMember)
+    {
+        $groupMember->update([
+            'type' => GroupMemberTypes::USER
+        ]);
+
+        return new GroupMemberResource($groupMember);
     }
 
     /**
@@ -103,8 +120,7 @@ class GroupMemberController extends Controller
 
         $model = $groupMember;
 
-        if($memberCount === 1){
-
+        if ($memberCount === 1) {
             Group::query()
                 ->where('id', $groupId)
                 ->forceDelete();
@@ -113,8 +129,7 @@ class GroupMemberController extends Controller
             return new GroupMemberResource($model);
         }
 
-        if($memberCount !== 1  && $groupMember->type === GroupMemberTypes::SUPER_ADMIN){
-
+        if ($memberCount !== 1  && $groupMember->type === GroupMemberTypes::SUPER_ADMIN) {
             GroupMember::query()
                 ->where('group_id', $groupMember->group_id)
                 ->first()

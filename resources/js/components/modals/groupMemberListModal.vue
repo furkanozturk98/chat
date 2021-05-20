@@ -6,14 +6,14 @@
             size="lg"
             hide-footer
         >
-            <div v-for="member in members">
+            <div v-for="member in members" :key="member.id">
                 <div class="friend-drawer ">
                     <img
                         class="profile-image"
                         :src="'images/'+member.member.image"
                         alt=""
                     >
-                    <div class="text" style="width:60%">
+                    <div class="text" style="width:50%">
                         <h6>
                             {{ member.member.name }}
                         </h6>
@@ -22,13 +22,19 @@
                             {{ member.member.about }}
                         </p>
                     </div>
-                    <span class="ml-3">
+                    <span class="ml-5">
             <button
                 v-if="member.type === 0 && currentMember.type === 2 && (member.member.id !== currentMember.member.id)"
                 class="btn btn-outline-success"
                 @click="makeAdmin(member.id)"
             >Make Admin</button>
-            <button v-if="!isFriend(member.member.id)" class="btn btn-outline-success" @click="addFriend(member.id)"><b-icon
+            <button
+                v-if="member.type === 1 && currentMember.type === 2 && (member.member.id !== currentMember.member.id)"
+                class="btn btn-outline-danger"
+                @click="dismissAsAdmin(member.id)"
+            >Dismiss as admin</button>
+            <button v-if="!isFriend(member.member.id) && member.member.id !== currentMember.member.id"
+                    class="btn btn-outline-success" @click="addFriend(member.id)"><b-icon
                 icon="person-plus-fill"
             /></button>
             <button
@@ -80,16 +86,32 @@ export default {
             })
                 .then(value => {
                     if (value) {
-                        this.$http.put('/api/group-member/make-admin/' + memberId);
+                        this.$http.put('/api/group-member/make-admin/' + memberId)
+                            .then(() => {
+                                this.$refs['group-member-list'].hide();
 
-                        this.$refs['group-member-list'].hide();
+                                Vue.$toast.open({
+                                    message: 'This user is now an admin',
+                                    type: 'success',
+                                    position: 'top-right',
+                                    duration: 1000
+                                });
 
-                        Vue.$toast.open({
-                            message: 'This user is now an admin',
-                            type: 'success',
-                            position: 'top-right',
-                            duration: 1000
-                        });
+                                this.members.forEach(item => {
+                                    if (item.member.id === memberId) {
+                                        item.type = 1;
+                                    }
+                                })
+
+                            })
+                            .catch(() => {
+                                Vue.$toast.open({
+                                    message: 'An error occurred!',
+                                    type: 'success',
+                                    position: 'top-right',
+                                    duration: 1000
+                                });
+                            });
                     }
                 });
         },
@@ -123,7 +145,7 @@ export default {
 
                             })
                             .catch((error) => {
-                                if (error.response.status === 422){
+                                if (error.response.status === 422) {
                                     this.$bvModal.msgBoxOk('You already sent a friendship request to this user', {
                                         title: 'Error',
                                         size: 'sm',
@@ -185,9 +207,54 @@ export default {
 
         },
 
+        dismissAsAdmin(memberId) {
+            this.$bvModal.msgBoxConfirm('Please confirm that you want to dismiss as admin this user.', {
+                title: 'Please Confirm',
+                size: 'sm',
+                buttonSize: 'sm',
+                okVariant: 'danger',
+                okTitle: 'YES',
+                cancelTitle: 'NO',
+                footerClass: 'p-2',
+                hideHeaderClose: false,
+                centered: true
+            })
+                .then(value => {
+                        if (value) {
+
+                            this.$http.put('/api/group-member/dismiss-as-admin/' + memberId)
+
+                                .then(() => {
+                                    this.$refs['group-member-list'].hide();
+
+                                    Vue.$toast.open({
+                                        message: 'This user is now a normal user',
+                                        type: 'success',
+                                        position: 'top-right',
+                                        duration: 1000
+                                    });
+
+                                    this.members.forEach(item => {
+                                        if (item.member.id === memberId) {
+                                            item.type = 0;
+                                        }
+                                    })
+                                })
+                                .catch(() => {
+                                    Vue.$toast.open({
+                                        message: 'An error occurred!',
+                                        type: 'error',
+                                        position: 'top-right',
+                                    })
+                                });
+                        }
+                    }
+                );
+        },
+
         isFriend(memberId) {
             for (let i = 0; i < this.friends.length; i++) {
-                if (this.friends[i].id === memberId) {
+                if (this.friends[i].friend_id === memberId) {
                     return true;
                 }
             }
@@ -198,7 +265,6 @@ export default {
         async fetchFriends() {
             const response = await this.$http.get('/api/friend-list');
             this.friends = response.data.data;
-            console.log(this.friends)
         }
     }
 }

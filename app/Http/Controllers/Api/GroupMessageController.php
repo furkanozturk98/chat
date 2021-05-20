@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\groupMessageSend;
+use App\Events\messageSend;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GroupMessageResource;
 use App\Http\Resources\GroupResource;
@@ -68,9 +70,11 @@ class GroupMessageController extends Controller
                 'status' => MessageStatuses::UNREAD
             ];
         }
-//burda patlıyor
+
         GroupMessageStatus::query()
             ->insert($data);
+
+        broadcast(new groupMessageSend($message));
 
         return new GroupMessageResource($message);
 

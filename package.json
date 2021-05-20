@@ -29,7 +29,7 @@
     },
     "dependencies": {
         "bootstrap-vue": "^2.19.0",
-        "emoji-mart-vue": "^2.6.6",
+        "emoji-mart-vue-fast": "^10.0.1",
         "form-backend-validation": "^2.4.0",
         "vue-toast-notification": "^0.6.0"
     }

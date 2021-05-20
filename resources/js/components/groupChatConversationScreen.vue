@@ -158,17 +158,14 @@
           :selected-group="groupConversation.id"
         />
       </div>
-
-        <Picker set="twitter" />
     </div>
-
 
     <div class="row">
       <div class="col-12">
         <div class="">
           <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
             <i class="material-icons">sentiment_very_satisfied</i>
-              <input v-model="form.message" type="text" placeholder="Type your message here..." @keyup.enter="sendMessage">
+            <input v-model="form.message" type="text" placeholder="Type your message here..." @keyup.enter="sendMessage">
             <a @click="sendMessage"><i class="material-icons">send</i></a>
           </div>
         </div>
@@ -183,7 +180,6 @@ import EditMessageModal from './modals/editMessageModal';
 import Form from 'form-backend-validation';
 import AddGroupMemberModal from './modals/addGroupMemberModal';
 import GroupMemberListModal from './modals/groupMemberListModal';
-import { Picker } from 'emoji-mart-vue'
 
 export default {
     name: 'GroupChatConversationScreen',
@@ -192,7 +188,6 @@ export default {
         GroupMessageList,
         EditMessageModal,
         GroupMemberListModal,
-        Picker
     },
     props: ['currentUser',],
 
@@ -246,20 +241,8 @@ export default {
             this.form.group_id = this.groupConversation.id;
             this.form.member_id = this.currentMember.id;
 
-            const message = this.form.message;
+            await this.form.post('/api/group-message');
 
-            const response = await this.form.post('/api/group-message');
-
-            console.log(response.data.data);
-
-            const lastItem = this.items[this.items.length - 1]
-            const data = {
-                'id': lastItem.id + 1,
-                'sender':   this.currentMember.id,
-                message,
-            };
-
-            this.items.push(data);
         },
 
         groupClicked(groupConversation) {

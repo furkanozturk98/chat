@@ -23,14 +23,14 @@ class MessageController extends Controller
     public function index(string $roomId)
     {
         Message::query()
-            ->where('room_id',$roomId)
+            ->where('room_id', $roomId)
             ->where('to', auth()->id())
             ->update([
                 'status' => MessageStatuses::READ
             ]);
 
         $messages = Message::query()
-            ->where('room_id',$roomId)
+            ->where('room_id', $roomId)
             ->get();
 
         return MessageResource::collection($messages);
@@ -44,7 +44,7 @@ class MessageController extends Controller
      * @param User $user
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,string $roomId,User $user)
+    public function store(Request $request, string $roomId, User $user)
     {
         $message = Message::query()
             ->create([
@@ -91,10 +91,10 @@ class MessageController extends Controller
      */
     public function destroy(Message $message)
     {
-
         try {
             $message->delete();
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         return response(200);
     }

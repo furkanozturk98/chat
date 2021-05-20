@@ -2,12 +2,12 @@
   <div id="messageDisplay">
     <div v-for="item in items" :key="item.id" class="row no-gutters">
       <div
-          class="col-md-3"
-          :class="item.sender.id === currentUser.id ? 'offset-md-9':''"
+        class="col-md-3"
+        :class="item.sender.id === currentUser.id ? 'offset-md-9':''"
       >
         <div
-            class="chat-bubble"
-            :class="item.sender.id === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
+          class="chat-bubble"
+          :class="item.sender.id === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
         >
           <div class="row">
             <div class="col-9">
@@ -20,31 +20,31 @@
                 {{ item.created_at }}
               </div>
             </div>
-            <div v-if="item.sender.id === currentUser.id" style="float:right;margin-top:10px" class="col-3">
-            <a
+            <div v-if="item.sender.id === currentUser.id" style="float:right;margin-top:12%" class="col-3">
+              <a
                 id="dropdownMenu3"
                 role="button"
                 data-toggle="dropdown"
                 style=" cursor: pointer"
-            >
-              <i class="bi bi-chevron-down" />
-              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+              >
+                <i class="bi bi-chevron-down" />
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
-                <button
+                  <button
                     class="dropdown-item edit-message"
                     type="button"
                     @click="showEditMessageModal(item)"
-                >Edit Message</button>
+                  >Edit Message</button>
 
-                <button
+                  <button
                     class="dropdown-item delete-message"
                     type="button"
                     @click="deleteMessage(item.id)"
-                >Delete
-                  Message</button>
-              </div>
-            </a>
-          </div>
+                  >Delete
+                    Message</button>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -78,7 +78,7 @@ export default {
   methods: {
     scrollToBottom() {
       let element = document.getElementById('messageDisplay');
-      element.scrollIntoView({behavior: 'smooth', block: 'end'});
+      element.scrollIntoView({ behavior: 'smooth', block: 'end' });
     },
 
     showEditMessageModal(item) {
@@ -94,7 +94,7 @@ export default {
     },
 
     groupMessageReceived(message) {
-      console.log(this.message);
+      console.log(message);
       if (message.group.id === this.selectedGroup) {
         this.items.push(message);
       }
