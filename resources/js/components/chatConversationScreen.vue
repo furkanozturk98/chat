@@ -152,7 +152,17 @@
         <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
           <!--          <i class="material-icons">sentiment_very_satisfied</i>
                       -->
-          <emoji-picker :data="data" @emoji:picked="handleEmojiPicked" />
+          <emoji-picker :data="data" class="mb-1" @emoji:picked="handleEmojiPicked" />
+
+          <file-upload
+            ref="upload"
+            :post-action="'/api/message/send/'+conversation.roomId+'/to/'+conversation.friend.id"
+            :headers="{'Authorization': 'Bearer '+currentUser.api_token}"
+            style="cursor:pointer;"
+            @input-file="$refs.upload.active = true"
+          >
+            <b-icon icon="paperclip" scale="1.5" class="ml-2" style="color:#808080;" aria-hidden="true" />
+          </file-upload>
 
           <input
             ref="input"
@@ -164,7 +174,7 @@
             @input="updateBody($event.target.value)"
             @click="handleEditorClick"
           >
-          <a @click="sendMessage"><i class="material-icons">send</i></a>
+          <a style="cursor:pointer;" @click="sendMessage"><i class="material-icons">send</i></a>
         </div>
       </div>
     </div>
@@ -190,11 +200,11 @@ export default {
             nightMode: false,
             messageListKey: 0,
             form: new Form({
-                message: null,
+                message: '',
             }),
-
             data,
-            body: ''
+            token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+
         }
     },
 

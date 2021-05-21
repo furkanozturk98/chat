@@ -31,6 +31,7 @@
         "@zaichaopan/emoji-picker": "^0.1.7",
         "bootstrap-vue": "^2.19.0",
         "form-backend-validation": "^2.4.0",
-        "vue-toast-notification": "^0.6.0"
+        "vue-toast-notification": "^0.6.0",
+        "vue-upload-component": "^2.8.22"
     }
 }

@@ -18,7 +18,8 @@ class Messages extends Migration
             $table->unsignedBigInteger('from');
             $table->unsignedBigInteger('to');
             $table->string('room_id');
-            $table->text('message');
+            $table->text('message')->nullable();
+            $table->string('image')->nullable();
             $table->unsignedTinyInteger('status')->nullable();
             $table->timestamps();
 

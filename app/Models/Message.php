@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Message $to
  * @property string $room_id
  * @property string $message
+ * @property string $image
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Message newModelQuery()
@@ -39,14 +40,17 @@ class Message extends Model
         'to',
         'room_id',
         'message',
+        'image',
         'status'
     ];
 
-    public function from(){
+    public function from()
+    {
         return $this->belongsTo(Message::class, 'from');
     }
 
-    public function to(){
-        return $this->belongsTo(Message::class,'to');
+    public function to()
+    {
+        return $this->belongsTo(Message::class, 'to');
     }
 }

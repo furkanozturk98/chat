@@ -46,12 +46,19 @@ class MessageController extends Controller
      */
     public function store(Request $request, string $roomId, User $user)
     {
+        $filename = null;
+        if ($request->has('file')) {
+            $filename =  time() . '.' . $request->file('file')->getClientOriginalExtension();
+            $request->file('file')->move(public_path('chat'), $filename);
+        }
+
         $message = Message::query()
             ->create([
                 'from' => auth()->id(),
                 'to' => $user->id,
                 'room_id' => $roomId,
                 'message' => $request->input('message'),
+                'image' => $filename,
                 'status' => \App\MessageStatuses::UNREAD
             ]);
 

@@ -25,6 +25,7 @@ class MessageResource extends JsonResource
             'to' => $this->to,
             'roomId' => $this->room_id,
             'message' => $this->message,
+            'image' => $this->image
         ];
     }
 }
