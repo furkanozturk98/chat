@@ -25,7 +25,8 @@ class MessageResource extends JsonResource
             'to' => $this->to,
             'roomId' => $this->room_id,
             'message' => $this->message,
-            'image' => $this->image
+            'image' => $this->image,
+            'created_at' => $this->created_at->format('Y-m-d H:i')
         ];
     }
 }

@@ -47,15 +47,22 @@ class GroupMessageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return GroupMessageResource
      */
-    public function store(Request $request)
+    public function store(Request $request, Group $group, GroupMember $groupMember)
     {
+
+        $filename = null;
+        if ($request->has('file')) {
+            $filename =  time() . '.' . $request->file('file')->getClientOriginalExtension();
+            $request->file('file')->move(public_path('chat'), $filename);
+        }
 
         /** @var GroupMessage $message */
         $message = GroupMessage::query()
             ->create([
-                'group_id' => $request->input('group_id'),
-                'sender' => $request->input('member_id'),
+                'group_id' => $group->id,
+                'sender' => $groupMember->id,
                 'content' => $request->input('message'),
+                'image' => $filename,
             ]);
 
         $groupMembers = GroupMember::query()
@@ -79,7 +86,6 @@ class GroupMessageController extends Controller
         broadcast(new groupMessageSend($message));
 
         return new GroupMessageResource($message);
-
     }
 
     /**

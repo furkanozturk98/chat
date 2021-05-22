@@ -14,40 +14,50 @@
               <div v-show="item.sender.id !== currentUser.id" class="chat-buble-name">
                 <b>{{ item.sender.name }}</b>
               </div>
-              {{ item.message }}
-              <br>
+              <div v-if="item.message">
+                {{ item.message }}
+              </div>
+
+              <img :src="'chat/'+item.image" alt="" style="height:150px;width:auto;max-width:180px;padding: 5px">
+            </div>
+            <div class="col-3">
+              <span v-if="item.sender.id === currentUser.id" style="float:right;">
+                <a
+                  id="dropdownMenu3"
+                  role="button"
+                  data-toggle="dropdown"
+                  style=" cursor: pointer"
+                >
+                  <i class="bi bi-chevron-down" />
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+
+                    <button
+                      v-if="item.message"
+                      class="dropdown-item edit-message"
+                      type="button"
+                      @click="showEditMessageModal(item)"
+                    >Edit Message
+                    </button>
+
+                    <button
+                      class="dropdown-item delete-message"
+                      type="button"
+                      @click="deleteMessage(item.id)"
+                    >Delete
+                      Message
+                    </button>
+                  </div>
+                </a>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-9">
               <div style="font-size: 10px">
                 {{ item.created_at }}
               </div>
             </div>
-            <div v-if="item.sender.id === currentUser.id" style="float:right;margin-top:12%" class="col-3">
-              <a
-                id="dropdownMenu3"
-                role="button"
-                data-toggle="dropdown"
-                style=" cursor: pointer"
-
-              >
-                <i class="bi bi-chevron-down" />
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-
-                  <button
-                    class="dropdown-item edit-message"
-                    type="button"
-                    @click="showEditMessageModal(item)"
-                  >Edit Message
-                  </button>
-
-                  <button
-                    class="dropdown-item delete-message"
-                    type="button"
-                    @click="deleteMessage(item.id)"
-                  >Delete
-                    Message
-                  </button>
-                </div>
-              </a>
-            </div>
+            <div class="col-3" />
           </div>
         </div>
       </div>

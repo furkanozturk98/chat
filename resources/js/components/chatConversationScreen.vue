@@ -53,88 +53,7 @@
     </div>
 
     <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
-      <div class="overflow-auto" style="height:630px;">
-        <!--
-                    <div class="row no-gutters">
-                      <div class="col-md-3">
-                        <div class="chat-bubble chat-bubble&#45;&#45;left">
-                          <div class="chat-buble-name">
-                            Robo Cop
-                          </div> &lt;!&ndash; show only in groups &ndash;&gt;
-                          Hello dude!
-                          <span style="float:right">
-                            <a
-                              id="dropdownMenu2"
-                              role="button"
-                              data-toggle="dropdown"
-                              style=" cursor: pointer"
-                            >
-                              <i class="bi bi-chevron-down" />
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-
-                                <button
-                                  class="dropdown-item edit-message"
-                                  type="button"
-                                  data-toggle="modal"
-                                  data-target="#editMessage"
-                                >Edit Message</button>
-
-                                <button
-                                  class="dropdown-item delete-message"
-                                  type="button"
-                                  data-toggle="modal"
-                                  data-target="#deleteMessage"
-                                >Delete
-                                  Message</button>
-                              </div>
-                            </a>
-                          </span>
-                          <div class="chat-buble-time">
-                            15:52
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row no-gutters">
-                      <div class="col-md-3 offset-md-9">
-                        <div class="chat-bubble chat-bubble&#45;&#45;right">
-                          <div class="chat-buble-name">
-                            Robo Cop
-                          </div> &lt;!&ndash; show only in groups &ndash;&gt;
-                          Hello dude!
-                          <span style="float:right">
-                            <a
-                              id="dropdownMenu3"
-                              role="button"
-                              data-toggle="dropdown"
-                              style=" cursor: pointer"
-                            >
-                              <i class="bi bi-chevron-down" />
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-
-                                <button
-                                  class="dropdown-item edit-message"
-                                  type="button"
-                                  data-toggle="modal"
-                                  data-target="#editMessage"
-                                >Edit Message</button>
-
-                                <button
-                                  class="dropdown-item delete-message"
-                                  type="button"
-                                  data-toggle="modal"
-                                  data-target="#deleteMessage"
-                                >Delete
-                                  Message</button>
-                              </div>
-                            </a>
-                          </span>
-                          <div class="chat-buble-time">
-                            15:52
-                          </div>
-                        </div>
-                      </div>
-                    </div>-->
+      <div class="overflow-auto" style="height:620px;">
 
         <edit-message-modal />
 
@@ -150,8 +69,7 @@
     <div class="row">
       <div class="col-12">
         <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
-          <!--          <i class="material-icons">sentiment_very_satisfied</i>
-                      -->
+
           <emoji-picker :data="data" class="mb-1" @emoji:picked="handleEmojiPicked" />
 
           <file-upload
@@ -159,7 +77,7 @@
             :post-action="'/api/message/send/'+conversation.roomId+'/to/'+conversation.friend.id"
             :headers="{'Authorization': 'Bearer '+currentUser.api_token}"
             style="cursor:pointer;"
-            @input-file="$refs.upload.active = true"
+            @input-file="inputFile"
           >
             <b-icon icon="paperclip" scale="1.5" class="ml-2" style="color:#808080;" aria-hidden="true" />
           </file-upload>
@@ -217,25 +135,23 @@ export default {
 
     methods: {
 
+        inputFile(newFile, oldFile) {
+            this.$refs.upload.active = true;
+
+            if (newFile && oldFile && !newFile.active && oldFile.active) {
+                // Get response data
+                console.log('response', newFile.response.data)
+
+                this.items.push( newFile.response.data);
+            }
+        },
+
         async sendMessage() {
             if (this.form.message === null) {
                 return;
             }
-
-            const message = this.form.message;
-            await this.form.post('/api/message/send/' + this.conversation.roomId + '/to/' + this.conversation.friend.id);
-
-            const lastItem = this.items[this.items.length - 1];
-
-            const data = {
-                'id': lastItem ? lastItem.id + 1 : 1,
-                'from': this.currentUser.id,
-                'to': this.conversation.friend.id,
-                message,
-                'room_id': this.conversation.roomId,
-            };
-
-            this.items.push(data);
+            const response = await this.form.post('/api/message/send/' + this.conversation.roomId + '/to/' + this.conversation.friend.id);
+            this.items.push(response.data);
         },
 
         async fetch() {

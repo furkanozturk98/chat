@@ -42,7 +42,7 @@ class MessageController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param string $roomId
      * @param User $user
-     * @return \Illuminate\Http\Response
+     * @return MessageResource
      */
     public function store(Request $request, string $roomId, User $user)
     {
@@ -64,7 +64,7 @@ class MessageController extends Controller
 
         broadcast(new messageSend($message));
 
-        return response(200);
+        return new MessageResource($message);
     }
 
     /**

@@ -24,6 +24,7 @@ class GroupMessageResource extends JsonResource
             'type' => $this->member->type,
             'group' => $this->member->group,
             'message' => $this->content,
+            'image' => $this->image,
             'created_at' => $this->created_at->format('Y-m-d H:i')
         ];
     }

@@ -18,6 +18,7 @@ class GroupMessages extends Migration
             $table->foreignId('group_id')->constrained("groups");
             $table->foreignId('sender')->constrained("group_members");
             $table->string("content")->nullable();
+            $table->string("image")->nullable();
             $table->timestamps();
 
         });

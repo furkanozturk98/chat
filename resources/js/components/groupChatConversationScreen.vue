@@ -66,89 +66,7 @@
     </div>
 
     <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
-      <div class="overflow-auto" style="height:630px;">
-        <!--
-                    <div class="row no-gutters">
-                      <div class="col-md-3">
-                        <div class="chat-bubble chat-bubble&#45;&#45;left">
-                          <div class="chat-buble-name">
-                            Robo Cop
-                          </div> &lt;!&ndash; show only in groups &ndash;&gt;
-                          Hello dude!
-                          <span style="float:right">
-                            <a
-                              id="dropdownMenu2"
-                              role="button"
-                              data-toggle="dropdown"
-                              style=" cursor: pointer"
-                            >
-                              <i class="bi bi-chevron-down" />
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-
-                                <button
-                                  class="dropdown-item edit-message"
-                                  type="button"
-                                  data-toggle="modal"
-                                  data-target="#editMessage"
-                                >Edit Message</button>
-
-                                <button
-                                  class="dropdown-item delete-message"
-                                  type="button"
-                                  data-toggle="modal"
-                                  data-target="#deleteMessage"
-                                >Delete
-                                  Message</button>
-                              </div>
-                            </a>
-                          </span>
-                          <div class="chat-buble-time">
-                            15:52
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row no-gutters">
-                      <div class="col-md-3 offset-md-9">
-                        <div class="chat-bubble chat-bubble&#45;&#45;right">
-                          <div class="chat-buble-name">
-                            Robo Cop
-                          </div> &lt;!&ndash; show only in groups &ndash;&gt;
-                          Hello dude!
-                          <span style="float:right">
-                            <a
-                              id="dropdownMenu3"
-                              role="button"
-                              data-toggle="dropdown"
-                              style=" cursor: pointer"
-                            >
-                              <i class="bi bi-chevron-down" />
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-
-                                <button
-                                  class="dropdown-item edit-message"
-                                  type="button"
-                                  data-toggle="modal"
-                                  data-target="#editMessage"
-                                >Edit Message</button>
-
-                                <button
-                                  class="dropdown-item delete-message"
-                                  type="button"
-                                  data-toggle="modal"
-                                  data-target="#deleteMessage"
-                                >Delete
-                                  Message</button>
-                              </div>
-                            </a>
-                          </span>
-                          <div class="chat-buble-time">
-                            15:52
-                          </div>
-                        </div>
-                      </div>
-                    </div>-->
-
+      <div class="overflow-auto" style="height:620px;">
         <edit-group-message-modal />
 
         <group-message-list
@@ -164,7 +82,17 @@
       <div class="col-12">
         <div class="">
           <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
-            <emoji-picker :data="data" @emoji:picked="handleEmojiPicked" />
+            <emoji-picker :data="data" class="mb-1" @emoji:picked="handleEmojiPicked" />
+
+            <file-upload
+              ref="upload"
+              :post-action="'/api/group-message/group/'+groupConversation.id+'/member/'+currentMember.id"
+              :headers="{'Authorization': 'Bearer '+currentUser.api_token}"
+              style="cursor:pointer;"
+              @input-file="inputFile"
+            >
+              <b-icon icon="paperclip" scale="1.5" class="ml-2" style="color:#808080;" aria-hidden="true" />
+            </file-upload>
 
             <input
               ref="input"
@@ -227,6 +155,16 @@ export default {
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
     },
     methods: {
+
+        inputFile(newFile, oldFile) {
+            this.$refs.upload.active = true;
+
+            if (newFile && oldFile && !newFile.active && oldFile.active) {
+                // Get response data
+                console.log('response', newFile.response.data)
+            }
+        },
+
         async fetch() {
             const response = await this.$http.get('/api/group-messages/' + this.groupConversation.id);
             this.items = response.data.data;
@@ -254,7 +192,7 @@ export default {
             this.form.group_id = this.groupConversation.id;
             this.form.member_id = this.currentMember.id;
 
-            await this.form.post('/api/group-message');
+            await this.form.post('/api/group-message/group/'+this.groupConversation.id+'/member/'+this.currentMember.id);
 
         },
 

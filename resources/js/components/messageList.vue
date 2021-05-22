@@ -9,33 +9,51 @@
           class="chat-bubble"
           :class="item.from === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
         >
-          {{ item.message }}
-
-          <span v-if="item.from === currentUser.id" style="float:right">
-            <a
-              id="dropdownMenu3"
-              role="button"
-              data-toggle="dropdown"
-              style=" cursor: pointer"
-            >
-              <i class="bi bi-chevron-down" />
-              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-
-                <button
-                  class="dropdown-item edit-message"
-                  type="button"
-                  @click="showEditMessageModal(item)"
-                >Edit Message</button>
-
-                <button
-                  class="dropdown-item delete-message"
-                  type="button"
-                  @click="deleteMessage(item.id)"
-                >Delete
-                  Message</button>
+          <div class="row">
+            <div class="col-9">
+              <div v-if="item.message">
+                {{ item.message }}
               </div>
-            </a>
-          </span>
+
+              <img :src="'chat/'+item.image" alt="" style="height:150px;width:auto;max-width:180px;padding: 5px">
+            </div>
+            <div class="col-3">
+              <span v-if="item.from === currentUser.id" style="float:right">
+                <a
+                  id="dropdownMenu3"
+                  role="button"
+                  data-toggle="dropdown"
+                  style=" cursor: pointer"
+                >
+                  <i class="bi bi-chevron-down" />
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+
+                    <button
+                      v-if="item.message"
+                      class="dropdown-item edit-message"
+                      type="button"
+                      @click="showEditMessageModal(item)"
+                    >Edit Message</button>
+
+                    <button
+                      class="dropdown-item delete-message"
+                      type="button"
+                      @click="deleteMessage(item.id)"
+                    >Delete
+                      Message</button>
+                  </div>
+                </a>
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-9">
+              <div style="font-size: 10px">
+                {{ item.created_at }}
+              </div>
+            </div>
+            <div class="col-3" />
+          </div>
         </div>
       </div>
     </div>
@@ -51,7 +69,7 @@ export default {
         items: {
             handler (val, oldVal) {
                 let self = this;
-                setTimeout(function(){
+                setTimeout(()=> {
                     self.scrollToBottom();
                 }, 1000);
 
@@ -85,6 +103,7 @@ export default {
         },
 
         messageReceived(message){
+            console.log(message);
             if(this.selectedFriend && message.from === this.selectedFriend.id){
                 this.items.push(message);
             }

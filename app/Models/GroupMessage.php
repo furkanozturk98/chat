@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $group_id
  * @property int $sender
  * @property string|null $content
+ * @property string|null $image
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessage newModelQuery()
@@ -34,7 +35,8 @@ class GroupMessage extends Model
     protected $fillable = [
         'group_id',
         'sender',
-        'content'
+        'content',
+        'image'
     ];
 
     public function member(){

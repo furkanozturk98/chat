@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Http\Resources\MessageResource;
 use App\Models\Message;
 use App\User;
 use Illuminate\Broadcasting\Channel;
@@ -40,7 +41,7 @@ class messageSend implements ShouldBroadcast
 
     public function broadcastWith()
     {
-        return ['message' => $this->message];
+        return ['message' => new MessageResource($this->message)];
     }
 
 }
