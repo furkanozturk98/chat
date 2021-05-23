@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class messageSend implements ShouldBroadcast
+class messageEdited implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -33,12 +33,11 @@ class messageSend implements ShouldBroadcast
     public function broadcastOn()
     {
         //dd('messages.'.$this->message->to);
-        return new PrivateChannel('messages.'.$this->message->to);
+        return new PrivateChannel('messageEdited.'.$this->message->to);
     }
 
     public function broadcastWith()
     {
         return ['message' => new MessageResource($this->message)];
     }
-
 }

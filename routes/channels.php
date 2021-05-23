@@ -18,6 +18,14 @@ Broadcast::channel('messages.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
+Broadcast::channel('messageEdited.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});
+
+Broadcast::channel('messageDeleted.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});
+
 Broadcast::channel('groupMessages.{groupId}', function ($user, $groupId) {
 
     $isMember = GroupMember::query()

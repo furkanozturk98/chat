@@ -22,6 +22,7 @@ class Messages extends Migration
             $table->string('image')->nullable();
             $table->unsignedTinyInteger('status')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('from')->references('id')->on('users');
             $table->foreign('to')->references('id')->on('users');

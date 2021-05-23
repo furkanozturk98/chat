@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\Message
  *
  * @property int $id
- * @property Message $from
- * @property Message $to
+ * @property int $from
+ * @property int $to
  * @property string $room_id
  * @property string $message
  * @property string $image
@@ -32,7 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Message extends Model
 {
-    use HasFactory;
+    use HasFactory;//SoftDeletes
+
 
     protected $fillable = [
         'id',

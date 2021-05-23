@@ -15,7 +15,7 @@
                 {{ item.message }}
               </div>
 
-              <img :src="'chat/'+item.image" alt="" style="height:150px;width:auto;max-width:180px;padding: 5px">
+              <img v-if="item.image" :src="'chat/'+item.image" alt="" style="height:150px;width:auto;max-width:180px;padding: 5px">
             </div>
             <div class="col-3">
               <span v-if="item.from === currentUser.id" style="float:right">
@@ -52,7 +52,12 @@
                 {{ item.created_at }}
               </div>
             </div>
-            <div class="col-3" />
+            <div class="col-3">
+              <div v-if="item.from === currentUser.id">
+                <i v-if="item.status === 0" class="fas fa-check fa-x" />
+                <i v-if="item.status === 1" class="fas fa-check-double fa-x" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -81,6 +86,8 @@ export default {
         this.$eventHub.$on('messageEdited',this.messageEdited);
 
         this.$eventHub.$on('messageReceived',this.messageReceived);
+
+        this.$eventHub.$on('messageDeleted',this.messageDeleted);
     },
 
     methods: {

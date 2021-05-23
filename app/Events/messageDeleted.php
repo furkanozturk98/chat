@@ -4,25 +4,33 @@ namespace App\Events;
 
 use App\Http\Resources\MessageResource;
 use App\Models\Message;
+use App\User;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class messageSend implements ShouldBroadcast
+class messageDeleted implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public Message $message;
+    public int $id;
+    public int $userId;
 
     /**
      * Create a new event instance.
+     * @param int $id
      *
+     * @param User $user
      */
-    public function __construct(Message $message)
+    public function __construct(int $id, int $userId)
     {
-        $this->message = $message;
+        $this->id = $id;
+
+        $this->userId = $userId;
     }
 
     /**
@@ -33,12 +41,11 @@ class messageSend implements ShouldBroadcast
     public function broadcastOn()
     {
         //dd('messages.'.$this->message->to);
-        return new PrivateChannel('messages.'.$this->message->to);
+        return new PrivateChannel('messageDeleted.'.$this->userId);
     }
 
     public function broadcastWith()
     {
-        return ['message' => new MessageResource($this->message)];
+        return ['id' => $this->id];
     }
-
 }

@@ -231,6 +231,18 @@ export default {
                 console.log(e.message);
             });
 
+        window.Echo.private(`messageEdited.${this.currentUser.id}`)
+            .listen('messageEdited', (e) => {
+                this.$eventHub.$emit('messageEdited', e.message);
+                console.log(e.message);
+            });
+
+        window.Echo.private(`messageDeleted.${this.currentUser.id}`)
+            .listen('messageDeleted', (e) => {
+                this.$eventHub.$emit('messageDeleted', e.id);
+                console.log(e.id);
+            });
+
         this.getFriends();
         this.getGroups();
 

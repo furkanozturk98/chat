@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\messageDeleted;
+use App\Events\messageEdited;
 use App\Events\messageSend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MessageEditFormRequest;
@@ -88,6 +90,8 @@ class MessageController extends Controller
     public function update(MessageEditFormRequest $request, Message $message)
     {
         $message->update($request->validated());
+
+        broadcast(new messageEdited($message));
     }
 
     /**
@@ -98,8 +102,13 @@ class MessageController extends Controller
      */
     public function destroy(Message $message)
     {
+        $id = $message->id;
+        $userId = $message->to;
+
         try {
             $message->delete();
+
+            broadcast(new MessageDeleted($id, $userId));
         } catch (\Exception $e) {
         }
 
