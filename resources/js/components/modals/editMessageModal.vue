@@ -56,11 +56,11 @@ export default {
         async submit() {
             const data = {
                 'id' : this.data.id,
-                'message' : this.form.message
+                'message' : this.form.message,
             }
 
             await this.form.put('/api/message/update/' + this.data.id)
-                .then(() => {
+                .then((response) => {
 
                     Vue.$toast.open({
                         message: 'Message is edited successfully',

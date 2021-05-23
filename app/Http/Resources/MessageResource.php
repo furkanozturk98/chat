@@ -27,7 +27,9 @@ class MessageResource extends JsonResource
             'message' => $this->message,
             'image' => $this->image,
             'status' => $this->status,
-            'created_at' => $this->created_at->format('Y-m-d H:i')
+            'created_at' => now()->format('Y-m-d H:i'),
+            'updated_at' => isset($this->updated_at) ? $this->updated_at->format('Y-m-d H:i'): null,
+            'deleted_at' => isset($this->deleted_at) ? $this->deleted_at->format('Y-m-d H:i') : null
         ];
     }
 }

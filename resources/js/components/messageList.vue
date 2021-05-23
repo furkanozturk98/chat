@@ -11,14 +11,17 @@
         >
           <div class="row">
             <div class="col-9">
-              <div v-if="item.message">
-                {{ item.message }}
+              <div v-if="item.deleted_at">
+                <i>This message has been deleted</i>
               </div>
+              <div v-else>
+                {{ item.message }}
 
-              <img v-if="item.image" :src="'chat/'+item.image" alt="" style="height:150px;width:auto;max-width:180px;padding: 5px">
+                <img v-if="item.image" :src="'chat/'+item.image" alt="" style="height:150px;width:auto;max-width:180px;padding: 5px">
+              </div>
             </div>
             <div class="col-3">
-              <span v-if="item.from === currentUser.id" style="float:right">
+              <span v-if="item.from === currentUser.id && !item.deleted_at" style="float:right">
                 <a
                   id="dropdownMenu3"
                   role="button"
@@ -49,11 +52,11 @@
           <div class="row">
             <div class="col-9">
               <div style="font-size: 10px">
-                {{ item.created_at }}
+                {{ item.deleted_at === null && item.updated_at ? item.created_at + '(edited)' : item.created_at }}
               </div>
             </div>
             <div class="col-3">
-              <div v-if="item.from === currentUser.id">
+              <div v-if="item.from === currentUser.id && item.deleted_at === null">
                 <i v-if="item.status === 0" class="fas fa-check fa-x" />
                 <i v-if="item.status === 1" class="fas fa-check-double fa-x" />
               </div>
@@ -88,6 +91,9 @@ export default {
         this.$eventHub.$on('messageReceived',this.messageReceived);
 
         this.$eventHub.$on('messageDeleted',this.messageDeleted);
+
+        this.$eventHub.$on('messageSeen', this.messageSeen);
+
     },
 
     methods: {
@@ -105,19 +111,34 @@ export default {
             this.items.forEach(item => {
                 if(item.id === data.id){
                    item.message = data.message;
+                   item.updated_at = 'sss';
                 }
             })
         },
 
         messageReceived(message){
-            console.log(message);
+            console.log(this.selectedFriend);
             if(this.selectedFriend && message.from === this.selectedFriend.id){
                 this.items.push(message);
+                this.$http.put('/api/message/receive/'+ message.id);
             }
         },
 
         messageDeleted(id){
-            this.items = this.items.filter(item => item.id !== id);
+            //this.items = this.items.filter(item => item.id !== id);
+            this.items.forEach(item => {
+                if(item.id === id){
+                    item.deleted_at = '1234';
+                }
+            })
+        },
+
+        messageSeen(data){
+            this.items.forEach(item => {
+                if(data.includes(item.id )){
+                    item.status = 1;
+                }
+            })
         },
 
         async deleteMessage(id) {

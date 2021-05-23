@@ -60,5 +60,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('message/{roomId}', [MessageController::class,'index']);
     Route::post('message/send/{roomId}/to/{user}', [MessageController::class,'store']);
     Route::put('message/update/{message}', [MessageController::class,'update']);
+    Route::put('message/receive/{message}', [MessageController::class,'receive']);
     Route::delete('message/delete/{message}', [MessageController::class,'destroy']);
 });

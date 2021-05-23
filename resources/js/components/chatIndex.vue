@@ -243,6 +243,13 @@ export default {
                 console.log(e.id);
             });
 
+        window.Echo.private(`messageSeen.${this.currentUser.id}`)
+            .listen('messageSeen', (e) => {
+                console.log('messageSeen');
+                this.$eventHub.$emit('messageSeen', e.messageIds);
+                console.log(e.messageIds);
+            });
+
         this.getFriends();
         this.getGroups();
 

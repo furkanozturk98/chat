@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $image
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|Message newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message query()
@@ -33,8 +34,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Message extends Model
 {
-    use HasFactory;//SoftDeletes
+    use HasFactory ,SoftDeletes;
 
+    public $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -43,7 +45,14 @@ class Message extends Model
         'room_id',
         'message',
         'image',
-        'status'
+        'status',
+        'created_at',
+        'updated_at'
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d',
+        'updated_at' => 'datetime:Y-m-d',
     ];
 
     public function from()
