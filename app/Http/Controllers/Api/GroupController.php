@@ -32,17 +32,17 @@ class GroupController extends Controller
             ->whereIn('id', $groupIds)
             ->get();
 
-        $groups->map(function($group) {
+        $groups->map(function ($group) {
             $count = GroupMessageStatus::query()
-                ->where('group_id',auth()->id())
-                ->where('member_id',auth()->id())
+                ->where('group_id', $group->id)
+                ->where('member_id', auth()->id())
                 ->where('status', MessageStatuses::UNREAD)
                 ->count();
 
             $group->unread = $count;
 
             $lastMessage = GroupMessage::query()
-                ->where('group_id',$group->id)
+                ->where('group_id', $group->id)
                 ->latest()
                 ->first();
 

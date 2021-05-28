@@ -5,6 +5,7 @@ namespace App\Models;
 use App\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\GroupMessage
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $image
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessage query()
@@ -30,17 +32,19 @@ use Illuminate\Database\Eloquent\Model;
  */
 class GroupMessage extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'group_id',
         'sender',
         'content',
-        'image'
+        'image',
+        'created_at',
+        'updated_at'
     ];
 
-    public function member(){
+    public function member()
+    {
         return $this->belongsTo(GroupMember::class, 'sender');
     }
-
 }

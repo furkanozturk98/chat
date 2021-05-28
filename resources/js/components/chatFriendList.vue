@@ -1,18 +1,25 @@
 <template>
   <div style="height: 700px;">
-    <div v-for="item in items" :key="item.id" @click="friendClick(item)">
-      <div class="friend-drawer friend-drawer--onhover" :class="{'friend-dark' : nightMode}">
-        <img class="profile-image" :src="'images/'+item.friend.image" alt="">
-        <div class="text" :class=" {'text-white' : nightMode}">
-          <h6>{{ item.friend.name }}</h6>
-          <p :class="{'text-muted' :!nightMode, 'text-light' :nightMode,}">
-            {{ item.friend.about }}
-          </p>
+    <div v-if="items.length > 0">
+      <div v-for="item in items" :key="item.id" @click="friendClick(item)">
+        <div class="friend-drawer friend-drawer--onhover" :class="{'friend-dark' : nightMode}">
+          <img class="profile-image" :src="'images/'+item.friend.image" alt="">
+          <div class="text" :class=" {'text-white' : nightMode}">
+            <h6>{{ item.friend.name }}</h6>
+            <p :class="{'text-muted' :!nightMode, 'text-light' :nightMode,}">
+              {{ item.friend.about }}
+            </p>
+          </div>
+
+          <span v-if="item.unread && selectedFriendId !== item.friend.id" class="badge badge-success unread" style="padding: 7px">{{ item.unread }}</span>
+
+          <span class="time text-muted small">{{ item.last_message }}</span> <!-- last message send  -->
         </div>
-
-        <span v-if="item.unread && selectedFriendId !== item.friend.id" class="badge badge-success unread" style="padding: 7px">{{ item.unread }}</span>
-
-        <span class="time text-muted small">{{ item.last_message }}</span> <!-- last message send  -->
+      </div>
+    </div>
+    <div v-else>
+      <div class="alert alert-info mt-1" role="alert">
+        You have no friends
       </div>
     </div>
   </div>
@@ -25,7 +32,6 @@
 
         data (){
             return {
-                //items : [],
                 selectedFriendId: null,
                 selectedItem: null
             }

@@ -8,6 +8,8 @@ axios.defaults.headers.common['Authorization'] = 'Bearer ' + window.api_token;
 
 Vue.prototype.$http = axios;
 
+window.devtools = require('devtools-detect');
+
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)

@@ -26,8 +26,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read GroupMessage message
  */
 class GroupMessageStatus extends Model
 {
     use HasFactory;
+
+    public function message()
+    {
+        return $this->belongsTo(GroupMessage::class, '$message_id');
+    }
 }

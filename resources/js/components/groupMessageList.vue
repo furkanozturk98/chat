@@ -11,17 +11,17 @@
         >
           <div class="row">
             <div class="col-9">
-              <div v-show="item.sender.id !== currentUser.id" class="chat-buble-name">
-                <b>{{ item.sender.name }}</b>
+              <div v-if="item.deleted_at">
+                <i>This message has been deleted</i>
               </div>
-              <div v-if="item.message">
+              <div v-else>
                 {{ item.message }}
-              </div>
 
-              <img :src="'chat/'+item.image" alt="" style="height:150px;width:auto;max-width:180px;padding: 5px">
+                <img v-if="item.image" :src="'chat/'+item.image" alt="" style="height:150px;width:auto;max-width:180px;padding: 5px">
+              </div>
             </div>
             <div class="col-3">
-              <span v-if="item.sender.id === currentUser.id" style="float:right;">
+              <span v-if="item.sender.id === currentUser.id && !item.deleted_at" style="float:right;">
                 <a
                   id="dropdownMenu3"
                   role="button"
@@ -54,7 +54,7 @@
           <div class="row">
             <div class="col-9">
               <div style="font-size: 10px">
-                {{ item.created_at }}
+                {{ item.deleted_at === null && item.updated_at ? item.created_at + '(edited)' : item.created_at }}
               </div>
             </div>
             <div class="col-3" />
@@ -85,13 +85,17 @@ export default {
     mounted() {
         this.$eventHub.$on('groupMessageEdited', this.groupMessageEdited);
 
+        this.$eventHub.$on('groupMessageDeleted', this.groupMessageDeleted);
+
         this.$eventHub.$on('groupMessageReceived', this.groupMessageReceived);
     },
 
     methods: {
         scrollToBottom() {
-            let element = document.getElementById('messageDisplay');
-            element.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            if(!window.devtools.isOpen) {
+                let element = document.getElementById('messageDisplay');
+                element.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
         },
 
         showEditMessageModal(item) {
@@ -112,8 +116,19 @@ export default {
             }
         },
 
-        messageDeleted(id) {
+        /*messageDeleted(id) {
             this.items = this.items.filter(item => item.id !== id);
+        },*/
+
+        groupMessageDeleted(id){
+            console.log('groupMessageDeleted')
+            console.log(id);
+            this.items.forEach(item => {
+                if(item.id === id){
+                    item.deleted_at = '1234';
+                    console.log('match');
+                }
+            })
         },
 
         deleteMessage(id) {
@@ -139,7 +154,7 @@ export default {
                                     duration: 1000
                                 });
 
-                                this.messageDeleted(id);
+                                this.groupMessageDeleted(id);
                             })
                             .catch(() => {
                                 Vue.$toast.open({

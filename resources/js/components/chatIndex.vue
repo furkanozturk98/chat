@@ -300,11 +300,19 @@ export default {
         listenGroups(){
 
             for (let i=0; i < this.groups.length; i++){
+                console.log(`groupMessages.${this.groups[i].id}`);
                  window.Echo.private(`groupMessages.${this.groups[i].id}`)
                 .listen('groupMessageSend', (e) => {
                     this.$eventHub.$emit('groupMessageReceived', e.message);
-                    console.log(e.message);
-                });
+                }).listen('groupMessageEdited', (e) => {
+                     this.$eventHub.$emit('groupMessageEdited', e.message);
+                }).listen('groupMessageDeleted', (e) => {
+                     this.$eventHub.$emit('groupMessageDeleted', e.id);
+                 }).listen('groupMessageSeen', (e) => {
+                     this.$eventHub.$emit('groupMessageSeen', e.message);
+                     console.log(e.message);
+                 });
+
             }
         },
 

@@ -85,6 +85,12 @@ export default {
         }
     },
 
+    data(){
+      return{
+          consoleOpened: false
+        }
+    },
+
     mounted(){
         this.$eventHub.$on('messageEdited',this.messageEdited);
 
@@ -99,8 +105,10 @@ export default {
     methods: {
 
         scrollToBottom() {
-            let element = document.getElementById('messageDisplay');
-            element.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            if(!window.devtools.isOpen){
+                let element = document.getElementById('messageDisplay');
+                element.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
         },
 
         showEditMessageModal(item) {

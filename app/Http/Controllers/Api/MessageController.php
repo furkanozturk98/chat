@@ -42,7 +42,7 @@ class MessageController extends Controller
         $messages = Message::query()
             ->where('room_id', $roomId)
             ->where('to', auth()->id())
-            ->where('status', 0)
+            ->where('status', MessageStatuses::UNREAD)
             ->get();
 
         if ($messages->isEmpty()) {
