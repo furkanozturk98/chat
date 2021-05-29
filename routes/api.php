@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\GroupInviteController;
 use App\Http\Controllers\Api\GroupMemberController;
 use App\Http\Controllers\Api\GroupMessageController;
+use App\Http\Controllers\Api\GroupMessageInfoController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ProfileSettingController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('group-message/group/{group}/member/{groupMember}', [GroupMessageController::class,'store']);
     Route::put('group-message/{groupMessage}', [GroupMessageController::class,'update']);
     Route::delete('group-message/{groupMessage}', [GroupMessageController::class,'destroy']);
+    Route::put('group-message/receive/{groupMessage}', [GroupMessageController::class,'receive']);
 
     Route::get('get-group-invites', [GroupInviteController::class,'index']);
     Route::post('group-invite/{group}', [GroupInviteController::class,'store']);
@@ -62,4 +64,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('message/update/{message}', [MessageController::class,'update']);
     Route::put('message/receive/{message}', [MessageController::class,'receive']);
     Route::delete('message/delete/{message}', [MessageController::class,'destroy']);
+
+    Route::get('group-message-info/group/{group}/message/{groupMessage}', [GroupMessageInfoController::class,'index']);
+
 });

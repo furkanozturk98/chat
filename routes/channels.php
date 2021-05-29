@@ -39,3 +39,13 @@ Broadcast::channel('groupMessages.{groupId}', function ($user, $groupId) {
 
     return isset($isMember);
 });
+
+Broadcast::channel('groupMessageSeen.{groupId}.{userId}', function ($user, $groupId) {
+
+    $isMember = GroupMember::query()
+        ->where('member_id', $user->id)
+        ->where('group_id', $groupId)
+        ->get();
+
+    return isset($isMember);
+});

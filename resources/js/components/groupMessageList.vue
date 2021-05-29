@@ -1,5 +1,6 @@
 <template>
   <div id="messageDisplay">
+    <group-message-info-modal :current-user="currentUser" />
     <div v-for="item in items" :key="item.id" class="row no-gutters">
       <div
         class="col-md-3"
@@ -46,6 +47,13 @@
                     >Delete
                       Message
                     </button>
+
+                    <button
+                      class="dropdown-item delete-message"
+                      type="button"
+                      @click="showMessageInfoModal(item.id)"
+                    >Message Info
+                    </button>
                   </div>
                 </a>
               </span>
@@ -66,8 +74,14 @@
 </template>
 
 <script>
+import GroupMessageInfoModal from './modals/groupMessageInfoModal';
 export default {
     name: 'GroupMessageList',
+
+    components : {
+        GroupMessageInfoModal
+    },
+
     props: ['items', 'currentUser', 'selectedGroup'],
 
     watch: {
@@ -88,6 +102,7 @@ export default {
         this.$eventHub.$on('groupMessageDeleted', this.groupMessageDeleted);
 
         this.$eventHub.$on('groupMessageReceived', this.groupMessageReceived);
+
     },
 
     methods: {
@@ -102,10 +117,15 @@ export default {
             this.$eventHub.$emit('showEditGroupMessageModal', item);
         },
 
+        showMessageInfoModal(messageId){
+            this.$eventHub.$emit('showGroupMessageInfoModal',this.selectedGroup,messageId);
+        },
+
         groupMessageEdited(data) {
             this.items.forEach(item => {
                 if (item.id === data.id) {
                     item.message = data.message;
+                    item.updated_at = '123';
                 }
             })
         },
@@ -113,12 +133,9 @@ export default {
         groupMessageReceived(message) {
             if (message.group.id === this.selectedGroup) {
                 this.items.push(message);
+                this.$http.put('/api/group-message/receive/'+ message.id);
             }
         },
-
-        /*messageDeleted(id) {
-            this.items = this.items.filter(item => item.id !== id);
-        },*/
 
         groupMessageDeleted(id){
             console.log('groupMessageDeleted')

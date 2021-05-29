@@ -17,18 +17,23 @@ class groupMessageSeen implements ShouldBroadcast
 
     public Collection $messageIds;
     public int $groupId;
-    public int $memberId;
+    public int $senderId;
+    public int $messageId;
+    public int $receiverId;
 
     /**
      * Create a new event instance.
      * @param int $groupId
-     * @param int $memberId
-     * @param Collection $messageIds
+     * @param int $senderId
+     * @param int $messageId
+     * @param int $receiverId
      */
-    public function __construct(int $groupId, int $memberId, Collection $messageIds)
+    public function __construct(int $groupId, int $senderId, int $messageId, int $receiverId)
     {
         $this->groupId = $groupId;
-        $this->memberId = $memberId;
+        $this->senderId = $senderId;
+        $this->messageId = $messageId;
+        $this->receiverId = $receiverId;
     }
 
     /**
@@ -38,11 +43,15 @@ class groupMessageSeen implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('groupMessageSeen.'.$this->groupId.$this->memberId);
+        return new PrivateChannel('groupMessageSeen.'.$this->groupId.'.'.$this->senderId);
     }
 
     public function broadcastWith()
     {
-        return ['messageIds' => $this->messageIds->toArray()];
+        return [
+            'groupId' => $this->groupId,
+            'messageId' => $this->messageId,
+            'receiverId' => $this->receiverId
+        ];
     }
 }

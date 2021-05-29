@@ -19,8 +19,10 @@ class GroupMessages extends Migration
             $table->foreignId('sender')->constrained("group_members");
             $table->string("content")->nullable();
             $table->string("image")->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->nullable();
 
+            $table->softDeletes();
         });
     }
 

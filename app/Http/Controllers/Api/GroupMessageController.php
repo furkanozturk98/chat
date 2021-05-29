@@ -29,7 +29,7 @@ class GroupMessageController extends Controller
      */
     public function index(Group $group)
     {
-        //$this->updateMessagesAsRead($group);
+        $this->updateMessagesAsRead($group);
 
         /*GroupMessageStatus::query()
             ->where('group_id', $group->id)
@@ -41,8 +41,6 @@ class GroupMessageController extends Controller
         $messages = GroupMessage::withTrashed()
             ->where('group_id', $group->id)
             ->get();
-
-        //broadcast(new groupMessageSeen($group->id, auth()->id(), ));
 
         return GroupMessageResource::collection($messages);
     }
@@ -70,20 +68,20 @@ class GroupMessageController extends Controller
                 ->where('message_id', $message->id)
                 ->where('member_id', auth()->id());*/
 
-               /* \DB::table('group_message_statuses')
-                    ->join('group_messages', 'group_message_statuses.message_id', '=', 'group_messages.id')
-                    ->where('group_messages.sender', $message->message->sender)
-                    ->where('group_message_statuses.member_id', auth()->id())
-                    ->where('status', MessageStatuses::UNREAD)
-                    ->select('group_messages.id')
-                    ->get();*/
+            /* \DB::table('group_message_statuses')
+                 ->join('group_messages', 'group_message_statuses.message_id', '=', 'group_messages.id')
+                 ->where('group_messages.sender', $message->message->sender)
+                 ->where('group_message_statuses.member_id', auth()->id())
+                 ->where('status', MessageStatuses::UNREAD)
+                 ->select('group_messages.id')
+                 ->get();*/
 
 
             $message->update([
                 'status' => MessageStatuses::READ,
             ]);
 
-            broadcast(new groupMessageSeen($group->id, $message->message->sender, $message->id));
+            broadcast(new groupMessageSeen($group->id, $message->message->sender, $message->message->id, auth()->id()));
         }
     }
 
@@ -108,6 +106,7 @@ class GroupMessageController extends Controller
                 'sender' => $groupMember->id,
                 'content' => $request->input('message'),
                 'image' => $filename,
+                'created_at'
             ]);
 
         $groupMembers = GroupMember::query()
@@ -153,7 +152,11 @@ class GroupMessageController extends Controller
      */
     public function update(GroupMessageEditFormRequest $request, GroupMessage $groupMessage)
     {
-        $groupMessage->update($request->validated());
+        $attributes = $request->validated();
+
+        $attributes['updated_at'] = now();
+
+        $groupMessage->update($attributes);
 
         broadcast(new groupMessageEdited($groupMessage));
     }
@@ -174,7 +177,7 @@ class GroupMessageController extends Controller
                 'status' => MessageStatuses::READ
             ]);
 
-        broadcast(new groupMessageSeen($groupMessage->group_id, auth()->id(), collect($groupMessage->id)));
+        broadcast(new groupMessageSeen($groupMessage->group_id, $groupMessage->sender, $groupMessage->id, auth()->id()));
     }
 
     /**
