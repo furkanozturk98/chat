@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\api\FriendController;
 use App\Http\Controllers\Api\FriendRequestController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\GroupInviteController;
@@ -31,6 +32,9 @@ Route::middleware('auth:api')->group(function () {
     Route::put('friend-request/approve/{friendRequest}', [FriendRequestController::class,'approve']);
     Route::put('friend-request/reject/{friendRequest}', [FriendRequestController::class,'reject']);
     Route::delete('friend-request/cancel/{friendRequest}', [FriendRequestController::class,'cancel']);
+
+    Route::put('friend/block/{user}', [FriendController::class,'block']);
+    Route::put('friend/unblock/{user}', [FriendController::class,'unblock']);
 
     Route::get('get-groups', [GroupController::class,'index']);
     Route::post('group', [GroupController::class,'store']);

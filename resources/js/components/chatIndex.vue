@@ -229,6 +229,10 @@ export default {
             .listen('messageSend', (e) => {
                 this.$eventHub.$emit('messageReceived', e.message);
                 console.log(e.message);
+            })
+            .listen('userBlocked', (e) => {
+                this.$eventHub.$emit('userBlocked', e);
+                console.log(e);
             });
 
         window.Echo.private(`messageEdited.${this.currentUser.id}`)

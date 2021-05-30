@@ -21,7 +21,7 @@
               </div>
             </div>
             <div class="col-3">
-              <span v-if="item.from === currentUser.id && !item.deleted_at" style="float:right">
+              <span v-if="item.from === currentUser.id && !item.deleted_at && isBlocked === null" style="float:right">
                 <a
                   id="dropdownMenu3"
                   role="button"
@@ -65,13 +65,31 @@
         </div>
       </div>
     </div>
+    <div v-if="isBlocked !== null">
+      <div v-if="isBlocked === currentUser.id" class="row no-gutters" style="color: #fff;margin-left: 45%">
+        <b-alert show>
+          You have blocked this user.
+        </b-alert>
+      </div>
+      <div v-else class="row no-gutters" style="color: #fff;margin-left: 45%">
+        <b-alert show>
+          You have been blocked by this user.
+        </b-alert>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
     name: 'MessageList',
-    props: ['items', 'currentUser', 'selectedFriend'],
+    props: ['items', 'currentUser', 'selectedFriend', 'isBlocked'],
+
+    data(){
+      return{
+          consoleOpened: false
+        }
+    },
 
     watch : {
         items: {
@@ -82,12 +100,6 @@ export default {
                 }, 1000);
 
             }
-        }
-    },
-
-    data(){
-      return{
-          consoleOpened: false
         }
     },
 

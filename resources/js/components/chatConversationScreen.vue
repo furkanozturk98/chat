@@ -28,10 +28,11 @@
             <i class="material-icons">menu</i>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu3">
               <button
+                :disabled="conversation.blocked_by !== null && conversation.blocked_by !== currentUser.id"
                 class="dropdown-item edit-message"
                 type="button"
-                @click="block(conversation.friend.id)"
-              >Block</button>
+                @click="conversation.blocked_by === null ? block(conversation.friend.id) : unblock(conversation.friend.id)"
+              >{{ conversation.blocked_by === null ? 'Block': 'Unblock' }}</button>
             </div>
           </a>
 
@@ -45,7 +46,7 @@
           >
             <b-dropdown-item @click="block(conversation.friend.id)">
               <b-icon icon="person-lines-fill" aria-hidden="true" />
-              Block
+              {{ conversation.blocked_by !== null ? 'UnBlock': 'Block' }}
             </b-dropdown-item>
           </b-dropdown>
         </span>
@@ -54,7 +55,6 @@
 
     <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
       <div class="overflow-auto" style="height:620px;">
-
         <edit-message-modal />
 
         <message-list
@@ -62,6 +62,7 @@
           :items="items"
           :current-user="currentUser"
           :selected-friend="conversation.friend"
+          :is-blocked="conversation.blocked_by"
         />
       </div>
     </div>
@@ -69,7 +70,6 @@
     <div class="row">
       <div class="col-12">
         <div class="chat-box-tray" :class="{ 'chat-box-tray-dark': nightMode}">
-
           <emoji-picker :data="data" class="mb-1" @emoji:picked="handleEmojiPicked" />
 
           <file-upload
@@ -77,6 +77,7 @@
             :post-action="'/api/message/send/'+conversation.roomId+'/to/'+conversation.friend.id"
             :headers="{'Authorization': 'Bearer '+currentUser.api_token}"
             style="cursor:pointer;"
+            :disabled="conversation.blocked_by !== null"
             @input-file="inputFile"
           >
             <b-icon icon="paperclip" scale="1.5" class="ml-2" style="color:#808080;" aria-hidden="true" />
@@ -88,11 +89,12 @@
             type="text"
             placeholder="Type your message here..."
             class="message"
+            :disabled="conversation.blocked_by !== null"
             @keyup.enter="sendMessage"
             @input="updateBody($event.target.value)"
             @click="handleEditorClick"
           >
-          <a style="cursor:pointer;" @click="sendMessage"><i class="material-icons">send</i></a>
+          <a style="cursor:pointer;" :class="{'disabled': conversation.blocked_by !== null}" @click="sendMessage"><i class="material-icons">send</i></a>
         </div>
       </div>
     </div>
@@ -130,6 +132,8 @@ export default {
         this.$eventHub.$on('friendClick', this.friendClicked);
         this.$eventHub.$on('groupClick', this.groupClicked);
         this.$eventHub.$on('nightModeOn', this.nightModeOn);
+        this.$eventHub.$on('userBlocked', this.userBlocked);
+
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
     },
 
@@ -186,13 +190,31 @@ export default {
         },
 
         block(id) {
+            this.$http.put('api/friend/block/'+ id)
+                .then(res => {
+                    this.conversation.blocked_by = res.data.data.blocked_by
+                });
+        },
 
+        unblock(id) {
+            this.$http.put('api/friend/unblock/'+ id)
+                .then(res => {
+                    this.conversation.blocked_by = res.data.data.blocked_by
+                });
+        },
+
+        userBlocked(data){
+            this.conversation.blocked_by = data.data.blocked_by;
         },
 
         updateBody(text) {
             this.form.message = text;
         },
         handleEmojiPicked(emoji) {
+            if(this.conversation.blocked_by !== null){
+                return;
+            }
+
             this.form.message = `${
                 this.form.message
             } ${emoji}`;
@@ -208,3 +230,10 @@ export default {
 
 }
 </script>
+
+<style>
+.disabled {
+    pointer-events:none;
+    opacity:0.6;
+}
+</style>

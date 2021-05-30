@@ -4,14 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-
 /**
  * App\Friend
  *
  * @property int $id
  * @property int $user_id
  * @property int $friend_id
- * @property int $status
+ * @property int $blocked_by
  * @property string $room_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -35,15 +34,22 @@ class Friend extends Model
         'id',
         'user_id',
         'friend_id',
-        'status',
+        'blocked_by',
         'room_id'
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function friend(){
-        return $this->belongsTo(User::class,'friend_id');
+    public function friend()
+    {
+        return $this->belongsTo(User::class, 'friend_id');
+    }
+
+    public function blockedBy()
+    {
+        return $this->belongsTo(User::class, 'blocked_by');
     }
 }
