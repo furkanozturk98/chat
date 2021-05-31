@@ -184,17 +184,28 @@ class GroupMessageController extends Controller
      * Remove the specified resource from storage.
      *
      * @param GroupMessage $groupMessage
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(GroupMessage $groupMessage)
     {
         $messageId = $groupMessage->id;
         $groupId = $groupMessage->group_id;
 
+        $groupMember = GroupMember::query()
+            ->where('group_id', $groupMessage->group_id)
+            ->where('member_id', auth()->id())
+            ->first();
+
+        $groupMessage->update([
+            'deleted_by' => $groupMember->id
+        ]);
+
         $groupMessage->delete();
 
-        broadcast(new groupMessageDeleted($messageId, $groupId));
+        broadcast(new groupMessageDeleted($messageId, $groupId, $groupMember->id));
 
-        return response(200);
+        return response()->json([
+            'data' => $groupMember->id
+        ]);
     }
 }

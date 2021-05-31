@@ -73,6 +73,7 @@
           :key="messageListKey"
           :items="items"
           :current-user="currentUser"
+          :current-member="currentMember"
           :selected-group="groupConversation.id"
         />
       </div>

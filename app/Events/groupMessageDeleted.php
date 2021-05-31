@@ -17,6 +17,7 @@ class groupMessageDeleted implements ShouldBroadcast
 
     public int $messageId;
     public int $groupId;
+    public int $deletedBy;
 
     /**
      * Create a new event instance.
@@ -24,13 +25,11 @@ class groupMessageDeleted implements ShouldBroadcast
      *
      * @param User $user
      */
-    public function __construct(int $messageId, int $groupId)
+    public function __construct(int $messageId, int $groupId, int $deletedBy)
     {
         $this->messageId = $messageId;
-
         $this->groupId = $groupId;
-
-        //dd('groupMessages.'.$this->groupId);
+        $this->deletedBy = $deletedBy;
     }
 
     /**
@@ -45,6 +44,9 @@ class groupMessageDeleted implements ShouldBroadcast
 
     public function broadcastWith()
     {
-        return ['id' => $this->messageId];
+        return [
+            'id' => $this->messageId,
+            'deleted_by' => $this->deletedBy
+        ];
     }
 }

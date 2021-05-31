@@ -311,7 +311,7 @@ export default {
                 }).listen('groupMessageEdited', (e) => {
                      this.$eventHub.$emit('groupMessageEdited', e.message);
                 }).listen('groupMessageDeleted', (e) => {
-                     this.$eventHub.$emit('groupMessageDeleted', e.id);
+                     this.$eventHub.$emit('groupMessageDeleted', e.id,e.deleted_by);
                  });
 
                  console.log(`groupMessageSeen.${this.groups[i].id}.${this.currentUser.id}`);

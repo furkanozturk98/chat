@@ -13,7 +13,7 @@
           <div class="row">
             <div class="col-9">
               <div v-if="item.deleted_at">
-                <i>This message has been deleted</i>
+                <i>This message has been deleted {{ (item.sender.id !== item.deleted_by && item.deleted_by !== null )? 'by admin' : '' }}</i>
               </div>
               <div v-else>
                 {{ item.message }}
@@ -22,7 +22,7 @@
               </div>
             </div>
             <div class="col-3">
-              <span v-if="item.sender.id === currentUser.id && !item.deleted_at" style="float:right;">
+              <span v-if="(item.sender.id === currentUser.id || currentMember.type === 2) && !item.deleted_at" style="float:right;">
                 <a
                   id="dropdownMenu3"
                   role="button"
@@ -33,7 +33,7 @@
                   <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 
                     <button
-                      v-if="item.message"
+                      v-if="item.message && item.sender.id === currentUser.id"
                       class="dropdown-item edit-message"
                       type="button"
                       @click="showEditMessageModal(item)"
@@ -49,6 +49,7 @@
                     </button>
 
                     <button
+                      v-if="item.sender.id === currentUser.id"
                       class="dropdown-item delete-message"
                       type="button"
                       @click="showMessageInfoModal(item.id)"
@@ -82,7 +83,7 @@ export default {
         GroupMessageInfoModal
     },
 
-    props: ['items', 'currentUser', 'selectedGroup'],
+    props: ['items', 'currentUser', 'selectedGroup', 'currentMember'],
 
     watch: {
         items: {
@@ -137,13 +138,11 @@ export default {
             }
         },
 
-        groupMessageDeleted(id){
-            console.log('groupMessageDeleted')
-            console.log(id);
+        groupMessageDeleted(id,deletedBy){
             this.items.forEach(item => {
                 if(item.id === id){
                     item.deleted_at = '1234';
-                    console.log('match');
+                    item.deleted_by = deletedBy;
                 }
             })
         },
@@ -163,7 +162,7 @@ export default {
                 .then(value => {
                     if (value) {
                         this.$http.delete('api/group-message/' + id)
-                            .then(() => {
+                            .then((res) => {
                                 Vue.$toast.open({
                                     message: 'Message deleted successfully.',
                                     type: 'success',
@@ -171,7 +170,7 @@ export default {
                                     duration: 1000
                                 });
 
-                                this.groupMessageDeleted(id);
+                                this.groupMessageDeleted(id,res.data.data);
                             })
                             .catch(() => {
                                 Vue.$toast.open({

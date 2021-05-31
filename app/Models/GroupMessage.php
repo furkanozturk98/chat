@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $deleted_by
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessage query()
@@ -42,7 +43,8 @@ class GroupMessage extends Model
         'content',
         'image',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'deleted_by'
     ];
 
     protected $casts = [
@@ -53,5 +55,10 @@ class GroupMessage extends Model
     public function member()
     {
         return $this->belongsTo(GroupMember::class, 'sender');
+    }
+
+    public function deletedBy()
+    {
+        return $this->belongsTo(GroupMember::class, 'deleted_by');
     }
 }
