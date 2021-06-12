@@ -112,40 +112,6 @@
         </div>
       </div>
 
-      <!--      <div class="col-md-9">
-              <div class="settings-tray" :class="{'settings-tray-dark': nightMode}">
-                <div
-                  class="friend-drawer no-gutters"
-                  :class="{ 'friend-drawer&#45;&#45;grey' : !nightMode, 'friend-drawer&#45;&#45;dark' : nightMode }"
-                >
-                  <img
-                    class="profile-image"
-                    src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg"
-                    alt=""
-                  >
-                  <div class="text" :class=" {'text-white' : nightMode}">
-                    <h6>Robo Cop</h6>
-                    <p :class="{'text-muted' :!nightMode, 'text-light' :nightMode,}">
-                      Layin' down the law since like before Christ...
-                    </p>
-                  </div>
-                  <span class="settings-tray&#45;&#45;right" style="margin-left:220px">
-                    <a id="dropdownMenu2" role="button" data-toggle="dropdown">
-                      <i class="material-icons">menu</i>
-
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                        <button
-                          class="dropdown-item group-member-list"
-                          type="button"
-                          data-toggle="modal"
-                          data-target="#groupMemberList"
-                        >Group Member List</button>
-                      </div>
-                    </a>
-                  </span>
-                </div>
-              </div>-->
-
       <chat-conversation-screen v-show="selectedFriend" :current-user="currentUser" />
       <group-chat-conversation-screen v-show="groupSelected" :current-user="currentUser" />
 

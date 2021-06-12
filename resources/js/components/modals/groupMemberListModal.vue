@@ -1,54 +1,57 @@
 <template>
-    <div>
-        <b-modal
-            ref="group-member-list"
-            title="Group Members"
-            size="lg"
-            hide-footer
-        >
-            <div v-for="member in members" :key="member.id">
-                <div class="friend-drawer ">
-                    <img
-                        class="profile-image"
-                        :src="'images/'+member.member.image"
-                        alt=""
-                    >
-                    <div class="text" style="width:50%">
-                        <h6>
-                            {{ member.member.name }}
-                        </h6>
+  <div>
+    <b-modal
+      ref="group-member-list"
+      title="Group Members"
+      size="lg"
+      hide-footer
+    >
+      <div v-for="member in members" :key="member.id">
+        <div class="friend-drawer ">
+          <img
+            class="profile-image"
+            :src="'images/'+member.member.image"
+            alt=""
+          >
+          <div class="text" style="width:50%">
+            <h6>
+              {{ member.member.name }}
+            </h6>
 
-                        <p class="text-muted">
-                            {{ member.member.about }}
-                        </p>
-                    </div>
-                    <span class="ml-5">
+            <p class="text-muted">
+              {{ member.member.about }}
+            </p>
+          </div>
+          <span class="ml-5">
             <button
-                v-if="member.type === 0 && currentMember.type === 2 && (member.member.id !== currentMember.member.id)"
-                class="btn btn-outline-success"
-                @click="makeAdmin(member.id)"
+              v-if="member.type === 0 && currentMember.type === 2 && (member.member.id !== currentMember.member.id)"
+              class="btn btn-outline-success"
+              @click="makeAdmin(member.id)"
             >Make Admin</button>
             <button
-                v-if="member.type === 1 && currentMember.type === 2 && (member.member.id !== currentMember.member.id)"
-                class="btn btn-outline-danger"
-                @click="dismissAsAdmin(member.id)"
+              v-if="member.type === 1 && currentMember.type === 2 && (member.member.id !== currentMember.member.id)"
+              class="btn btn-outline-danger"
+              @click="dismissAsAdmin(member.id)"
             >Dismiss as admin</button>
-            <button v-if="!isFriend(member.member.id) && member.member.id !== currentMember.member.id"
-                    class="btn btn-outline-success" @click="addFriend(member.id)"><b-icon
-                icon="person-plus-fill"
+            <button
+              v-if="!isFriend(member.member.id) && member.member.id !== currentMember.member.id"
+              class="btn btn-outline-success"
+              @click="addFriend(member.id)"
+            ><b-icon
+              icon="person-plus-fill"
             /></button>
             <button
-                v-if="(currentMember.type === 2 && member.type === 0) || (currentMember.type === 1 && member.type === 0) || (currentMember.type === 2 && member.type === 1) || (member.member.id === currentMember.member.id)"
-                class="btn btn-outline-danger"
-                @click="remove(member.id, member.group.id)"
+              v-if="(currentMember.type === 2 && member.type === 0) || (currentMember.type === 1 && member.type === 0) || (currentMember.type === 2 && member.type === 1) || (member.member.id === currentMember.member.id)"
+              class="btn btn-outline-danger"
+              @click="remove(member.id, member.group.id)"
             ><b-icon
-                icon="x-circle"
+              icon="x-circle"
             /></button>
           </span>
-                </div>
-            </div>
-        </b-modal>
-    </div>
+        </div>
+      </div>
+    </b-modal>
+  </div>
 </template>
 
 <script>
@@ -254,7 +257,7 @@ export default {
 
         isFriend(memberId) {
             for (let i = 0; i < this.friends.length; i++) {
-                if (this.friends[i].friend_id === memberId) {
+                if (this.friends[i].friend.id === memberId) {
                     return true;
                 }
             }

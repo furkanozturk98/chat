@@ -34,7 +34,6 @@
         <div class="form-group has-error">
 
             <input id="email"
-                   type="email"
                    class="form-control @error('email') is-invalid @enderror"
                    name="email"
                    placeholder="Email"

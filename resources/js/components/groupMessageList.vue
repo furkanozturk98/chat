@@ -22,7 +22,7 @@
               </div>
             </div>
             <div class="col-3">
-              <span v-if="(item.sender.id === currentUser.id || currentMember.type === 2) && !item.deleted_at" style="float:right;">
+              <span v-if="(item.sender.id === currentUser.id || currentMember.type > 0) && !item.deleted_at" style="float:right;">
                 <a
                   id="dropdownMenu3"
                   role="button"

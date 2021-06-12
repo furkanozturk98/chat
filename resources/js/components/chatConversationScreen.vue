@@ -78,6 +78,7 @@
             :headers="{'Authorization': 'Bearer '+currentUser.api_token}"
             style="cursor:pointer;"
             :disabled="conversation.blocked_by !== null"
+            accept="image/png,image/jpeg"
             @input-file="inputFile"
           >
             <b-icon icon="paperclip" scale="1.5" class="ml-2" style="color:#808080;" aria-hidden="true" />

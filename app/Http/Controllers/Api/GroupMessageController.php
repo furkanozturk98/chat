@@ -47,9 +47,14 @@ class GroupMessageController extends Controller
 
     public function updateMessagesAsRead(Group $group): void
     {
-        $messages = GroupMessageStatus::query()
+        $groupMember = GroupMember::query()
             ->where('group_id', $group->id)
             ->where('member_id', auth()->id())
+            ->first();
+
+        $messages = GroupMessageStatus::query()
+            ->where('group_id', $group->id)
+            ->where('member_id', $groupMember->id)
             ->where('status', MessageStatuses::UNREAD)
             ->get();
 
@@ -81,7 +86,7 @@ class GroupMessageController extends Controller
                 'status' => MessageStatuses::READ,
             ]);
 
-            broadcast(new groupMessageSeen($group->id, $message->message->sender, $message->message->id, auth()->id()));
+            broadcast(new groupMessageSeen($group->id, $message->message->sender, $message->message->id, $groupMember->id));
         }
     }
 
@@ -169,15 +174,20 @@ class GroupMessageController extends Controller
      */
     public function receive(GroupMessage $groupMessage)
     {
-        GroupMessageStatus::query()
+        $groupMember = GroupMember::query()
             ->where('group_id', $groupMessage->group_id)
             ->where('member_id', auth()->id())
+            ->first();
+
+        GroupMessageStatus::query()
+            ->where('group_id', $groupMessage->group_id)
+            ->where('member_id', $groupMember->id)
             ->where('message_id', $groupMessage->id)
             ->update([
                 'status' => MessageStatuses::READ
             ]);
 
-        broadcast(new groupMessageSeen($groupMessage->group_id, $groupMessage->sender, $groupMessage->id, auth()->id()));
+        broadcast(new groupMessageSeen($groupMessage->group_id, $groupMessage->sender, $groupMessage->id, $groupMember->id));
     }
 
     /**
