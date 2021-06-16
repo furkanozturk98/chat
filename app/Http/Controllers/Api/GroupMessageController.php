@@ -31,13 +31,6 @@ class GroupMessageController extends Controller
     {
         $this->updateMessagesAsRead($group);
 
-        /*GroupMessageStatus::query()
-            ->where('group_id', $group->id)
-            ->where('member_id', auth()->id())
-            ->update([
-                'status' => MessageStatuses::READ
-            ]);*/
-
         $messages = GroupMessage::withTrashed()
             ->where('group_id', $group->id)
             ->get();
@@ -62,25 +55,7 @@ class GroupMessageController extends Controller
             return;
         }
 
-        //gruptaki üyelerin id lerini al. collection olarak evente pasla.Her üye için event tetikle
-
-        //$messageIds = $messages->pluck(['id']);
-
         foreach ($messages as $message) {
-
-            /*$messageIds = GroupMessageStatus::query()
-                ->where('group_id', $group->id)
-                ->where('message_id', $message->id)
-                ->where('member_id', auth()->id());*/
-
-            /* \DB::table('group_message_statuses')
-                 ->join('group_messages', 'group_message_statuses.message_id', '=', 'group_messages.id')
-                 ->where('group_messages.sender', $message->message->sender)
-                 ->where('group_message_statuses.member_id', auth()->id())
-                 ->where('status', MessageStatuses::UNREAD)
-                 ->select('group_messages.id')
-                 ->get();*/
-
 
             $message->update([
                 'status' => MessageStatuses::READ,

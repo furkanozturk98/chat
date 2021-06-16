@@ -45,22 +45,22 @@ class GroupInviteController extends Controller
     public function store(GroupInviteFormRequest $request, Group $group)
     {
         $user = User::query()
-            ->where('email',$request->input('email'))
+            ->where('email', $request->input('email'))
             ->first();
 
-        if(!isset($user)){
+        if (!isset($user)) {
             return response()->json([
                 'message' => "The given data was invalid.",
                 'errors' => ['email' => ['The email is not exist.Please enter an exist email.'] ]
-            ],422);
+            ], 422);
         }
 
         $request = GroupInvite::query()
-            ->where('from',auth()->id())
+            ->where('from', auth()->id())
             ->where('to', $user->id)
             ->first();
 
-        if(!isset($request)){
+        if (!isset($request)) {
             return GroupInvite::query()->create([
                 'from' => auth()->id(),
                 'to' => $user->id,
@@ -72,12 +72,11 @@ class GroupInviteController extends Controller
         return response()->json([
             'message' => "Already a group invite send to this email.",
             'errors' => ['email' => ['Already a group invite send to this email.'] ]
-        ],422);
+        ], 422);
     }
 
     public function approve(GroupInvite $groupInvite)
     {
-
         $groupInvite->status = GroupInviteStatuses::APPROVED;
 
         $groupInvite->save();
@@ -93,17 +92,17 @@ class GroupInviteController extends Controller
 
     public function reject(GroupInvite $groupInvite)
     {
-        try{
+        try {
             $groupInvite->delete();
+        } catch (Throwable $e) {
         }
-        catch(Throwable $e){}
     }
 
     public function cancel(GroupInvite $groupInvite)
     {
-        try{
+        try {
             $groupInvite->delete();
+        } catch (Throwable $e) {
         }
-        catch(Throwable $e){}
     }
 }
