@@ -79,8 +79,14 @@ export default {
     },
 
     methods: {
-        showFriendRequestsModal(friendRequests) {
-            this.friendRequests = friendRequests;
+
+        async fetch() {
+            const response = await this.$http.get('/api/get-friend-requests');
+            this.friendRequests = response.data.data;
+        },
+
+        showFriendRequestsModal() {
+            this.fetch();
 
             this.$refs['friend-requests'].show();
         },
@@ -149,7 +155,6 @@ export default {
 
         async approveRequest(id){
             const response = await this.form.put('/api/friend-request/approve/' + id);
-            console.log(response.data)
 
             this.$eventHub.$emit('friendRequestApproved', response.data);
         },

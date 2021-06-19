@@ -55,6 +55,18 @@ class GroupInviteController extends Controller
             ], 422);
         }
 
+        $groupMember = GroupMember::query()
+            ->where('group_id', $group->id)
+            ->where('member_id', $user->id)
+            ->first();
+
+        if (isset($groupMember)) {
+            return response()->json([
+                'message' => "The given data was invalid.",
+                'errors' => ['email' => ['You cannot send a group invite to already member of this group'] ]
+            ], 422);
+        }
+
         $request = GroupInvite::query()
             ->where('from', auth()->id())
             ->where('to', $user->id)

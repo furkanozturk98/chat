@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="add-group-member"
-      title="Add Friend"
+      title="Add Group Member"
       @show="resetModal"
       @hidden="resetModal"
       @ok="handleOk"

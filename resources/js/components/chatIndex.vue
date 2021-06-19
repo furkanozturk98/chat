@@ -331,7 +331,8 @@ export default {
         },
 
         showFriendRequestsModal() {
-            this.$eventHub.$emit('showFriendRequestsModal', this.friendRequest);
+            //this.$eventHub.$emit('showFriendRequestsModal', this.friendRequest);
+            this.$eventHub.$emit('showFriendRequestsModal');
         },
 
         showGroupInvitesModal() {
