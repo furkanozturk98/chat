@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="group-message-info"
-    title="Group Message Info"
+    title="Group Message Information"
     size="sm"
     hide-footer
   >
@@ -65,6 +65,7 @@ name: 'GroupMessageInfoModal',
 
         groupMessageSeen(data){
             this.items.forEach(item => {
+                console.log(data.messageId === item.message.id && data.groupId === item.group && data.receiverId === item.member.id)
                 if(data.messageId === item.message.id && data.groupId === item.group && data.receiverId === item.member.id){
                     item.status = 1;
                 }

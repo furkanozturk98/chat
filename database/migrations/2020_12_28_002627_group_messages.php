@@ -16,7 +16,7 @@ class GroupMessages extends Migration
         Schema::create('group_messages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('group_id')->constrained("groups");
-            $table->foreignId('sender')->constrained("group_members");
+            $table->foreignId('sender')->constrained("group_members")->cascadeOnDelete();
             $table->string("content")->nullable();
             $table->string("image")->nullable();
             $table->timestamp('created_at')->default(\DB::raw('CURRENT_TIMESTAMP'));

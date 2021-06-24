@@ -129,6 +129,8 @@ class GroupMemberController extends Controller
             return new GroupMemberResource($model);
         }
 
+        $groupMember->delete();
+
         if ($memberCount !== 1  && $groupMember->type === GroupMemberTypes::SUPER_ADMIN) {
             GroupMember::query()
                 ->where('group_id', $groupMember->group_id)
@@ -137,8 +139,6 @@ class GroupMemberController extends Controller
                     'type' => GroupMemberTypes::SUPER_ADMIN
                 ]);
         }
-
-        $groupMember->delete();
 
         return new GroupMemberResource($model);
     }

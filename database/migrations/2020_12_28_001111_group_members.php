@@ -15,7 +15,7 @@ class GroupMembers extends Migration
     {
         Schema::create('group_members', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('group_id')->constrained("groups");
+            $table->foreignId('group_id')->constrained("groups")->onDelete('cascade');
             $table->foreignId('member_id')->constrained("users");
             $table->tinyInteger('type')->default(0);
             $table->timestamps();

@@ -11,6 +11,11 @@
           :class="item.sender.id === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
         >
           <div class="row">
+            <div class="col-12">
+              <b>{{ item.sender.name }}</b>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-9">
               <div v-if="item.deleted_at">
                 <i>This message has been deleted {{ (item.sender.id !== item.deleted_by && item.deleted_by !== null )? 'by admin' : '' }}</i>
@@ -22,7 +27,7 @@
               </div>
             </div>
             <div class="col-3">
-              <span v-if="(item.sender.id === currentUser.id || currentMember.type > 0) && !item.deleted_at" style="float:right;">
+              <span v-if="(item.sender.id === currentUser.id || (currentMember.type > item.type)) && !item.deleted_at" style="float:right;">
                 <a
                   id="dropdownMenu3"
                   role="button"

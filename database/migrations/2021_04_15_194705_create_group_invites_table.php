@@ -23,7 +23,7 @@ class CreateGroupInvitesTable extends Migration
 
             $table->foreign('from')->references('id')->on('users');
             $table->foreign('to')->references('id')->on('users');
-            $table->foreign('group_id')->references('id')->on('groups');
+            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
         });
     }
 

@@ -68,6 +68,7 @@ class GroupInviteController extends Controller
         }
 
         $request = GroupInvite::query()
+            ->where('group_id', $group->id)
             ->where('from', auth()->id())
             ->where('to', $user->id)
             ->first();

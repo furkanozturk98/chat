@@ -21,8 +21,7 @@
         @endif
 
         <div class="form-group has-error">
-            <input type="email"
-                   class="form-control @error('email') is-invalid @enderror"
+            <input class="form-control @error('email') is-invalid @enderror"
                    name="email" placeholder="Email"
                    value="{{ old('email') }}"
                    >

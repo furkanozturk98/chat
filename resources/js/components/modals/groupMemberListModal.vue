@@ -99,9 +99,10 @@ export default {
                                     position: 'top-right',
                                     duration: 1000
                                 });
-
+console.log('memberid' + memberId)
                                 this.members.forEach(item => {
-                                    if (item.member.id === memberId) {
+                                    console.log(item.id)
+                                    if (item.id === memberId) {
                                         item.type = 1;
                                     }
                                 })
@@ -238,7 +239,7 @@ export default {
                                     });
 
                                     this.members.forEach(item => {
-                                        if (item.member.id === memberId) {
+                                        if (item.id === memberId) {
                                             item.type = 0;
                                         }
                                     })

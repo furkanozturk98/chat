@@ -61,7 +61,7 @@ class GroupMessageController extends Controller
                 'status' => MessageStatuses::READ,
             ]);
 
-            broadcast(new groupMessageSeen($group->id, $message->message->sender, $message->message->id, $groupMember->id));
+            broadcast(new groupMessageSeen($group->id, $message->message->sender, $message->message->id, auth()->id()));
         }
     }
 
@@ -162,7 +162,7 @@ class GroupMessageController extends Controller
                 'status' => MessageStatuses::READ
             ]);
 
-        broadcast(new groupMessageSeen($groupMessage->group_id, $groupMessage->sender, $groupMessage->id, $groupMember->id));
+        broadcast(new groupMessageSeen($groupMessage->group_id, $groupMessage->sender, $groupMessage->id, auth()->id()));
     }
 
     /**
