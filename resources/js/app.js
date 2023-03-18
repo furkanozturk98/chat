@@ -22,7 +22,7 @@ import EmojiPicker from '@zaichaopan/emoji-picker';
 Vue.use(EmojiPicker);
 
 Vue.component('file-upload', require('vue-upload-component'));
-Vue.component('chat-index', require('./components/chatIndex.vue').default);
+Vue.component('chat-index', require('./components/chat-index.vue').default);
 
 window.eventHub = new Vue();
 Vue.prototype.$eventHub = eventHub;

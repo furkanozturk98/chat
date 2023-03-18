@@ -5,15 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileSettingFormRequest;
 use App\Http\Resources\ProfileSettingResource;
-use App\Repositories\ProfileSettingRepository;
+use App\Services\ProfileService;
 
-class ProfileSettingController extends Controller
+class ProfileController extends Controller
 {
-
-    private ProfileSettingRepository $profileSettingRepository;
-
-    public function __construct(ProfileSettingRepository $profileSettingRepository){
-        $this->profileSettingRepository = $profileSettingRepository;
+    public function __construct(public ProfileService $profileService)
+    {
     }
 
     /**
@@ -21,7 +18,7 @@ class ProfileSettingController extends Controller
      *
      * @return ProfileSettingResource
      */
-    public function index()
+    public function index(): ProfileSettingResource
     {
         return new ProfileSettingResource(auth()->user());
     }
@@ -30,15 +27,13 @@ class ProfileSettingController extends Controller
      * Update the specified resource in storage.
      *
      * @param ProfileSettingFormRequest $request
+     *
      * @return ProfileSettingResource
      */
-    public function update(ProfileSettingFormRequest $request)
+    public function update(ProfileSettingFormRequest $request): ProfileSettingResource
     {
-
-        $data = $this->profileSettingRepository->updateProfile($request->validated());
+        $data = $this->profileService->updateProfile($request->validated());
 
         return new ProfileSettingResource($data);
-
     }
-
 }

@@ -1,66 +1,68 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Events\userBlocked;
 use App\Http\Controllers\Controller;
-use App\Models\Friend;
+use App\Http\Resources\FriendResource;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\FriendService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FriendController extends Controller
 {
+    public function __construct(public FriendService $friendService)
+    {
+    }
+
+    /**
+     * @return AnonymousResourceCollection
+     */
+    public function index(): AnonymousResourceCollection
+    {
+        $data = $this->friendService->get();
+
+        return FriendResource::collection($data);
+    }
+
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
      * @param User $user
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      */
-    public function block(Request $request, User $user)
+    public function block(User $user): JsonResponse
     {
-        Friend::query()
-            ->where(function ($query) use ($user) {
-                $query->whereIn('user_id', [$user->id, auth()->id()])
-                    ->whereIn('friend_id', [$user->id, auth()->id()]);
-            })
-            ->update([
-                'blocked_by' => auth()->id()
-            ]);
+        $status = $this->friendService->block($user);
 
-        broadcast(new userBlocked($user, auth()->id()));
+        broadcast(new UserBlocked($user, auth()->id()));
 
         return response()->json([
             'data' => [
-                'blocked_by' => auth()->id()
-            ]
+                'status' => $status,
+            ],
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
      * @param User $user
-     * @return \Illuminate\Http\JsonResponse
+     *
+     * @return JsonResponse
      */
-    public function unblock(Request $request, User $user)
+    public function unblock(User $user): JsonResponse
     {
-        Friend::query()
-            ->where(function ($query) use ($user) {
-                $query->whereIn('user_id', [$user->id, auth()->id()])
-                    ->whereIn('friend_id', [$user->id, auth()->id()]);
-            })
-            ->update([
-                'blocked_by' => null
-            ]);
+        $this->friendService->unblock($user);
 
-        broadcast(new userBlocked($user, null));
+        broadcast(new UserBlocked($user, null));
 
         return response()->json([
             'data' => [
-                'blocked_by' => null
-            ]
+                'blocked_by' => null,
+            ],
         ]);
     }
 }
