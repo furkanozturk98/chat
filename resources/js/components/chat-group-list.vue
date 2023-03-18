@@ -1,5 +1,5 @@
 <template>
-  <div class="messages overflow-auto" style="height: 700px;">
+  <div class="messages overflow-auto">
     <div v-if="items.length > 0">
       <div v-for="item in items" :key="item.id" @click="groupClick(item)">
         <div class="friend-drawer friend-drawer--onhover" :class="{'friend-dark' : nightMode}">

@@ -115,11 +115,11 @@
 </template>
 
 <script>
-import GroupMessageList from './groupMessageList';
-import EditGroupMessageModal from './modals/editGroupMessageModal';
+import GroupMessageList from './group-message-list';
+import EditGroupMessageModal from './modals/edit-group-message-modal';
 import Form from 'form-backend-validation';
-import AddGroupMemberModal from './modals/addGroupMemberModal';
-import GroupMemberListModal from './modals/groupMemberListModal';
+import AddGroupMemberModal from './modals/send-group-invite-modal';
+import GroupMemberListModal from './modals/group-member-list-modal';
 import data from '@zaichaopan/emoji-picker/data/emojis.json';
 
 export default {
@@ -188,9 +188,10 @@ export default {
         },
 
         async sendMessage() {
-            if(this.form.message === null){
+            if(this.form.message === null || this.form.message === ''){
                 return;
             }
+
             this.form.group_id = this.groupConversation.id;
             this.form.member_id = this.currentMember.id;
 

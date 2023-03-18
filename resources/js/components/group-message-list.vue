@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import GroupMessageInfoModal from './modals/groupMessageInfoModal';
+import GroupMessageInfoModal from './modals/group-message-info-modal';
 export default {
     name: 'GroupMessageList',
 

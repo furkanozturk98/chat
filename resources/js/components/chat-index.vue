@@ -7,7 +7,7 @@
     <profile-settings-modal :current-user="currentUser" />
 
     <div class="row no-gutters">
-      <div class="col-md-3 border-right" :class="{'friend-dark': nightMode}">
+      <div class="col-md-3 border-right" :class="{'friend-white': !nightMode, 'friend-dark': nightMode}">
         <div class="settings-tray" :class="{'settings-tray-dark': nightMode}">
           <img
             class="profile-image"
@@ -117,7 +117,7 @@
 
       <div v-if="!selectedFriend && !groupSelected " class="col-md-9">
         <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
-          <div style="height:80vh;color:white;padding-top:25%;padding-left:35%">
+          <div style="height:80vh;color:white;padding-top:25%;padding-left:35%;border-top-right-radius: 15px">
             Select a friend or a group to start chatting.
           </div>
         </div>
@@ -128,15 +128,15 @@
 
 <script>
 import Form from 'form-backend-validation';
-import ChatFriendList from './chatFriendList';
-import ChatConversationScreen from './chatConversationScreen';
-import GroupChatConversationScreen from './groupChatConversationScreen';
-import FriendRequestModal from './modals/friendRequestsModal';
-import ProfileSettingsModal from './modals/profileSettingsModal';
-import AddFriendModal from './modals/addFriendModal';
-import CreateGroupModal from './modals/CreateGroupModal';
-import ChatGroupList from './chatGroupList';
-import GroupInvitesModal from './modals/groupInvitesModal';
+import ChatFriendList from './chat-friend-list';
+import ChatConversationScreen from './chat-conversation-screen';
+import GroupChatConversationScreen from './group-chat-conversation-screen';
+import FriendRequestModal from './modals/friend-request-list-modal';
+import ProfileSettingsModal from './modals/profile-modal';
+import AddFriendModal from './modals/send-friend-request-modal';
+import CreateGroupModal from './modals/create-group-modal';
+import ChatGroupList from './chat-group-list';
+import GroupInvitesModal from './modals/group-invite-list-modal';
 
 export default {
     name: 'ChatIndex',

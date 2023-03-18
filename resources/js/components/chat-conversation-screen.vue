@@ -1,6 +1,6 @@
 <template>
   <div v-if="conversation" class="col-md-9">
-    <div class="settings-tray" :class="{'settings-tray-dark': nightMode}">
+    <div class="conversation-settings-tray" :class="{'settings-tray-dark': nightMode}">
       <div
         class="friend-drawer no-gutters"
         :class="{ 'friend-drawer--grey' : !nightMode, 'friend-drawer--dark' : nightMode }"
@@ -103,8 +103,8 @@
 </template>
 
 <script>
-import EditMessageModal from './modals/editMessageModal';
-import MessageList from './messageList';
+import EditMessageModal from './modals/edit-message-modal';
+import MessageList from './message-list';
 import Form from 'form-backend-validation';
 import data from '@zaichaopan/emoji-picker/data/emojis.json';
 
