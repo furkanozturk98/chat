@@ -3,22 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AddFriendFormRequest;
+use App\Http\Requests\FriendRequestFormRequest;
 use App\Http\Resources\FriendRequestResource;
-use App\Http\Resources\FriendResource;
 use App\Models\FriendRequest;
-use App\Repositories\FriendRequestRepository;
+use App\Services\FriendRequestService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Throwable;
 
 class FriendRequestController extends Controller
 {
-
-    private FriendRequestRepository $friendRequestRepository;
-
-    function __construct(FriendRequestRepository $friendRequestRepository) {
-        $this->friendRequestRepository = $friendRequestRepository;
+    public function __construct(public FriendRequestService $friendRequestService)
+    {
     }
 
     /**
@@ -26,57 +21,58 @@ class FriendRequestController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $data = $this->friendRequestRepository->index();
+        $data = $this->friendRequestService->get();
 
         return FriendRequestResource::collection($data);
     }
 
     /**
-     * @param AddFriendFormRequest $request
+     * @param FriendRequestFormRequest $request
      *
      * @return FriendRequestResource|JsonResponse
      */
-    public function store(AddFriendFormRequest $request): FriendRequestResource|JsonResponse
+    public function store(FriendRequestFormRequest $request): FriendRequestResource|JsonResponse
     {
-        return $this->friendRequestRepository->store($request);
+        $data = $this->friendRequestService->create($request);
 
+        return new FriendRequestResource($data);
     }
 
     /**
      * @param FriendRequest $friendRequest
+     *
+     * @return JsonResponse
      */
-    public function approve(FriendRequest $friendRequest): FriendResource
+    public function approve(FriendRequest $friendRequest): JsonResponse
     {
+        $this->friendRequestService->approve($friendRequest);
 
-        $data = $this->friendRequestRepository->approve($friendRequest);
-
-        return new FriendResource($data);
+        return response()->json([
+            'status' => true,
+        ]);
     }
 
     /**
      * @param FriendRequest $friendRequest
+     *
+     * @return JsonResponse
      */
     public function reject(FriendRequest $friendRequest): JsonResponse
     {
-        try{
-            $friendRequest->delete();
-        }
-        catch(Throwable $e){}
+        $friendRequest->delete();
 
         return response()->json(204);
     }
 
     /**
      * @param FriendRequest $friendRequest
+     *
+     * @return JsonResponse
      */
     public function cancel(FriendRequest $friendRequest): JsonResponse
     {
-        try{
-            $friendRequest->delete();
-        }
-        catch(Throwable $e){}
+        $friendRequest->delete();
 
         return response()->json(204);
     }
-
 }

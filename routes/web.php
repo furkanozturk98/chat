@@ -2,15 +2,11 @@
 
 use App\Events\groupMessageSend;
 use App\Events\messageSend;
-use App\Events\MyEvent;
-use App\Friend;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FacebookLoginController;
 use App\Http\Controllers\GoogleLoginController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\TwitterLoginController;
 use App\Models\GroupMessage;
-use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -45,7 +41,7 @@ Route::get('/publish',function (){
         'to'   => 1,
         'message' => 'selam aaa',
         'room_id' => $roomId,
-        'status' => \App\MessageStatuses::UNREAD
+        'status' => \App\Enums\MessageStatuses::UNREAD
     ]);
     broadcast(new messageSend($message));
 });

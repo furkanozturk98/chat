@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\MessageStatuses;
 use App\Events\groupMessageDeleted;
 use App\Events\groupMessageEdited;
 use App\Events\groupMessageSeen;
 use App\Events\groupMessageSend;
-use App\Events\messageSeen;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GroupMessageEditFormRequest;
 use App\Http\Resources\GroupMessageResource;
-use App\MessageStatuses;
 use App\Models\Group;
 use App\Models\GroupMember;
 use App\Models\GroupMessage;
 use App\Models\GroupMessageStatus;
-use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -110,17 +108,6 @@ class GroupMessageController extends Controller
         broadcast(new groupMessageSend($message));
 
         return new GroupMessageResource($message);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**

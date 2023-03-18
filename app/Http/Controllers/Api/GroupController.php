@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\GroupMemberTypes;
+use App\Enums\GroupMemberTypes;
+use App\Enums\MessageStatuses;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GroupCreateFormRequest;
 use App\Http\Resources\GroupResource;
-use App\MessageStatuses;
 use App\Models\Group;
 use App\Models\GroupMember;
 use App\Models\GroupMessage;

@@ -117,7 +117,7 @@
 
       <div v-if="!selectedFriend && !groupSelected " class="col-md-9">
         <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
-          <div style="height:1000px;color:white;padding-top:25%;padding-left:35%">
+          <div style="height:80vh;color:white;padding-top:25%;padding-left:35%">
             Select a friend or a group to start chatting.
           </div>
         </div>

@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Friend;
-use App\MessageStatuses;
+use App\Enums\MessageStatuses;
+use App\Models\Friend;
 use App\Models\Message;
 use Illuminate\Database\Seeder;
 

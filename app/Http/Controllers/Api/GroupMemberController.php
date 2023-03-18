@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\FriendRequestStatuses;
-use App\GroupMemberTypes;
+use App\Enums\FriendRequestStatuses;
+use App\Enums\GroupMemberTypes;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FriendRequestResource;
 use App\Http\Resources\GroupMemberResource;
-use App\Http\Resources\GroupResource;
 use App\Models\FriendRequest;
 use App\Models\Group;
 use App\Models\GroupMember;

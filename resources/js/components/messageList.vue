@@ -2,7 +2,7 @@
   <div id="messageDisplay">
     <div v-for="item in items" :key="item.id" class="row no-gutters">
       <div
-        class="col-md-3"
+        class="col-md-5"
         :class="item.from === currentUser.id ? 'offset-md-9':''"
       >
         <div

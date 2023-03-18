@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\MessageStatuses;
 use App\Http\Controllers\Controller;
-use App\Friend;
 use App\Http\Resources\FriendResource;
-use App\MessageStatuses;
+use App\Models\Friend;
 use App\Models\Message;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 

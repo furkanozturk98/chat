@@ -54,7 +54,7 @@
     </div>
 
     <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
-      <div class="overflow-auto" style="height:620px;">
+      <div class="overflow-auto" style="height:70vh;">
         <edit-message-modal />
 
         <message-list

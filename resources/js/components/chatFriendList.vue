@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 700px;">
+  <div>
     <div v-if="items.length > 0">
       <div v-for="item in items" :key="item.id" @click="friendClick(item)">
         <div class="friend-drawer friend-drawer--onhover" :class="{'friend-dark' : nightMode}">

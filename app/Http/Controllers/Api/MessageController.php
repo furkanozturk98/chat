@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\MessageStatuses;
 use App\Events\messageDeleted;
 use App\Events\messageEdited;
 use App\Events\messageSeen;
@@ -9,9 +10,8 @@ use App\Events\messageSend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MessageEditFormRequest;
 use App\Http\Resources\MessageResource;
-use App\MessageStatuses;
 use App\Models\Message;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -85,7 +85,7 @@ class MessageController extends Controller
                 'room_id' => $roomId,
                 'message' => $request->input('message'),
                 'image' => $filename,
-                'status' => \App\MessageStatuses::UNREAD
+                'status' => \App\Enums\MessageStatuses::UNREAD
             ]);
 
         broadcast(new messageSend($message));

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Friend;
+use App\Models\Friend;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 

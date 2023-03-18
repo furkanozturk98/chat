@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\api;
 
 use App\Events\userBlocked;
-use App\Friend;
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Models\Friend;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class FriendController extends Controller

@@ -25,6 +25,12 @@ body {
     padding: 10px 15px;
 }
 
+.no-gutters {
+    padding-left: 150px;
+    padding-right: 150px;
+    padding-top: 50px;
+}
+
 .settings-tray .no-gutters {
     padding: 0;
 }
@@ -158,13 +164,13 @@ hr {
 .chat-box-tray {
     background: #eee;
     display: flex;
-    position: fixed;
+    /*position: fixed;*/
     align-items: baseline;
     padding: 10px 15px;
     align-items: center;
-    margin-top: 19px;
+    /*margin-top: 19px;*/
     bottom: 0;
-    width: 75%;
+    /*width: 75%;*/
 }
 .chat-box-tray .message {
     margin: 0 10px;

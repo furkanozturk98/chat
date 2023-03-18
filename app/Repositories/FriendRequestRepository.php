@@ -4,11 +4,11 @@
 namespace App\Repositories;
 
 
-use App\Friend;
-use App\FriendRequestStatuses;
+use App\Enums\FriendRequestStatuses;
 use App\Http\Resources\FriendRequestResource;
+use App\Models\Friend;
 use App\Models\FriendRequest;
-use App\User;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\GroupInviteStatuses;
+use App\Enums\GroupInviteStatuses;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\groupInviteFormRequest;
 use App\Http\Resources\GroupInviteResource;
@@ -10,7 +10,7 @@ use App\Http\Resources\GroupMemberResource;
 use App\Models\Group;
 use App\Models\GroupInvite;
 use App\Models\GroupMember;
-use App\User;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
