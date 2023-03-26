@@ -7,8 +7,6 @@ use App\Http\Resources\GroupMessageInfoResource;
 use App\Models\Group;
 use App\Models\GroupMessage;
 use App\Models\GroupMessageStatus;
-use http\Client\Response;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class GroupMessageInfoController extends Controller
@@ -16,8 +14,7 @@ class GroupMessageInfoController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Group $group
-     *
+     * @param Group        $group
      * @param GroupMessage $groupMessage
      *
      * @return AnonymousResourceCollection

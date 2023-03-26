@@ -2,6 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ExistingGroupInvite;
+use App\Rules\ExistingMember;
+use App\Rules\FriendRequest\ValidUser;
+use App\Services\UserService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class GroupInviteFormRequest extends FormRequest
@@ -11,7 +15,7 @@ class GroupInviteFormRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -21,10 +25,22 @@ class GroupInviteFormRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
+        $userService = app(UserService::class);
+
+        $user = $userService->findUserByEmail($this->input('email'));
+
+        $group = $this->route('group');
+
         return [
-            'email' => 'required|email'
+            'email' => [
+                'required',
+                'email',
+                new ValidUser($user),
+                new ExistingMember($user, $group),
+                new ExistingGroupInvite($user, $group),
+            ],
         ];
     }
 }

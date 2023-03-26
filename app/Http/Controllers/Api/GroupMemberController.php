@@ -35,6 +35,8 @@ class GroupMemberController extends Controller
      */
     public function store(Request $request, GroupMember $groupMember)
     {
+        //@TODO REFACTOR
+
         $count = FriendRequest::query()
             ->where('from', auth()->id())
             ->where('to', $groupMember->member_id)

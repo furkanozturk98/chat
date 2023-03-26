@@ -7,7 +7,7 @@
     <profile-settings-modal :current-user="currentUser" />
 
     <div class="row no-gutters">
-      <div class="col-md-3 border-right" :class="{'friend-white': !nightMode, 'friend-dark': nightMode}">
+      <div class="left-panel col-md-3 border-right" :class="{'friend-white': !nightMode, 'friend-dark': nightMode}">
         <div class="settings-tray" :class="{'settings-tray-dark': nightMode}">
           <img
             class="profile-image"
@@ -117,7 +117,7 @@
 
       <div v-if="!selectedFriend && !groupSelected " class="col-md-9">
         <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
-          <div style="height:80vh;color:white;padding-top:25%;padding-left:35%;border-top-right-radius: 15px">
+          <div style="height:80vh;color:white;padding-top:25%;padding-left:35%;">
             Select a friend or a group to start chatting.
           </div>
         </div>

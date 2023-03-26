@@ -16,7 +16,8 @@ class Messages extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('from');
-            $table->unsignedBigInteger('to');
+            $table->unsignedBigInteger('to')->nullable();
+            $table->unsignedBigInteger('group_id')->nullable();
             $table->string('room_id');
             $table->text('message')->nullable();
             $table->string('image')->nullable();

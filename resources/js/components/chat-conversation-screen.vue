@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
+    <div class="chat-panel no-border" :class="{ 'chat-panel-dark': nightMode } ">
       <div class="overflow-auto" style="height:70vh;">
         <edit-message-modal />
 

@@ -4,158 +4,113 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\MessageStatuses;
 use App\Events\messageDeleted;
-use App\Events\messageEdited;
 use App\Events\messageSeen;
-use App\Events\messageSend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MessageEditFormRequest;
 use App\Http\Resources\MessageResource;
 use App\Models\Message;
 use App\Models\User;
+use App\Services\MessageService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class MessageController extends Controller
 {
+    public function __construct(public MessageService $messageService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @param string $roomId
+     *
      * @return AnonymousResourceCollection
      */
-    public function index(string $roomId)
+    public function index(string $roomId): AnonymousResourceCollection
     {
-        $this->updateMessagesAsRead($roomId);
-
-        $messages = Message::query()
-            ->withTrashed()
-            ->where('room_id', $roomId)
-            ->get();
+        $messages = $this->messageService->getMessagesByRoomId($roomId);
 
         return MessageResource::collection($messages);
-    }
-
-    public function updateMessagesAsRead(string $roomId): void
-    {
-        $from = null;
-
-        $messages = Message::query()
-            ->where('room_id', $roomId)
-            ->where('to', auth()->id())
-            ->where('status', MessageStatuses::UNREAD)
-            ->get();
-
-        if ($messages->isEmpty()) {
-            return;
-        }
-
-        $from = $messages->first()->from;
-
-        $messageIds = $messages->pluck(['id']);
-
-        broadcast(new messageSeen($from, $messageIds));
-
-        foreach ($messages as $message) {
-            $message->update([
-                'status' => MessageStatuses::READ,
-            ]);
-        }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string $roomId
-     * @param User $user
+     * @param Request $request
+     * @param string  $roomId
+     * @param User    $user
+     *
      * @return MessageResource
      */
-    public function store(Request $request, string $roomId, User $user)
+    public function store(Request $request, string $roomId, User $user): MessageResource
     {
-        $filename = null;
-        if ($request->has('file')) {
-            $filename = time() . '.' . $request->file('file')->getClientOriginalExtension();
-            $request->file('file')->move(public_path('chat'), $filename);
-        }
-
-        $message = Message::query()
-            ->create([
-                'from' => auth()->id(),
-                'to' => $user->id,
-                'room_id' => $roomId,
-                'message' => $request->input('message'),
-                'image' => $filename,
-                'status' => \App\Enums\MessageStatuses::UNREAD
-            ]);
-
-        broadcast(new messageSend($message));
+        $message = $this->messageService->createMessageByRoomId($request, $roomId, $user);
 
         return new MessageResource($message);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param MessageEditFormRequest $request
+     * @param Message                $message
+     *
+     * @return MessageResource
      */
-    public function update(MessageEditFormRequest $request, Message $message)
+    public function update(MessageEditFormRequest $request, Message $message): MessageResource
     {
         $attributes = $request->validated();
 
-        $attributes['updated_at'] = now();
+        $this->messageService->updateMessage($attributes, $message);
 
-        $message->update($attributes);
-
-        broadcast(new messageEdited($message));
+        return new MessageResource($message);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param Message $message
+     *
+     * @return MessageResource
      */
-    public function receive(Message $message)
+    public function receive(Message $message): MessageResource
     {
         $message->update([
             'status' => MessageStatuses::READ,
         ]);
 
         broadcast(new messageSeen($message->from, collect($message->id)));
+
+        return new MessageResource($message);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param Message $message
+     *
+     * @return Response
      */
-    public function destroy(Message $message)
+    public function destroy(Message $message): Response
     {
-        $id = $message->id;
+        $id     = $message->id;
         $userId = $message->to;
 
         try {
             $message->delete();
 
             broadcast(new MessageDeleted($id, $userId));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            \Log::error('Error on deleting message', [
+                'message' => $e->getMessage(),
+                'id'      => $id,
+                'user_id' => $userId,
+            ]);
         }
 
-        return response(200);
+        return \response()->noContent();
     }
 }

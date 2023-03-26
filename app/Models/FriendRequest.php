@@ -2,31 +2,36 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\FriendRequest
  *
- * @property int $id
- * @property int $from
- * @property int $to
- * @property int $status
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int         $id
+ * @property int         $from
+ * @property int         $to
+ * @property int         $status
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read User $fromUser
  * @property-read User $toUser
- * @method static \Illuminate\Database\Eloquent\Builder|FriendRequest newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|FriendRequest newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|FriendRequest query()
- * @method static \Illuminate\Database\Eloquent\Builder|FriendRequest whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|FriendRequest whereFrom($value)
- * @method static \Illuminate\Database\Eloquent\Builder|FriendRequest whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|FriendRequest whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|FriendRequest whereTo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|FriendRequest whereUpdatedAt($value)
- * @mixin \Eloquent
+ *
+ * @method static Builder|FriendRequest newModelQuery()
+ * @method static Builder|FriendRequest newQuery()
+ * @method static Builder|FriendRequest query()
+ * @method static Builder|FriendRequest whereCreatedAt($value)
+ * @method static Builder|FriendRequest whereFrom($value)
+ * @method static Builder|FriendRequest whereId($value)
+ * @method static Builder|FriendRequest whereStatus($value)
+ * @method static Builder|FriendRequest whereTo($value)
+ * @method static Builder|FriendRequest whereUpdatedAt($value)
+ *
+ * @mixin Eloquent
  */
 class FriendRequest extends Model
 {
@@ -36,7 +41,7 @@ class FriendRequest extends Model
         'id',
         'from',
         'to',
-        'status'
+        'status',
     ];
 
     public function fromUser(): BelongsTo
@@ -46,6 +51,6 @@ class FriendRequest extends Model
 
     public function toUser(): BelongsTo
     {
-        return $this->belongsTo(User::class,'to');
+        return $this->belongsTo(User::class, 'to');
     }
 }

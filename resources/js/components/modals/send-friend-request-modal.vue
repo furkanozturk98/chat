@@ -29,7 +29,7 @@
 import Form from 'form-backend-validation';
 
 export default {
-name: 'AddFriendModal',
+name: 'SendFriendRequestModal',
 
     data(){
         return {

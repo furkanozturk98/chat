@@ -28,6 +28,8 @@ class FriendService
             $lastMessage = $this->getLastMessage($friend);
 
             $friend->lastMessage = $lastMessage->created_at ?? null;
+
+            return $friend;
         });
     }
 
@@ -58,9 +60,9 @@ class FriendService
     /**
      * @param Friend $friend
      *
-     * @return Message
+     * @return ?Message
      */
-    public function getLastMessage(Friend $friend): Message
+    public function getLastMessage(Friend $friend): ?Message
     {
         return Message::query()
             ->select([

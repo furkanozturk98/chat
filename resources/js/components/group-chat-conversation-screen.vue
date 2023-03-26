@@ -2,7 +2,7 @@
   <div v-if="groupConversation" class="col-md-9">
     <add-group-member-modal :selected-group="groupConversation.id" />
     <group-member-list-modal :selected-group="groupConversation.id" :current-member="currentMember" :members="groupMembers" />
-    <div class="settings-tray" :class="{'settings-tray-dark': nightMode}">
+    <div class="conversation-settings-tray" :class="{'settings-tray-dark': nightMode}">
       <div
         class="friend-drawer no-gutters"
         :class="{ 'friend-drawer--grey' : !nightMode, 'friend-drawer--dark' : nightMode }"
@@ -65,8 +65,8 @@
       </div>
     </div>
 
-    <div class="chat-panel" :class="{ 'chat-panel-dark': nightMode } ">
-      <div class="overflow-auto" style="height:620px;">
+    <div class="chat-panel no-border" :class="{ 'chat-panel-dark': nightMode } ">
+      <div class="overflow-auto" style="height:70vh">
         <edit-group-message-modal />
 
         <group-message-list
