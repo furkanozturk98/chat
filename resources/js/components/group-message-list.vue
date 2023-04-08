@@ -139,7 +139,7 @@ export default {
         groupMessageReceived(message) {
             if (message.group.id === this.selectedGroup) {
                 this.items.push(message);
-                this.$http.put('/api/group-message/receive/'+ message.id);
+                this.$http.put('/api/group-messages/'+ message.id + '/receive');
             }
         },
 
@@ -166,7 +166,7 @@ export default {
             })
                 .then(value => {
                     if (value) {
-                        this.$http.delete('api/group-message/' + id)
+                        this.$http.delete('api/group-messages/' + id)
                             .then((res) => {
                                 Vue.$toast.open({
                                     message: 'Message deleted successfully.',

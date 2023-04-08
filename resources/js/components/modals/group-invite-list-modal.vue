@@ -92,7 +92,7 @@ name: 'GroupInvitesModal',
             })
                 .then(value => {
                     if (value) {
-                        this.$http.delete('/api/group-invite/cancel/' + id);
+                        this.$http.delete('/api/group-invites/' + id + '/cancel');
 
                         this.$eventHub.$emit('refreshGroupInvites');
 
@@ -137,7 +137,7 @@ name: 'GroupInvitesModal',
         },
 
         async approveRequest(id){
-            const response = await this.$http.put('/api/group-invite/approve/' + id);
+            const response = await this.$http.put('/api/group-invites/' + id + '/approve');
             console.log(response.data.data.group)
 
             this.$eventHub.$emit('groupInviteApproved', response.data.data.group);
@@ -157,7 +157,7 @@ name: 'GroupInvitesModal',
             })
                 .then(value => {
                     if (value) {
-                        this.$http.put('/api/group-invite/reject/' + id);
+                        this.$http.put('/api/group-invites/' + id + '/reject');
 
                         this.$eventHub.$emit('refreshGroupInvite');
 

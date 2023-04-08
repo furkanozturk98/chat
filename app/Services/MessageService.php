@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Enums\MessageStatuses;
 use App\Events\GroupMessageSeen;
+use App\Events\groupMessageSend;
 use App\Events\messageSeen;
 use App\Events\messageSend;
+use App\Http\Requests\MessageFormRequest;
 use App\Models\GroupMember;
 use App\Models\GroupMessage;
 use App\Models\GroupMessageStatus;
@@ -16,6 +18,16 @@ use Illuminate\Support\Collection;
 
 class MessageService
 {
+    /**
+     * @param int $messageId
+     *
+     * @return Message|null
+     */
+    public function findById(int $messageId): ?Message
+    {
+        return Message::find($messageId)->first();
+    }
+
     /**
      * @param string $roomId
      *
@@ -106,13 +118,13 @@ class MessageService
     }
 
     /**
-     * @param Request $request
-     * @param string  $roomId
-     * @param User    $user
+     * @param MessageFormRequest $request
+     * @param string $roomId
+     * @param User $user
      *
      * @return Message
      */
-    public function createMessageByRoomId(Request $request, string $roomId, User $user): Message
+    public function createMessageByRoomId(MessageFormRequest $request, string $roomId, User $user): Message
     {
         $filename = $this->uploadFile($request);
 
@@ -127,6 +139,50 @@ class MessageService
             ]);
 
         broadcast(new MessageSend($message));
+
+        return $message;
+    }
+
+    /**
+     * @param Request $request
+     * @param int     $groupId
+     * @param int     $groupMemberId
+     *
+     * @return GroupMessage
+     */
+    public function createGroupMessage(Request $request, int $groupId, int $groupMemberId): GroupMessage
+    {
+        $filename = $this->uploadFile($request);
+
+        /** @var GroupMessage $message */
+        $message = GroupMessage::query()
+            ->create([
+                'group_id' => $groupId,
+                'sender'   => $groupMemberId,
+                'content'  => $request->input('message'),
+                'image'    => $filename,
+                'created_at',
+            ]);
+
+        $groupMembers = GroupMember::query()
+            ->where('group_id', $groupId)
+            ->get();
+
+        $data = [];
+
+        foreach ($groupMembers as $groupMember) {
+            $data[] = [
+                'group_id'   => $groupMember->group_id,
+                'member_id'  => $groupMember->id,
+                'message_id' => $message->id,
+                'status'     => $groupMember->id === auth()->id() ? MessageStatuses::READ : MessageStatuses::UNREAD,
+            ];
+        }
+
+        GroupMessageStatus::query()
+            ->insert($data);
+
+        broadcast(new GroupMessageSend($message));
 
         return $message;
     }

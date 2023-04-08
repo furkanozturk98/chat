@@ -51,7 +51,7 @@ export default {
         },
 
         async submit() {
-            await this.form.post('/api/group');
+            await this.form.post('/api/groups');
 
             this.$refs['group'].hide();
 

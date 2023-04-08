@@ -4,9 +4,7 @@ namespace App\Services;
 
 use App\Enums\GroupInviteStatuses;
 use App\Models\GroupInvite;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
 
 class GroupInviteService
 {
@@ -36,16 +34,18 @@ class GroupInviteService
     }
 
     /**
-     * @param User $user
+     * @param int $userId
+     * @param int $groupId
      *
      * @return GroupInvite
      */
-    public function createInvite(User $user): GroupInvite
+    public function createInvite(int $userId, int $groupId): GroupInvite
     {
         return GroupInvite::query()->create([
-            'from'   => auth()->id(),
-            'to'     => $user->id,
-            'status' => GroupInviteStatuses::WAITING,
+            'from'     => auth()->id(),
+            'to'       => $userId,
+            'group_id' => $groupId,
+            'status'   => GroupInviteStatuses::WAITING,
         ]);
     }
 }

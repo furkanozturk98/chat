@@ -59,7 +59,7 @@ export default {
                 'message' : this.form.message,
             }
 
-            await this.form.put('/api/message/update/' + this.data.id)
+            await this.form.put('/api/messages/' + this.data.id)
                 .then((response) => {
 
                     Vue.$toast.open({

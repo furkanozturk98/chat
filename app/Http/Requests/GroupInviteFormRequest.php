@@ -31,9 +31,12 @@ class GroupInviteFormRequest extends FormRequest
 
         $user = $userService->findUserByEmail($this->input('email'));
 
-        $group = $this->route('group');
+        $group = $this->input('group_id');
 
         return [
+            'group_id' => [
+                'required',
+            ],
             'email' => [
                 'required',
                 'email',

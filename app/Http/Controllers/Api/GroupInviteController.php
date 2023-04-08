@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\groupInviteFormRequest;
 use App\Http\Resources\GroupInviteResource;
 use App\Http\Resources\GroupMemberResource;
-use App\Models\Group;
 use App\Models\GroupInvite;
 use App\Services\GroupInviteService;
 use App\Services\GroupMemberService;
@@ -40,15 +39,14 @@ class GroupInviteController extends Controller
      * Store a newly created resource in storage.
      *
      * @param GroupInviteFormRequest $request
-     * @param Group                  $group
      *
      * @return GroupInviteResource
      */
-    public function store(GroupInviteFormRequest $request, Group $group): GroupInviteResource
+    public function store(GroupInviteFormRequest $request): GroupInviteResource
     {
         $user = $this->userService->findUserByEmail($request->input('email'));
 
-        $groupInvite = $this->groupInviteService->createInvite($user);
+        $groupInvite = $this->groupInviteService->createInvite($user->id, $request->input('group_id'));
 
         return new GroupInviteResource($groupInvite);
     }

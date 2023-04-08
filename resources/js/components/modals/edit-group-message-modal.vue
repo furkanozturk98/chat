@@ -61,7 +61,7 @@ name: 'EditGroupMessageModal',
                 'message' : this.form.content
             }
 
-            await this.form.put('/api/group-message/' + this.data.id)
+            await this.form.put('/api/group-messages/' + this.data.id)
                 .then(() => {
 
                     Vue.$toast.open({

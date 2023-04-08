@@ -89,7 +89,7 @@ export default {
             })
                 .then(value => {
                     if (value) {
-                        this.$http.put('/api/group-member/make-admin/' + memberId)
+                        this.$http.put('/api/group-members/' + memberId + '/make-admin')
                             .then(() => {
                                 this.$refs['group-member-list'].hide();
 
@@ -99,7 +99,7 @@ export default {
                                     position: 'top-right',
                                     duration: 1000
                                 });
-console.log('memberid' + memberId)
+
                                 this.members.forEach(item => {
                                     console.log(item.id)
                                     if (item.id === memberId) {
@@ -181,7 +181,7 @@ console.log('memberid' + memberId)
                 .then(value => {
                     if (value) {
 
-                        this.$http.delete('/api/group-member/remove/' + memberId)
+                        this.$http.delete('/api/group-members/' + memberId + '/remove')
                             .then((response) => {
 
                                 console.log(response.data.data);
@@ -226,7 +226,7 @@ console.log('memberid' + memberId)
                 .then(value => {
                         if (value) {
 
-                            this.$http.put('/api/group-member/dismiss-as-admin/' + memberId)
+                            this.$http.put('/api/group-member' + memberId + '/dismiss')
 
                                 .then(() => {
                                     this.$refs['group-member-list'].hide();

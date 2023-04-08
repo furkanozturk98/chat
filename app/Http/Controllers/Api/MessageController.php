@@ -7,6 +7,8 @@ use App\Events\messageDeleted;
 use App\Events\messageSeen;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MessageEditFormRequest;
+use App\Http\Requests\MessageFormRequest;
+use App\Http\Requests\MessageIndexRequest;
 use App\Http\Resources\MessageResource;
 use App\Models\Message;
 use App\Models\User;
@@ -29,9 +31,9 @@ class MessageController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index(string $roomId): AnonymousResourceCollection
+    public function index(MessageIndexRequest $request): AnonymousResourceCollection
     {
-        $messages = $this->messageService->getMessagesByRoomId($roomId);
+        $messages = $this->messageService->getMessagesByRoomId($request->input('room_id'));
 
         return MessageResource::collection($messages);
     }
@@ -45,7 +47,7 @@ class MessageController extends Controller
      *
      * @return MessageResource
      */
-    public function store(Request $request, string $roomId, User $user): MessageResource
+    public function store(MessageFormRequest $request, string $roomId, User $user): MessageResource
     {
         $message = $this->messageService->createMessageByRoomId($request, $roomId, $user);
 

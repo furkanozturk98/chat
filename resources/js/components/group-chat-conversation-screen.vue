@@ -87,7 +87,7 @@
 
             <file-upload
               ref="upload"
-              :post-action="'/api/group-message/group/'+groupConversation.id+'/member/'+currentMember.id"
+              :post-action="'/api/group-message?group_id='+groupConversation.id+'&member_id='+currentMember.id"
               :headers="{'Authorization': 'Bearer '+currentUser.api_token}"
               style="cursor:pointer;"
               accept="image/png,image/jpeg"
@@ -168,12 +168,12 @@ export default {
         },
 
         async fetch() {
-            const response = await this.$http.get('/api/group-messages/' + this.groupConversation.id);
+            const response = await this.$http.get('/api/group-messages?group_id=' + this.groupConversation.id);
             this.items = response.data.data;
         },
 
         async getGroupMembers(){
-            const response = await this.$http.get('/api/group-member/' + this.groupConversation.id);
+            const response = await this.$http.get('/api/group-members?group_id=' + this.groupConversation.id);
             this.groupMembers = response.data.data;
 
             for(let i=0;i< this.groupMembers.length; i++)
@@ -195,7 +195,7 @@ export default {
             this.form.group_id = this.groupConversation.id;
             this.form.member_id = this.currentMember.id;
 
-            await this.form.post('/api/group-message/group/'+this.groupConversation.id+'/member/'+this.currentMember.id);
+            await this.form.post('/api/group-message?group_id='+this.groupConversation.id+'&member_id='+this.currentMember.id);
 
         },
 

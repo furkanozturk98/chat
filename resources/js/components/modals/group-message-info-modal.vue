@@ -50,7 +50,7 @@ name: 'GroupMessageInfoModal',
 
     methods: {
         async fetch(){
-            const response = await this.$http.get('/api/group-message-info/group/' + this.groupId + '/message/'+ this.messageId);
+            const response = await this.$http.get('/api/group-messages/info?group_id=' + this.groupId + '&message_id='+ this.messageId);
             this.items = response.data.data;
         },
 

@@ -89,7 +89,7 @@
 
             async submit() {
 
-                const response = await this.form.post('/api/profile-setting');
+                const response = await this.form.post('/api/profile-settings');
 
                 this.$refs['profile-settings'].hide();
 

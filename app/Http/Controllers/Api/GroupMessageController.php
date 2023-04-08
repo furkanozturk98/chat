@@ -6,22 +6,26 @@ use App\Enums\MessageStatuses;
 use App\Events\groupMessageDeleted;
 use App\Events\groupMessageEdited;
 use App\Events\groupMessageSeen;
-use App\Events\groupMessageSend;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GroupMemberStoreFormRequest;
 use App\Http\Requests\GroupMessageEditFormRequest;
+use App\Http\Requests\GroupMessageIndexRequest;
 use App\Http\Resources\GroupMessageResource;
 use App\Models\Group;
 use App\Models\GroupMember;
 use App\Models\GroupMessage;
 use App\Models\GroupMessageStatus;
+use App\Services\GroupMemberService;
 use App\Services\MessageService;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class GroupMessageController extends Controller
 {
-    public function __construct(public MessageService $messageService)
-    {
+    public function __construct(
+        public MessageService $messageService,
+        public GroupMemberService $groupMemberService,
+    ) {
     }
 
     /**
@@ -31,11 +35,13 @@ class GroupMessageController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index(Group $group): AnonymousResourceCollection
+    public function index(GroupMessageIndexRequest $request): AnonymousResourceCollection
     {
-        $this->messageService->updateGroupMessagesAsRead(groupId: $group);
+        $groupId = $request->input('group_id');
 
-        $messages = $this->messageService->getMessagesByGroupId($group->id);
+        $this->messageService->updateGroupMessagesAsRead(groupId: $groupId);
+
+        $messages = $this->messageService->getMessagesByGroupId(groupId: $groupId);
 
         return GroupMessageResource::collection($messages);
     }
@@ -43,47 +49,19 @@ class GroupMessageController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param GroupMemberStoreFormRequest $request
+     * @param Group                       $group
+     * @param GroupMember                 $groupMember
      *
      * @return GroupMessageResource
      */
-    public function store(Request $request, Group $group, GroupMember $groupMember)
+    public function store(GroupMemberStoreFormRequest $request, Group $group, GroupMember $groupMember): GroupMessageResource
     {
-        $filename = null;
-        if ($request->has('file')) {
-            $filename = time() . '.' . $request->file('file')->getClientOriginalExtension();
-            $request->file('file')->move(public_path('chat'), $filename);
-        }
-
-        /** @var GroupMessage $message */
-        $message = GroupMessage::query()
-            ->create([
-                'group_id' => $group->id,
-                'sender'   => $groupMember->id,
-                'content'  => $request->input('message'),
-                'image'    => $filename,
-                'created_at',
-            ]);
-
-        $groupMembers = GroupMember::query()
-            ->where('group_id', $request->input('group_id'))
-            ->get();
-
-        $data = [];
-
-        foreach ($groupMembers as $groupMember) {
-            $data[] = [
-                'group_id'   => $groupMember->group_id,
-                'member_id'  => $groupMember->id,
-                'message_id' => $message->id,
-                'status'     => $groupMember->id === auth()->id() ? MessageStatuses::READ : MessageStatuses::UNREAD,
-            ];
-        }
-
-        GroupMessageStatus::query()
-            ->insert($data);
-
-        broadcast(new GroupMessageSend($message));
+        $message = $this->messageService->createGroupMessage(
+            request: $request,
+            groupId: $group->id,
+            groupMemberId: $groupMember->id
+        );
 
         return new GroupMessageResource($message);
     }
@@ -91,12 +69,12 @@ class GroupMessageController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param GroupMessage             $groupMessage
+     * @param GroupMessageEditFormRequest $request
+     * @param GroupMessage                $groupMessage
      *
-     * @return \Illuminate\Http\Response
+     * @return GroupMessageResource
      */
-    public function update(GroupMessageEditFormRequest $request, GroupMessage $groupMessage)
+    public function update(GroupMessageEditFormRequest $request, GroupMessage $groupMessage): GroupMessageResource
     {
         $attributes = $request->validated();
 
@@ -105,6 +83,8 @@ class GroupMessageController extends Controller
         $groupMessage->update($attributes);
 
         broadcast(new GroupMessageEdited($groupMessage));
+
+        return new GroupMessageResource($groupMessage);
     }
 
     /**
@@ -112,14 +92,11 @@ class GroupMessageController extends Controller
      *
      * @param GroupMessage $groupMessage
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
-    public function receive(GroupMessage $groupMessage)
+    public function receive(GroupMessage $groupMessage): void
     {
-        $groupMember = GroupMember::query()
-            ->where('group_id', $groupMessage->group_id)
-            ->where('member_id', auth()->id())
-            ->first();
+        $groupMember = $this->groupMemberService->getGroupMember($groupMessage->group_id);
 
         GroupMessageStatus::query()
             ->where('group_id', $groupMessage->group_id)
@@ -129,7 +106,12 @@ class GroupMessageController extends Controller
                 'status' => MessageStatuses::READ,
             ]);
 
-        broadcast(new GroupMessageSeen($groupMessage->group_id, $groupMessage->sender, $groupMessage->id, auth()->id()));
+        broadcast(new GroupMessageSeen(
+            $groupMessage->group_id,
+            $groupMessage->sender,
+            $groupMessage->id,
+            auth()->id()
+        ));
     }
 
     /**
@@ -137,25 +119,25 @@ class GroupMessageController extends Controller
      *
      * @param GroupMessage $groupMessage
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function destroy(GroupMessage $groupMessage)
+    public function destroy(GroupMessage $groupMessage): JsonResponse
     {
         $messageId = $groupMessage->id;
         $groupId   = $groupMessage->group_id;
 
-        $groupMember = GroupMember::query()
-            ->where('group_id', $groupMessage->group_id)
-            ->where('member_id', auth()->id())
-            ->first();
+        $groupMember = $this->groupMemberService->getGroupMember($groupMessage->group_id);
 
         $groupMessage->update([
             'deleted_by' => $groupMember->id,
+            'deleted_at' >= now(),
         ]);
 
-        $groupMessage->delete();
-
-        broadcast(new GroupMessageDeleted($messageId, $groupId, $groupMember->id));
+        broadcast(new GroupMessageDeleted(
+            $messageId,
+            $groupId,
+            $groupMember->id
+        ));
 
         return response()->json([
             'data' => $groupMember->id,

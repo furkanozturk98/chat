@@ -244,7 +244,7 @@ export default {
     methods: {
 
         async submit() {
-            await this.form.post('/api/friend-request');
+            await this.form.post('/api/friend-requests');
 
             this.$refs['add-person'].hide();
 
@@ -252,7 +252,7 @@ export default {
         },
 
         async getFriends(){
-            const response = await this.$http.get('/api/friend-list');
+            const response = await this.$http.get('/api/friends');
             this.friends = response.data.data;
         },
 
@@ -261,7 +261,7 @@ export default {
         },
 
         async getGroups(){
-            const response = await this.$http.get('/api/get-groups')
+            const response = await this.$http.get('/api/groups')
             this.groups = response.data.data;
 
             await this.listenGroups();
@@ -348,12 +348,12 @@ export default {
         },
 
         async getFriendRequests() {
-            const response = await this.$http.get('/api/get-friend-requests');
+            const response = await this.$http.get('/api/friend-requests');
             this.friendRequest = response.data.data;
         },
 
         async getGroupInvites() {
-            const response = await this.$http.get('/api/get-group-invites');
+            const response = await this.$http.get('/api/group-invites');
             this.groupInvites = response.data.data;
         },
 

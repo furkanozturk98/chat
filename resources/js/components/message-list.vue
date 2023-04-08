@@ -140,7 +140,7 @@ export default {
             console.log(this.selectedFriend);
             if(this.selectedFriend && message.from === this.selectedFriend.id){
                 this.items.push(message);
-                this.$http.put('/api/message/receive/'+ message.id);
+                this.$http.put('/api/messages/'+ message.id + '/receive');
             }
         },
 
@@ -176,7 +176,7 @@ export default {
             })
                 .then(value => {
                     if (value) {
-                        this.$http.delete('api/message/delete/' + id)
+                        this.$http.delete('api/messages/' + id)
                             .then(() => {
                                 Vue.$toast.open({
                                     message: 'Message deleted successfully.',

@@ -109,7 +109,7 @@ export default {
             })
                 .then(value => {
                     if (value) {
-                        this.$http.delete('/api/friend-request/cancel/' + id);
+                        this.$http.delete('/api/friend-requests/' + id + '/cancel');
 
                         this.$eventHub.$emit('refreshFriendRequests');
 
@@ -154,7 +154,7 @@ export default {
         },
 
         async approveRequest(id){
-            const response = await this.form.put('/api/friend-request/approve/' + id);
+            const response = await this.form.put('/api/friend-requests/' + id + '/approve');
 
             this.$eventHub.$emit('friendRequestApproved', response.data);
         },
@@ -173,7 +173,7 @@ export default {
             })
                 .then(value => {
                     if (value) {
-                        this.$http.put('/api/friend-request/reject/' + id);
+                        this.$http.put('/api/friend-requests/reject/' + id);
 
                         this.$eventHub.$emit('refreshFriendRequests');
 

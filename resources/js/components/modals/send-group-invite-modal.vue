@@ -53,7 +53,7 @@ name: 'AddGroupMemberModal',
         },
 
         async submit() {
-            await this.form.post('/api/group-invite/' + this.selectedGroup);
+            await this.form.post('/api/group-invites/' + this.selectedGroup);
 
             this.$refs['add-group-member'].hide();
 
