@@ -18,7 +18,6 @@ class groupMessageSend implements ShouldBroadcast
 
     /**
      * Create a new event instance.
-     *
      */
     public function __construct(GroupMessage $message)
     {
@@ -32,7 +31,7 @@ class groupMessageSend implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('groupMessages.'.$this->message->group_id);
+        return new PrivateChannel('groupMessages.' . $this->message->group_id);
     }
 
     public function broadcastWith()

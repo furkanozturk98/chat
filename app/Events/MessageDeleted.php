@@ -3,9 +3,7 @@
 namespace App\Events;
 
 use App\Models\User;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -16,12 +14,13 @@ class messageDeleted implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public int $id;
+
     public int $userId;
 
     /**
      * Create a new event instance.
-     * @param int $id
      *
+     * @param int  $id
      * @param User $user
      */
     public function __construct(int $id, int $userId)
@@ -38,7 +37,7 @@ class messageDeleted implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('messageDeleted.'.$this->userId);
+        return new PrivateChannel('messageDeleted.' . $this->userId);
     }
 
     public function broadcastWith()

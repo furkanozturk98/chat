@@ -4,9 +4,7 @@ namespace App\Events;
 
 use App\Http\Resources\GroupMessageResource;
 use App\Models\GroupMessage;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -20,7 +18,6 @@ class groupMessageEdited implements ShouldBroadcast
 
     /**
      * Create a new event instance.
-     *
      */
     public function __construct(GroupMessage $message)
     {
@@ -34,7 +31,7 @@ class groupMessageEdited implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('groupMessages.'.$this->message->group_id);
+        return new PrivateChannel('groupMessages.' . $this->message->group_id);
     }
 
     public function broadcastWith()

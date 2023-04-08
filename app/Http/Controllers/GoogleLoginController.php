@@ -44,10 +44,10 @@ class GoogleLoginController extends Controller
         $user = User::firstOrCreate([
             'email' => $user->getEmail(),
         ], [
-            'name'     => $user->getName(),
-            'password' => bcrypt(Str::random()),
+            'name'      => $user->getName(),
+            'password'  => bcrypt(Str::random()),
             'api_token' => Str::random(60),
-            'image' => 'profile.jpg'
+            'image'     => 'profile.jpg',
         ]);
 
         Auth::login($user);

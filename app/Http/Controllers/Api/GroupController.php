@@ -11,7 +11,6 @@ use App\Models\Group;
 use App\Models\GroupMember;
 use App\Models\GroupMessage;
 use App\Models\GroupMessageStatus;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class GroupController extends Controller
@@ -32,7 +31,7 @@ class GroupController extends Controller
             ->whereIn('id', $groupIds)
             ->get();
 
-        $groups->map(function ($group) {
+        $groups->map(function($group) {
             $count = GroupMessageStatus::query()
                 ->where('group_id', $group->id)
                 ->where('member_id', auth()->id())
@@ -46,7 +45,7 @@ class GroupController extends Controller
                 ->latest()
                 ->first();
 
-            $group->lastMessage = isset($lastMessage->created_at) ? $lastMessage->created_at : null;
+            $group->lastMessage = $lastMessage->created_at ?? null;
         });
 
         return GroupResource::collection($groups);
@@ -56,14 +55,15 @@ class GroupController extends Controller
      * Store a newly created resource in storage.
      *
      * @param GroupCreateFormRequest $request
+     *
      * @return GroupResource
      */
     public function store(GroupCreateFormRequest $request)
     {
         $attributes = [
-            'name' => $request->input('name'),
+            'name'       => $request->input('name'),
             'created_by' => $request->user()->id,
-            'image' => 'group.png'
+            'image'      => 'group.png',
         ];
 
         /** @var Group $group */
@@ -72,9 +72,9 @@ class GroupController extends Controller
 
         GroupMember::query()
             ->create([
-                'group_id' => $group->id,
+                'group_id'  => $group->id,
                 'member_id' => $request->user()->id,
-                'type' => GroupMemberTypes::SUPER_ADMIN,
+                'type'      => GroupMemberTypes::SUPER_ADMIN,
             ]);
 
         return new GroupResource($group);
@@ -83,7 +83,8 @@ class GroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)

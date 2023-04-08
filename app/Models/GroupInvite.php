@@ -9,13 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * App\Models\GroupInvite
  *
- * @property int $id
- * @property int $from
- * @property int $to
- * @property int $group_id
- * @property int $status
+ * @property int                             $id
+ * @property int                             $from
+ * @property int                             $to
+ * @property int                             $group_id
+ * @property int                             $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|GroupInvite newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|GroupInvite newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|GroupInvite query()
@@ -26,7 +27,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|GroupInvite whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|GroupInvite whereTo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|GroupInvite whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
+ *
  * @property-read User $fromUser
  * @property-read User $toUser
  * @property-read \App\Models\Group $group
@@ -39,7 +42,7 @@ class GroupInvite extends Model
         'from',
         'to',
         'group_id',
-        'status'
+        'status',
     ];
 
     public function fromUser(): BelongsTo
@@ -49,11 +52,11 @@ class GroupInvite extends Model
 
     public function toUser(): BelongsTo
     {
-        return $this->belongsTo(User::class,'to');
+        return $this->belongsTo(User::class, 'to');
     }
 
     public function group(): BelongsTo
     {
-        return $this->belongsTo(Group::class,'group_id');
+        return $this->belongsTo(Group::class, 'group_id');
     }
 }

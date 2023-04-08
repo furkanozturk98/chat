@@ -9,15 +9,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * App\Models\Message
  *
- * @property int $id
- * @property int $from
- * @property int $to
- * @property string $room_id
- * @property string $message
- * @property string $image
+ * @property int                             $id
+ * @property int                             $from
+ * @property int                             $to
+ * @property string                          $room_id
+ * @property string                          $message
+ * @property string                          $image
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Message newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Message query()
@@ -28,8 +29,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereRoomId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereTo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
+ *
  * @property int|null $status
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereStatus($value)
  */
 class Message extends Model
@@ -47,7 +51,7 @@ class Message extends Model
         'image',
         'status',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     protected $casts = [

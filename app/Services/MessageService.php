@@ -119,8 +119,8 @@ class MessageService
 
     /**
      * @param MessageFormRequest $request
-     * @param string $roomId
-     * @param User $user
+     * @param string             $roomId
+     * @param User               $user
      *
      * @return Message
      */

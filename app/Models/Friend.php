@@ -12,11 +12,11 @@ use Illuminate\Support\Carbon;
 /**
  * App\Friend
  *
- * @property int                             $id
- * @property int                             $user_id
- * @property int                             $friend_id
- * @property int                             $blocked_by
- * @property string                          $room_id
+ * @property int         $id
+ * @property int         $user_id
+ * @property int         $friend_id
+ * @property int         $blocked_by
+ * @property string      $room_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read User $friend

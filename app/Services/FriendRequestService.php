@@ -13,7 +13,6 @@ class FriendRequestService
 {
     public function __construct(public UserService $userService)
     {
-
     }
 
     /**

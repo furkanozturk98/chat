@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Models\GroupMessageStatus
  *
- * @property int $id
- * @property int $group_id
- * @property int $member_id
- * @property int $message_id
- * @property int|null $status
+ * @property int                             $id
+ * @property int                             $group_id
+ * @property int                             $member_id
+ * @property int                             $message_id
+ * @property int|null                        $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus query()
@@ -25,7 +26,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus whereMessageId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
+ *
  * @property-read GroupMessage $message
  * @property-read GroupMember $member
  */

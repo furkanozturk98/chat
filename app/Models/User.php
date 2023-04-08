@@ -9,17 +9,18 @@ use Illuminate\Notifications\Notifiable;
 /**
  * App\User
  *
- * @property int $id
- * @property string $name
- * @property string $email
+ * @property int                             $id
+ * @property string                          $name
+ * @property string                          $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
- * @property string $password
- * @property string|null $image
- * @property string|null $about
+ * @property string                          $password
+ * @property string|null                     $image
+ * @property string|null                     $about
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
@@ -32,10 +33,15 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
+ *
  * @property string|null $api_token
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|User whereApiToken($value)
+ *
  * @property string|null $remember_token
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  */
 class User extends Authenticatable
@@ -43,13 +49,14 @@ class User extends Authenticatable
     use Notifiable, HasFactory;
 
     protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'image','about','api_token'
+        'name', 'email', 'password', 'image', 'about', 'api_token',
     ];
 
     /**

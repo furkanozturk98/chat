@@ -18,7 +18,6 @@ class messageSend implements ShouldBroadcast
 
     /**
      * Create a new event instance.
-     *
      */
     public function __construct(Message $message)
     {
@@ -33,12 +32,11 @@ class messageSend implements ShouldBroadcast
     public function broadcastOn()
     {
         //dd('messages.'.$this->message->to);
-        return new PrivateChannel('messages.'.$this->message->to);
+        return new PrivateChannel('messages.' . $this->message->to);
     }
 
     public function broadcastWith()
     {
         return ['message' => new MessageResource($this->message)];
     }
-
 }

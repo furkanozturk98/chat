@@ -2,9 +2,7 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -16,13 +14,18 @@ class GroupMessageSeen implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public Collection $messageIds;
+
     public int $groupId;
+
     public int $senderId;
+
     public int $messageId;
+
     public int $receiverId;
 
     /**
      * Create a new event instance.
+     *
      * @param int $groupId
      * @param int $senderId
      * @param int $messageId
@@ -30,9 +33,9 @@ class GroupMessageSeen implements ShouldBroadcast
      */
     public function __construct(int $groupId, int $senderId, int $messageId, int $receiverId)
     {
-        $this->groupId = $groupId;
-        $this->senderId = $senderId;
-        $this->messageId = $messageId;
+        $this->groupId    = $groupId;
+        $this->senderId   = $senderId;
+        $this->messageId  = $messageId;
         $this->receiverId = $receiverId;
     }
 
@@ -43,15 +46,15 @@ class GroupMessageSeen implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('groupMessageSeen.'.$this->groupId.'.'.$this->senderId);
+        return new PrivateChannel('groupMessageSeen.' . $this->groupId . '.' . $this->senderId);
     }
 
     public function broadcastWith()
     {
         return [
-            'groupId' => $this->groupId,
-            'messageId' => $this->messageId,
-            'receiverId' => $this->receiverId
+            'groupId'    => $this->groupId,
+            'messageId'  => $this->messageId,
+            'receiverId' => $this->receiverId,
         ];
     }
 }

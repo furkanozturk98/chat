@@ -24,9 +24,9 @@ class ProfileSettingFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required'],
+            'name'  => ['required'],
             'image' => 'nullable',
-            'about' => 'nullable'
+            'about' => 'nullable',
         ];
     }
 }

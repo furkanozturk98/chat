@@ -18,7 +18,6 @@ class messageEdited implements ShouldBroadcast
 
     /**
      * Create a new event instance.
-     *
      */
     public function __construct(Message $message)
     {
@@ -33,7 +32,7 @@ class messageEdited implements ShouldBroadcast
     public function broadcastOn()
     {
         //dd('messages.'.$this->message->to);
-        return new PrivateChannel('messageEdited.'.$this->message->to);
+        return new PrivateChannel('messageEdited.' . $this->message->to);
     }
 
     public function broadcastWith()
