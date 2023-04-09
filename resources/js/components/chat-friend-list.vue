@@ -38,7 +38,7 @@
         },
 
         mounted() {
-            this.$eventHub.$on('messageReceived',this.messageReceived);
+            this.$eventHub.$on('message-received',this.messageReceived);
         },
 
         methods: {

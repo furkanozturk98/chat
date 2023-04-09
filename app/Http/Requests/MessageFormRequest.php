@@ -23,6 +23,8 @@ class MessageFormRequest extends FormRequest
      */
     public function rules()
     {
+        $file = $this->hasFile('file');
+
         return [
             'room_id' => [
                 'required',
@@ -31,7 +33,7 @@ class MessageFormRequest extends FormRequest
                 'required',
             ],
             'message' => [
-                'required',
+                $file ? 'nullable' : 'required',
             ],
         ];
     }

@@ -31,7 +31,7 @@ class UserBlocked implements ShouldBroadcast
      */
     public function broadcastOn(): Channel|PrivateChannel|array
     {
-        return new PrivateChannel('messages.' . $this->user->id);
+        return new PrivateChannel('private.' . $this->user->id);
     }
 
     public function broadcastWith(): array

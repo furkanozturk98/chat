@@ -46,7 +46,7 @@ class GroupMessageSeen implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('groupMessageSeen.' . $this->groupId . '.' . $this->senderId);
+        return new PrivateChannel('group.' . $this->groupId . '.' . $this->senderId);
     }
 
     public function broadcastWith()

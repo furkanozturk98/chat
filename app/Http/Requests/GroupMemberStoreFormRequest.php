@@ -27,7 +27,7 @@ class GroupMemberStoreFormRequest extends FormRequest
             'group_id' => [
                 'required',
             ],
-            'member_id' => [
+            'user_id' => [
                 'required',
             ],
         ];

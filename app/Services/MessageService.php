@@ -4,15 +4,13 @@ namespace App\Services;
 
 use App\Enums\MessageStatuses;
 use App\Events\GroupMessageSeen;
-use App\Events\groupMessageSend;
-use App\Events\messageSeen;
-use App\Events\messageSend;
+use App\Events\GroupMessageSend;
+use App\Events\MessageSeen;
+use App\Events\MessageSend;
 use App\Http\Requests\MessageFormRequest;
 use App\Models\GroupMember;
-use App\Models\GroupMessage;
 use App\Models\GroupMessageStatus;
 use App\Models\Message;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -50,7 +48,7 @@ class MessageService
      */
     public function getMessagesByGroupId(string $groupId): Collection
     {
-        return GroupMessage::withTrashed()
+        return Message::withTrashed()
             ->where('group_id', $groupId)
             ->get();
     }
@@ -144,18 +142,19 @@ class MessageService
     /**
      * @param Request $request
      *
-     * @return GroupMessage
+     * @return Message
      */
-    public function createGroupMessage(Request $request): GroupMessage
+    public function createGroupMessage(Request $request): Message
     {
         $filename = $this->uploadFile($request);
 
-        /** @var GroupMessage $message */
-        $message = GroupMessage::query()
+        /** @var Message $message */
+        $message = Message::query()
             ->create([
+                'from'     => $request->input('user_id'),
+                'to'       => null,
                 'group_id' => $request->input('group_id'),
-                'sender'   => $request->input('member_id'),
-                'content'  => $request->input('message'),
+                'message'  => $request->input('message'),
                 'image'    => $filename,
             ]);
 

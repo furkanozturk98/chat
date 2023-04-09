@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\GroupMessage;
+use App\Models\Message;
 use Illuminate\Database\Seeder;
 
 class GroupMessageSeeder extends Seeder
@@ -12,31 +12,30 @@ class GroupMessageSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        GroupMessage::query()->create([
+        Message::query()->create([
             'group_id' => 1,
-            'sender' => 1,
-            'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+            'from'     => 1,
+            'message'  => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
         ]);
 
-        GroupMessage::query()->create([
+        Message::query()->create([
             'group_id' => 1,
-            'sender' => 2,
-            'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+            'from'     => 2,
+            'message'  => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
         ]);
 
-        GroupMessage::query()->create([
+        Message::query()->create([
             'group_id' => 1,
-            'sender' => 1,
-            'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+            'from'     => 1,
+            'message'  => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
         ]);
 
-        GroupMessage::query()->create([
+        Message::query()->create([
             'group_id' => 1,
-            'sender' => 2,
-            'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+            'from'     => 2,
+            'message'  => 'Lorem  ipsum dolor sit amet, consectetur adipiscing elit',
         ]);
-
     }
 }

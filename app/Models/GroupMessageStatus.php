@@ -2,34 +2,38 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\GroupMessageStatus
  *
- * @property int                             $id
- * @property int                             $group_id
- * @property int                             $member_id
- * @property int                             $message_id
- * @property int|null                        $status
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int         $id
+ * @property int         $group_id
+ * @property int         $member_id
+ * @property int         $message_id
+ * @property int|null    $status
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  *
- * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus query()
- * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus whereGroupId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus whereMemberId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus whereMessageId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|GroupMessageStatus whereUpdatedAt($value)
+ * @method static Builder|GroupMessageStatus newModelQuery()
+ * @method static Builder|GroupMessageStatus newQuery()
+ * @method static Builder|GroupMessageStatus query()
+ * @method static Builder|GroupMessageStatus whereCreatedAt($value)
+ * @method static Builder|GroupMessageStatus whereGroupId($value)
+ * @method static Builder|GroupMessageStatus whereId($value)
+ * @method static Builder|GroupMessageStatus whereMemberId($value)
+ * @method static Builder|GroupMessageStatus whereMessageId($value)
+ * @method static Builder|GroupMessageStatus whereStatus($value)
+ * @method static Builder|GroupMessageStatus whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  *
- * @property-read GroupMessage $message
+ * @property-read Message $message
  * @property-read GroupMember $member
  */
 class GroupMessageStatus extends Model
@@ -38,13 +42,13 @@ class GroupMessageStatus extends Model
 
     protected $fillable = ['status'];
 
-    public function member()
+    public function member(): BelongsTo
     {
         return $this->belongsTo(GroupMember::class, 'member_id');
     }
 
-    public function message()
+    public function message(): BelongsTo
     {
-        return $this->belongsTo(GroupMessage::class, 'message_id');
+        return $this->belongsTo(Message::class, 'message_id');
     }
 }

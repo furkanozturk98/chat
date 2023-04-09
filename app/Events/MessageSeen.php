@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\Message;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -34,8 +33,7 @@ class messageSeen implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        //dd('messages.'.$this->message->to);
-        return new PrivateChannel('messageSeen.' . $this->from);
+        return new PrivateChannel('private.' . $this->from);
     }
 
     public function broadcastWith()

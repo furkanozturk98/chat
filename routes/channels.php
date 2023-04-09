@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\GroupMember;
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -14,24 +15,11 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('messages.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('private.{id}', function(User $user, int $id) {
+    return $user->id === $id;
 });
 
-Broadcast::channel('messageEdited.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
-});
-
-Broadcast::channel('messageDeleted.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
-});
-
-Broadcast::channel('messageSeen.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
-});
-
-Broadcast::channel('groupMessages.{groupId}', function ($user, $groupId) {
-
+Broadcast::channel('group.{groupId}', function(User $user, int $groupId) {
     $isMember = GroupMember::query()
         ->where('member_id', $user->id)
         ->where('group_id', $groupId)
@@ -40,8 +28,7 @@ Broadcast::channel('groupMessages.{groupId}', function ($user, $groupId) {
     return isset($isMember);
 });
 
-Broadcast::channel('groupMessageSeen.{groupId}.{userId}', function ($user, $groupId) {
-
+Broadcast::channel('group.{groupId}.{userId}', function(User $user, int $groupId) {
     $isMember = GroupMember::query()
         ->where('member_id', $user->id)
         ->where('group_id', $groupId)

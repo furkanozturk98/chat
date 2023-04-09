@@ -37,7 +37,7 @@ class messageDeleted implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('messageDeleted.' . $this->userId);
+        return new PrivateChannel('private.' . $this->userId);
     }
 
     public function broadcastWith()

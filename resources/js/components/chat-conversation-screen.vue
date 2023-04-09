@@ -156,7 +156,6 @@ export default {
                 return;
             }
             const response = await this.form.post('/api/messages?room_id=' + this.conversation.roomId + '&user_id=' + this.conversation.friend.id);
-            console.log(response);
             this.items.push(response.data);
         },
 

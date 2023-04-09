@@ -94,7 +94,7 @@
             >Groups</a>
           </li>
 
-          <li v-show="visibleSaveButton" role="presentation" class="nav-item ml-auto">
+          <li v-show="showGroups" role="presentation" class="nav-item ml-auto">
             <button class="btn btn-primary btn-sm float-right mr-2 mt-1" @click="showCreateGroupModal">
               <b-icon icon="person-plus-fill" aria-hidden="true" />
             </button>
@@ -102,12 +102,12 @@
         </ul>
 
         <div id="myTabContent" class="tab-content">
-          <div id="friend" class="tab-pane fade show active" role="tabpanel" aria-labelledby="friend-tab">
+          <div v-if="!showGroups" id="friend" class="tab-pane fade show active" role="tabpanel" aria-labelledby="friend-tab">
             <chat-friend-list :night-mode="nightMode" :items="filteredItems" />
           </div>
 
-          <div id="group" class="tab-pane fade" role="tabpanel" aria-labelledby="group-tab">
-            <chat-group-list v-if="visibleSaveButton" :night-mode="nightMode" :items="filteredItems" />
+          <div v-else id="group" class="tab-pane fade" role="tabpanel" aria-labelledby="group-tab">
+            <chat-group-list :night-mode="nightMode" :items="filteredItems" />
           </div>
         </div>
       </div>
@@ -169,7 +169,7 @@ export default {
             groupSelected: null,
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
             rand: 1,
-            visibleSaveButton: false,
+            showGroups: false,
             search: '',
             friends: [],
             groups: []
@@ -178,7 +178,7 @@ export default {
 
     computed: {
         filteredItems() {
-            if(this.visibleSaveButton){
+            if(this.showGroups){
                 return this.groups
                     .filter(item => item.name.toLowerCase().includes(this.search.toLocaleLowerCase()))
                     .sort((a, b) => a['name'] > b['name'] ? 1 : -1);
@@ -191,33 +191,22 @@ export default {
     },
 
     mounted() {
-        window.Echo.private(`messages.${this.currentUser.id}`)
-            .listen('messageSend', (e) => {
-                this.$eventHub.$emit('messageReceived', e.message);
-                console.log(e.message);
+        window.Echo.private(`private.${this.currentUser.id}`)
+            .listen('MessageSend', (e) => {
+                console.log('message send');
+                this.$eventHub.$emit('message-received', e.message);
             })
-            .listen('userBlocked', (e) => {
-                this.$eventHub.$emit('userBlocked', e);
-                console.log(e);
-            });
-
-        window.Echo.private(`messageEdited.${this.currentUser.id}`)
-            .listen('messageEdited', (e) => {
-                this.$eventHub.$emit('messageEdited', e.message);
-                console.log(e.message);
-            });
-
-        window.Echo.private(`messageDeleted.${this.currentUser.id}`)
-            .listen('messageDeleted', (e) => {
-                this.$eventHub.$emit('messageDeleted', e.id);
-                console.log(e.id);
-            });
-
-        window.Echo.private(`messageSeen.${this.currentUser.id}`)
-            .listen('messageSeen', (e) => {
-                console.log('messageSeen');
-                this.$eventHub.$emit('messageSeen', e.messageIds);
-                console.log(e.messageIds);
+            .listen('UserBlocked', (e) => {
+                this.$eventHub.$emit('user-blocked', e);
+            })
+            .listen('MessageEdited', (e) => {
+                this.$eventHub.$emit('message-edited', e.message);
+            })
+            .listen('MessageDeleted', (e) => {
+                this.$eventHub.$emit('message-deleted', e.id);
+            })
+            .listen('MessageSeen', (e) => {
+                this.$eventHub.$emit('message-seen', e.messageIds);
             });
 
         this.getFriends();
@@ -271,22 +260,22 @@ export default {
 
             for (let i=0; i < this.groups.length; i++){
 
-                 window.Echo.private(`groupMessages.${this.groups[i].id}`)
-                .listen('groupMessageSend', (e) => {
-                    this.$eventHub.$emit('groupMessageReceived', e.message);
-                }).listen('groupMessageEdited', (e) => {
-                     this.$eventHub.$emit('groupMessageEdited', e.message);
-                }).listen('groupMessageDeleted', (e) => {
-                     this.$eventHub.$emit('groupMessageDeleted', e.id,e.deleted_by);
-                 });
+                 window.Echo.private(`group.${this.groups[i].id}`)
+                    .listen('GroupMessageSend', (e) => {
+                        console.log('group message');
+                        this.$eventHub.$emit('group-message-received', e.message);
+                    })
+                     .listen('GroupMessageEdited', (e) => {
+                        this.$eventHub.$emit('group-message-edited', e.message);
+                    })
+                     .listen('GroupMessageDeleted', (e) => {
+                        this.$eventHub.$emit('group-message-deleted', e.id,e.deleted_by);
+                    });
 
-                 console.log(`groupMessageSeen.${this.groups[i].id}.${this.currentUser.id}`);
-
-                window.Echo.private(`groupMessageSeen.${this.groups[i].id}.${this.currentUser.id}`)
-                .listen('groupMessageSeen', (e) => {
-                    this.$eventHub.$emit('groupMessageSeen', e);
-                    console.log(e);
-                });
+                window.Echo.private(`group.${this.groups[i].id}.${this.currentUser.id}`)
+                    .listen('GroupMessageSeen', (e) => {
+                        this.$eventHub.$emit('group-message-seen', e);
+                    });
 
             }
         },
@@ -331,7 +320,6 @@ export default {
         },
 
         showFriendRequestsModal() {
-            //this.$eventHub.$emit('showFriendRequestsModal', this.friendRequest);
             this.$eventHub.$emit('showFriendRequestsModal');
         },
 
@@ -387,11 +375,11 @@ export default {
         },
 
         handleFriendsTabClick() {
-            this.visibleSaveButton = false;
+            this.showGroups = false;
         },
 
         handleGroupsTabClick() {
-            this.visibleSaveButton = true;
+            this.showGroups = true;
         },
 
     }

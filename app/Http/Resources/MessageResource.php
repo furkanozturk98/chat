@@ -22,9 +22,11 @@ class MessageResource extends JsonResource
     {
         return [
             'id'         => $this->id,
-            'from'       => $this->from,
+            'from_id'    => $this->from,
+            'from_name'  => $this->fromUser->name,
             'to'         => $this->to,
             'roomId'     => $this->room_id,
+            'group_id'   => $this->group_id,
             'message'    => $this->message,
             'image'      => $this->image,
             'status'     => $this->status,

@@ -1,13 +1,13 @@
 <template>
   <div id="messageDisplay">
-    <div v-for="item in items" :key="item.id" class="row no-gutters">
+    <div v-for="item in items" :key="item.id" class="row">
       <div
-        class="col-md-5"
-        :class="item.from === currentUser.id ? 'offset-md-9':''"
+        class="col-md-3"
+        :class="item.from_id === currentUser.id ? 'offset-md-9':''"
       >
         <div
           class="chat-bubble"
-          :class="item.from === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
+          :class="item.from_id === currentUser.id ? 'chat-bubble--right': 'chat-bubble--left'"
         >
           <div class="row">
             <div class="col-9">
@@ -21,7 +21,7 @@
               </div>
             </div>
             <div class="col-3">
-              <span v-if="item.from === currentUser.id && !item.deleted_at && isBlocked === null" style="float:right">
+              <span v-if="item.from_id === currentUser.id && !item.deleted_at && isBlocked === null" style="float:right">
                 <a
                   id="dropdownMenu3"
                   role="button"
@@ -56,7 +56,7 @@
               </div>
             </div>
             <div class="col-3">
-              <div v-if="item.from === currentUser.id && item.deleted_at === null">
+              <div v-if="item.from_id === currentUser.id && item.deleted_at === null">
                 <i v-if="item.status === 0" class="fas fa-check fa-x" />
                 <i v-if="item.status === 1" class="fas fa-check-double fa-x" />
               </div>
@@ -104,13 +104,13 @@ export default {
     },
 
     mounted(){
-        this.$eventHub.$on('messageEdited',this.messageEdited);
+        this.$eventHub.$on('message-edited',this.messageEdited);
 
-        this.$eventHub.$on('messageReceived',this.messageReceived);
+        this.$eventHub.$on('message-received',this.messageReceived);
 
-        this.$eventHub.$on('messageDeleted',this.messageDeleted);
+        this.$eventHub.$on('message-deleted',this.messageDeleted);
 
-        this.$eventHub.$on('messageSeen', this.messageSeen);
+        this.$eventHub.$on('message-seen', this.messageSeen);
 
     },
 
@@ -138,7 +138,7 @@ export default {
 
         messageReceived(message){
             console.log(this.selectedFriend);
-            if(this.selectedFriend && message.from === this.selectedFriend.id){
+            if(this.selectedFriend && message.from_id === this.selectedFriend.id){
                 this.items.push(message);
                 this.$http.put('/api/messages/'+ message.id + '/receive');
             }

@@ -44,7 +44,7 @@ name: 'GroupMessageInfoModal',
     mounted() {
         this.$eventHub.$on('showGroupMessageInfoModal', this.showGroupMessageInfoModal);
 
-        this.$eventHub.$on('groupMessageSeen', this.groupMessageSeen);
+        this.$eventHub.$on('group-message-seen', this.groupMessageSeen);
 
     },
 

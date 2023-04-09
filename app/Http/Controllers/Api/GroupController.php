@@ -9,8 +9,8 @@ use App\Http\Requests\GroupCreateFormRequest;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Models\GroupMember;
-use App\Models\GroupMessage;
 use App\Models\GroupMessageStatus;
+use App\Models\Message;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class GroupController extends Controller
@@ -40,7 +40,7 @@ class GroupController extends Controller
 
             $group->unread = $count;
 
-            $lastMessage = GroupMessage::query()
+            $lastMessage = Message::query()
                 ->where('group_id', $group->id)
                 ->latest()
                 ->first();
@@ -58,7 +58,7 @@ class GroupController extends Controller
      *
      * @return GroupResource
      */
-    public function store(GroupCreateFormRequest $request)
+    public function store(GroupCreateFormRequest $request): GroupResource
     {
         $attributes = [
             'name'       => $request->input('name'),
@@ -78,17 +78,5 @@ class GroupController extends Controller
             ]);
 
         return new GroupResource($group);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 }

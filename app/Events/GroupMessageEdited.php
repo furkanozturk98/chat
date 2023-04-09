@@ -2,24 +2,25 @@
 
 namespace App\Events;
 
-use App\Http\Resources\GroupMessageResource;
-use App\Models\GroupMessage;
+use App\Http\Resources\MessageResource;
+use App\Models\Message;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class groupMessageEdited implements ShouldBroadcast
+class GroupMessageEdited implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public GroupMessage $message;
+    public Message $message;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(GroupMessage $message)
+    public function __construct(Message $message)
     {
         $this->message = $message;
     }
@@ -27,15 +28,15 @@ class groupMessageEdited implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('groupMessages.' . $this->message->group_id);
+        return new PrivateChannel('group.' . $this->message->group_id);
     }
 
     public function broadcastWith()
     {
-        return ['message' => new GroupMessageResource($this->message)];
+        return ['message' => new MessageResource($this->message)];
     }
 }

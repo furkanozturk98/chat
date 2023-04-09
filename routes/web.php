@@ -43,15 +43,15 @@ Route::get('/publish',function (){
         'room_id' => $roomId,
         'status' => \App\Enums\MessageStatuses::UNREAD
     ]);
-    broadcast(new messageSend($message));
+    broadcast(new MessageSend($message));
 });
 
 Route::get('/groupMessage',function (){
     /*event(new MyEvent('hello world'));*/
 
-    $message = GroupMessage::create([
+    $message = \App\Models\Message::create([
         'group_id' => 3,
-        'sender'   => 6,
+        'from'   => 6,
         'content' => 'aaaaaa',
     ]);
     broadcast(new groupMessageSend($message));

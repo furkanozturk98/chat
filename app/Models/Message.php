@@ -2,39 +2,43 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Message
  *
- * @property int                             $id
- * @property int                             $from
- * @property int                             $to
- * @property string                          $room_id
- * @property string                          $message
- * @property string                          $image
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int         $id
+ * @property int         $from
+ * @property int         $to
+ * @property int         $group_id
+ * @property string      $room_id
+ * @property string      $message
+ * @property string      $image
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  *
- * @method static \Illuminate\Database\Eloquent\Builder|Message newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Message newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Message query()
- * @method static \Illuminate\Database\Eloquent\Builder|Message whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Message whereFrom($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Message whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Message whereMessage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Message whereRoomId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Message whereTo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Message whereUpdatedAt($value)
+ * @method static Builder|Message newModelQuery()
+ * @method static Builder|Message newQuery()
+ * @method static Builder|Message query()
+ * @method static Builder|Message whereCreatedAt($value)
+ * @method static Builder|Message whereFrom($value)
+ * @method static Builder|Message whereId($value)
+ * @method static Builder|Message whereMessage($value)
+ * @method static Builder|Message whereRoomId($value)
+ * @method static Builder|Message whereTo($value)
+ * @method static Builder|Message whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  *
  * @property int|null $status
  *
- * @method static \Illuminate\Database\Eloquent\Builder|Message whereStatus($value)
+ * @method static Builder|Message whereStatus($value)
  */
 class Message extends Model
 {
@@ -47,6 +51,7 @@ class Message extends Model
         'from',
         'to',
         'room_id',
+        'group_id',
         'message',
         'image',
         'status',
@@ -59,13 +64,13 @@ class Message extends Model
         'updated_at' => 'datetime:Y-m-d',
     ];
 
-    public function from()
+    public function fromUser()
     {
-        return $this->belongsTo(Message::class, 'from');
+        return $this->belongsTo(User::class, 'from');
     }
 
-    public function to()
+    public function toUser()
     {
-        return $this->belongsTo(Message::class, 'to');
+        return $this->belongsTo(User::class, 'to');
     }
 }

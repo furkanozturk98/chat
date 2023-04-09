@@ -11,10 +11,10 @@ use App\Http\Requests\GroupMemberStoreFormRequest;
 use App\Http\Requests\GroupMessageEditFormRequest;
 use App\Http\Requests\GroupMessageIndexRequest;
 use App\Http\Resources\GroupMessageResource;
+use App\Http\Resources\MessageResource;
 use App\Models\Group;
-use App\Models\GroupMember;
-use App\Models\GroupMessage;
 use App\Models\GroupMessageStatus;
+use App\Models\Message;
 use App\Services\GroupMemberService;
 use App\Services\MessageService;
 use Illuminate\Http\JsonResponse;
@@ -43,23 +43,42 @@ class GroupMessageController extends Controller
 
         $messages = $this->messageService->getMessagesByGroupId(groupId: $groupId);
 
-        return GroupMessageResource::collection($messages);
+        return MessageResource::collection($messages);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param GroupMemberStoreFormRequest $request
-     * @param Group                       $group
-     * @param GroupMember                 $groupMember
      *
-     * @return GroupMessageResource
+     * @return MessageResource
      */
-    public function store(GroupMemberStoreFormRequest $request): GroupMessageResource
+    public function store(GroupMemberStoreFormRequest $request): MessageResource
     {
         $message = $this->messageService->createGroupMessage(
             request: $request,
         );
+
+        return new MessageResource($message);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param GroupMessageEditFormRequest $request
+     * @param Message                     $message
+     *
+     * @return GroupMessageResource
+     */
+    public function update(GroupMessageEditFormRequest $request, Message $message): GroupMessageResource
+    {
+        $attributes = $request->validated();
+
+        $attributes['updated_at'] = now();
+
+        $message->update($attributes);
+
+        broadcast(new GroupMessageEdited($message));
 
         return new GroupMessageResource($message);
     }
@@ -67,47 +86,28 @@ class GroupMessageController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param GroupMessageEditFormRequest $request
-     * @param GroupMessage                $groupMessage
-     *
-     * @return GroupMessageResource
-     */
-    public function update(GroupMessageEditFormRequest $request, GroupMessage $groupMessage): GroupMessageResource
-    {
-        $attributes = $request->validated();
-
-        $attributes['updated_at'] = now();
-
-        $groupMessage->update($attributes);
-
-        broadcast(new GroupMessageEdited($groupMessage));
-
-        return new GroupMessageResource($groupMessage);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param GroupMessage $groupMessage
+     * @param Message $message
      *
      * @return void
      */
-    public function receive(GroupMessage $groupMessage): void
+    public function receive(Message $message): void
     {
-        $groupMember = $this->groupMemberService->getGroupMember($groupMessage->group_id);
+        abort_if(empty($message->group_id), 404);
+
+        $groupMember = $this->groupMemberService->getGroupMember($message->group_id);
 
         GroupMessageStatus::query()
-            ->where('group_id', $groupMessage->group_id)
+            ->where('group_id', $message->group_id)
             ->where('member_id', $groupMember->id)
-            ->where('message_id', $groupMessage->id)
+            ->where('message_id', $message->id)
             ->update([
                 'status' => MessageStatuses::READ,
             ]);
 
         broadcast(new GroupMessageSeen(
-            $groupMessage->group_id,
-            $groupMessage->sender,
-            $groupMessage->id,
+            $message->group_id,
+            $message->from,
+            $message->id,
             auth()->id()
         ));
     }
@@ -115,18 +115,18 @@ class GroupMessageController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param GroupMessage $groupMessage
+     * @param Message $message
      *
      * @return JsonResponse
      */
-    public function destroy(GroupMessage $groupMessage): JsonResponse
+    public function destroy(Message $message): JsonResponse
     {
-        $messageId = $groupMessage->id;
-        $groupId   = $groupMessage->group_id;
+        $messageId = $message->id;
+        $groupId   = $message->group_id;
 
-        $groupMember = $this->groupMemberService->getGroupMember($groupMessage->group_id);
+        $groupMember = $this->groupMemberService->getGroupMember($message->group_id);
 
-        $groupMessage->update([
+        $message->update([
             'deleted_by' => $groupMember->id,
             'deleted_at' >= now(),
         ]);
