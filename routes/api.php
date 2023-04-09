@@ -62,8 +62,6 @@ Route::middleware('auth:api')->group(function() {
 
     Route::group(['prefix' => 'group-members'], function() {
         Route::get('/', [GroupMemberController::class, 'index']);
-        //@TODO use friend requests api
-        //Route::post('group-member/add-friend/{groupMember}', [GroupMemberController::class, 'store']);
         Route::put('{groupMember}/make-admin', [GroupMemberController::class, 'makeAdmin']);
         Route::put('{groupMember}/dismiss', [GroupMemberController::class, 'dismiss']);
         Route::delete('{groupMember}/remove', [GroupMemberController::class, 'destroy']);

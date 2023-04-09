@@ -52,7 +52,7 @@ name: 'SendFriendRequestModal',
 
         async submit() {
             try {
-                const response = await this.form.post('/api/friend-request');
+                const response = await this.form.post('/api/friend-requests');
 
                 this.$refs['add-person'].hide();
 

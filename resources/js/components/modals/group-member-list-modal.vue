@@ -135,9 +135,8 @@ export default {
                 .then(value => {
                     if (value) {
 
-                        this.$http.post('/api/group-member/add-friend/' + memberId)
-                            .then((response) => {
-
+                        this.$http.post('/api/friend-requests?user_id=' + memberId)
+                            .then(() => {
                                 this.$refs['group-member-list'].hide();
 
                                 Vue.$toast.open({

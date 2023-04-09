@@ -55,12 +55,10 @@ class GroupMessageController extends Controller
      *
      * @return GroupMessageResource
      */
-    public function store(GroupMemberStoreFormRequest $request, Group $group, GroupMember $groupMember): GroupMessageResource
+    public function store(GroupMemberStoreFormRequest $request): GroupMessageResource
     {
         $message = $this->messageService->createGroupMessage(
             request: $request,
-            groupId: $group->id,
-            groupMemberId: $groupMember->id
         );
 
         return new GroupMessageResource($message);

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\FriendRequestStatuses;
+use App\Http\Requests\FriendRequestFormRequest;
 use App\Models\Friend;
 use App\Models\FriendRequest;
 use Illuminate\Database\Eloquent\Collection;
@@ -33,9 +34,11 @@ class FriendRequestService
      *
      * @return FriendRequest
      */
-    public function create(Request $request): FriendRequest
+    public function create(FriendRequestFormRequest $request): FriendRequest
     {
-        $user = $this->userService->findUserByEmail($request->input('email'));
+        $user = $request->has('email')
+             ? $this->userService->findUserByEmail($request->input('email'))
+             : $this->userService->findUserById($request->input('user_id'));
 
         return FriendRequest::query()->create([
             'from'   => auth()->id(),

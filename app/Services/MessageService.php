@@ -119,20 +119,18 @@ class MessageService
 
     /**
      * @param MessageFormRequest $request
-     * @param string             $roomId
-     * @param User               $user
      *
      * @return Message
      */
-    public function createMessageByRoomId(MessageFormRequest $request, string $roomId, User $user): Message
+    public function createMessageByRoomId(MessageFormRequest $request): Message
     {
         $filename = $this->uploadFile($request);
 
         $message = Message::query()
             ->create([
                 'from'    => auth()->id(),
-                'to'      => $user->id,
-                'room_id' => $roomId,
+                'to'      => $request->input('user_id'),
+                'room_id' => $request->input('room_id'),
                 'message' => $request->input('message'),
                 'image'   => $filename,
                 'status'  => MessageStatuses::UNREAD,
@@ -145,27 +143,24 @@ class MessageService
 
     /**
      * @param Request $request
-     * @param int     $groupId
-     * @param int     $groupMemberId
      *
      * @return GroupMessage
      */
-    public function createGroupMessage(Request $request, int $groupId, int $groupMemberId): GroupMessage
+    public function createGroupMessage(Request $request): GroupMessage
     {
         $filename = $this->uploadFile($request);
 
         /** @var GroupMessage $message */
         $message = GroupMessage::query()
             ->create([
-                'group_id' => $groupId,
-                'sender'   => $groupMemberId,
+                'group_id' => $request->input('group_id'),
+                'sender'   => $request->input('member_id'),
                 'content'  => $request->input('message'),
                 'image'    => $filename,
-                'created_at',
             ]);
 
         $groupMembers = GroupMember::query()
-            ->where('group_id', $groupId)
+            ->where('group_id', $request->input('group_id'))
             ->get();
 
         $data = [];

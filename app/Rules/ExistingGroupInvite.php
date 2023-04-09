@@ -29,6 +29,10 @@ class ExistingGroupInvite implements Rule
      */
     public function passes($attribute, $value): bool
     {
+        if (is_null($this->user) || is_null($this->group)) {
+            return true;
+        }
+
         $invite = GroupInvite::query()
             ->where('group_id', $this->group->id)
             ->where('from', auth()->id())

@@ -81,7 +81,7 @@ export default {
     methods: {
 
         async fetch() {
-            const response = await this.$http.get('/api/get-friend-requests');
+            const response = await this.$http.get('/api/friend-requests');
             this.friendRequests = response.data.data;
         },
 

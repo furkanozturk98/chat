@@ -74,7 +74,7 @@
 
           <file-upload
             ref="upload"
-            :post-action="'/api/messages/send/'+conversation.roomId+'/to/'+conversation.friend.id"
+            :post-action="'/api/messages?room_id='+conversation.roomId+'&user_id='+conversation.friend.id"
             :headers="{'Authorization': 'Bearer '+currentUser.api_token}"
             style="cursor:pointer;"
             :disabled="conversation.blocked_by !== null"
@@ -155,13 +155,13 @@ export default {
             if (this.form.message === null) {
                 return;
             }
-            const response = await this.form.post('/api/messages/send/' + this.conversation.roomId + '/to/' + this.conversation.friend.id);
+            const response = await this.form.post('/api/messages?room_id=' + this.conversation.roomId + '&user_id=' + this.conversation.friend.id);
             console.log(response);
             this.items.push(response.data);
         },
 
         async fetch() {
-            const response = await this.$http.get('/api/messages?room_id' + this.conversation.roomId);
+            const response = await this.$http.get('/api/messages?room_id=' + this.conversation.roomId);
             this.items = response.data.data;
         },
 

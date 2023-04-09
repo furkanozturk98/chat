@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\FriendRequestStatuses;
 use App\Enums\GroupMemberTypes;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GroupMemberIndexRequest;
-use App\Http\Resources\FriendRequestResource;
 use App\Http\Resources\GroupMemberResource;
-use App\Models\FriendRequest;
 use App\Models\Group;
 use App\Models\GroupMember;
 use App\Services\GroupMemberService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class GroupMemberController extends Controller
 {
-    public function __construct(public GroupMemberService $groupMemberService)
+    public function __construct(
+        public GroupMemberService $groupMemberService
+    )
     {
     }
 
@@ -31,38 +29,6 @@ class GroupMemberController extends Controller
         $groupMembers = $this->groupMemberService->getGroupMembers($request->input('group_id'));
 
         return GroupMemberResource::collection($groupMembers);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request     $request
-     * @param GroupMember $groupMember
-     *
-     * @return FriendRequestResource|\Illuminate\Http\JsonResponse
-     */
-    public function store(Request $request, GroupMember $groupMember)
-    {
-        //@TODO REFACTOR
-
-        $count = FriendRequest::query()
-            ->where('from', auth()->id())
-            ->where('to', $groupMember->member_id)
-            ->count();
-
-        if ($count > 0) {
-            return \response()->json([
-                'error' => 'Already a friendship request is sent to this user',
-            ], 422);
-        }
-
-        $data = FriendRequest::query()->create([
-            'from'   => auth()->id(),
-            'to'     => $groupMember->member_id,
-            'status' => FriendRequestStatuses::WAITING,
-        ]);
-
-        return new FriendRequestResource($data);
     }
 
     /**

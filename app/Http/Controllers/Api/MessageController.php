@@ -47,9 +47,9 @@ class MessageController extends Controller
      *
      * @return MessageResource
      */
-    public function store(MessageFormRequest $request, string $roomId, User $user): MessageResource
+    public function store(MessageFormRequest $request): MessageResource
     {
-        $message = $this->messageService->createMessageByRoomId($request, $roomId, $user);
+        $message = $this->messageService->createMessageByRoomId($request);
 
         return new MessageResource($message);
     }

@@ -33,9 +33,12 @@ class FriendRequestFormRequest extends FormRequest
         $user = $userService->findUserByEmail($this->input('email'));
 
         return [
+            'user_id' => [
+                $user ? 'nullable' : 'required',
+            ],
             'email' => [
                 'required',
-                'email',
+                'email:filter',
                 new SendYourself(),
                 new ValidUser($user),
                 new ExistingFriend($user),

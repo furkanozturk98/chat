@@ -37,6 +37,6 @@ class ValidUser implements Rule
      */
     public function message(): string
     {
-        return 'The email is not exist.Please enter an exist email.';
+        return 'The email is not exist. Please enter an exist email.';
     }
 }
