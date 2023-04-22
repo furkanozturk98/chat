@@ -37,7 +37,9 @@ class FriendController extends Controller
     {
         $status = $this->friendService->block($user);
 
-        broadcast(new UserBlocked($user, auth()->id()));
+        if ($status) {
+            broadcast(new UserBlocked($user, auth()->id()));
+        }
 
         return response()->json([
             'data' => [
@@ -55,13 +57,15 @@ class FriendController extends Controller
      */
     public function unblock(User $user): JsonResponse
     {
-        $this->friendService->unblock($user);
+        $status = $this->friendService->unblock($user);
 
-        broadcast(new UserBlocked($user, null));
+        if ($status) {
+            broadcast(new UserBlocked($user, null));
+        }
 
         return response()->json([
             'data' => [
-                'blocked_by' => null,
+                'status' => $status,
             ],
         ]);
     }

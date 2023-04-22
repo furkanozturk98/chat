@@ -189,18 +189,16 @@ export default {
             this.messageListKey += 1;
         },
 
-        block(id) {
-            this.$http.put('api/friends/'+ id + '/block')
-                .then(res => {
-                    this.conversation.blocked_by = res.data.data.blocked_by
-                });
+        async block(id) {
+            const response = await this.$http.put('api/friends/'+ id + '/block')
+
+            this.conversation.blocked_by = response.data.data.blocked_by
         },
 
-        unblock(id) {
-            this.$http.put('api/friends/'+ id + 'unblock')
-                .then(res => {
-                    this.conversation.blocked_by = res.data.data.blocked_by
-                });
+        async unblock(id) {
+            await this.$http.put('api/friends/'+ id + 'unblock')
+
+            this.conversation.blocked_by = null;
         },
 
         userBlocked(data){
