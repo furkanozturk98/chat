@@ -13,7 +13,7 @@ class ExistingFriend implements Rule
      *
      * @return void
      */
-    public function __construct(public ?User $user)
+    public function __construct(public ?User $user = null)
     {
     }
 

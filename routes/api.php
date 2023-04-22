@@ -28,7 +28,7 @@ Route::middleware('auth:api')->group(function() {
         Route::get('/', [FriendRequestController::class, 'index']);
         Route::post('/', [FriendRequestController::class, 'store']);
         Route::put('{friendRequest}/approve', [FriendRequestController::class, 'approve']);
-        Route::put('{friendRequest}', [FriendRequestController::class, 'reject']);
+        Route::put('{friendRequest}/reject', [FriendRequestController::class, 'reject']);
         Route::delete('{friendRequest}/cancel', [FriendRequestController::class, 'cancel']);
     });
 

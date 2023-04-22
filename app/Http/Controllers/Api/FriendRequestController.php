@@ -9,6 +9,7 @@ use App\Models\FriendRequest;
 use App\Services\FriendRequestService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class FriendRequestController extends Controller
 {
@@ -55,24 +56,24 @@ class FriendRequestController extends Controller
     /**
      * @param FriendRequest $friendRequest
      *
-     * @return JsonResponse
+     * @return Response
      */
-    public function reject(FriendRequest $friendRequest): JsonResponse
+    public function reject(FriendRequest $friendRequest): Response
     {
         $friendRequest->delete();
 
-        return response()->json(204);
+        return response()->noContent();
     }
 
     /**
      * @param FriendRequest $friendRequest
      *
-     * @return JsonResponse
+     * @return Response
      */
-    public function cancel(FriendRequest $friendRequest): JsonResponse
+    public function cancel(FriendRequest $friendRequest): Response
     {
         $friendRequest->delete();
 
-        return response()->json(204);
+        return response()->noContent();
     }
 }

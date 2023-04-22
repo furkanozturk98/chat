@@ -30,7 +30,7 @@ class FriendRequestService
     }
 
     /**
-     * @param Request $request
+     * @param FriendRequestFormRequest $request
      *
      * @return FriendRequest
      */

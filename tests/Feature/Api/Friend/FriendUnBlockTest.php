@@ -84,7 +84,7 @@ class FriendUnBlockTest extends TestCase
             ->assertSuccessful()
             ->assertExactJson([
                 'data' => [
-                    'blocked_by' => null,
+                    'status' => true,
                 ],
             ]);
 
