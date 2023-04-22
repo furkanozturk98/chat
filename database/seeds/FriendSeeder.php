@@ -17,54 +17,54 @@ class FriendSeeder extends Seeder
     {
         $room_id = Str::random(5);
         Friend::query()->create([
-            'user_id' => 1,
+            'user_id'   => 1,
             'friend_id' => 6,
-            'room_id' => $room_id,
+            'room_id'   => $room_id,
         ]);
 
         Friend::query()->create([
-            'user_id' => 6,
+            'user_id'   => 6,
             'friend_id' => 1,
-            'room_id' => $room_id,
+            'room_id'   => $room_id,
         ]);
 
         $room_id = Str::random(5);
         Friend::query()->create([
-            'user_id' => 1,
+            'user_id'   => 1,
             'friend_id' => 7,
-            'room_id' => $room_id,
+            'room_id'   => $room_id,
         ]);
 
         Friend::query()->create([
-            'user_id' => 7,
+            'user_id'   => 7,
             'friend_id' => 1,
-            'room_id' => $room_id,
+            'room_id'   => $room_id,
         ]);
 
         $room_id = Str::random(5);
         Friend::query()->create([
-            'user_id' => 1,
+            'user_id'   => 1,
             'friend_id' => 8,
-            'room_id' => $room_id,
+            'room_id'   => $room_id,
         ]);
 
         Friend::query()->create([
-            'user_id' => 8,
+            'user_id'   => 8,
             'friend_id' => 1,
-            'room_id' => $room_id,
+            'room_id'   => $room_id,
         ]);
 
         $room_id = Str::random(5);
         Friend::query()->create([
-            'user_id' => 1,
+            'user_id'   => 1,
             'friend_id' => 9,
-            'room_id' => $room_id,
+            'room_id'   => $room_id,
         ]);
 
         Friend::query()->create([
-            'user_id' => 9,
+            'user_id'   => 9,
             'friend_id' => 1,
-            'room_id' => $room_id,
+            'room_id'   => $room_id,
         ]);
     }
 }

@@ -40,6 +40,11 @@ class Friend extends Model
 {
     use HasFactory;
 
+//    protected $appends = [
+//        'unread',
+//        'last_message',
+//    ];
+
     protected $fillable = [
         'id',
         'user_id',
