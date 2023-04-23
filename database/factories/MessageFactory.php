@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\MessageStatuses;
 use App\Models\Friend;
+use App\Models\Group;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,6 +26,7 @@ class MessageFactory extends Factory
             'from'    => $friend->user_id,
             'to'      => $friend->friend_id,
             'room_id' => $friend->room_id,
+            'group_id' => Group::factory()->create()->id,
             'message' => \Str::random(30),
             'status'  => rand(MessageStatuses::UNREAD, MessageStatuses::READ),
         ];
