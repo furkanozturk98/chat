@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\GroupMemberTypes;
 use App\Enums\MessageStatuses;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\GroupCreateFormRequest;
+use App\Http\Requests\GroupFormRequest;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Models\GroupMember;
@@ -54,11 +54,11 @@ class GroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param GroupCreateFormRequest $request
+     * @param GroupFormRequest $request
      *
      * @return GroupResource
      */
-    public function store(GroupCreateFormRequest $request): GroupResource
+    public function store(GroupFormRequest $request): GroupResource
     {
         $attributes = [
             'name'       => $request->input('name'),
