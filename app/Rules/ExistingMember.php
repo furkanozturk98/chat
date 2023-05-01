@@ -14,7 +14,7 @@ class ExistingMember implements Rule
      *
      * @return void
      */
-    public function __construct(public ?User $user, public ?Group $group)
+    public function __construct(public ?User $user = null, public ?Group $group = null)
     {
         //
     }

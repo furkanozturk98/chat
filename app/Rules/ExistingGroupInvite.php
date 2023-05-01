@@ -14,7 +14,7 @@ class ExistingGroupInvite implements Rule
      *
      * @return void
      */
-    public function __construct(public ?User $user, public ?Group $group)
+    public function __construct(public ?User $user = null, public ?Group $group = null)
     {
         //
     }
@@ -39,7 +39,7 @@ class ExistingGroupInvite implements Rule
             ->where('to', $this->user->id)
             ->first();
 
-        return isset($invite);
+        return !isset($invite);
     }
 
     /**

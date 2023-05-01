@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Group;
 use App\Rules\ExistingGroupInvite;
 use App\Rules\ExistingMember;
 use App\Rules\FriendRequest\ValidUser;
@@ -31,7 +32,7 @@ class GroupInviteFormRequest extends FormRequest
 
         $user = $userService->findUserByEmail($this->input('email'));
 
-        $group = $this->input('group_id');
+        $group = Group::find($this->input('group_id'));
 
         return [
             'group_id' => [
@@ -39,7 +40,7 @@ class GroupInviteFormRequest extends FormRequest
             ],
             'email' => [
                 'required',
-                'email',
+                'email:filter',
                 new ValidUser($user),
                 new ExistingMember($user, $group),
                 new ExistingGroupInvite($user, $group),
