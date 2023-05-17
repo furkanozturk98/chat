@@ -57,7 +57,7 @@ Route::middleware('auth:api')->group(function() {
         Route::post('/', [GroupInviteController::class, 'store']);
         Route::put('{groupInvite}/approve', [GroupInviteController::class, 'approve']);
         Route::put('{groupInvite}/reject', [GroupInviteController::class, 'reject']);
-        Route::delete('{groupInvite}/cancel', [GroupInviteController::class, 'cancel']);
+        Route::put('{groupInvite}/cancel', [GroupInviteController::class, 'cancel']);
     });
 
     Route::group(['prefix' => 'group-members'], function() {
