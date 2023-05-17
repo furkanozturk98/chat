@@ -111,7 +111,7 @@ class MessageService
                 'status' => MessageStatuses::READ,
             ]);
 
-            broadcast(new GroupMessageSeen($groupId, $message->message->sender, $message->message->id, auth()->id()));
+            broadcast(new GroupMessageSeen($groupId, $message->message->from, $message->message->id, auth()->id()));
         }
     }
 

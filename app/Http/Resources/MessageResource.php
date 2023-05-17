@@ -32,6 +32,7 @@ class MessageResource extends JsonResource
             'status'     => $this->status,
             'created_at' => now()->format('Y-m-d H:i'),
             'updated_at' => isset($this->updated_at) ? $this->updated_at->format('Y-m-d H:i') : null,
+            'deleted_by' => $this->deleted_by,
             'deleted_at' => isset($this->deleted_at) ? $this->deleted_at->format('Y-m-d H:i') : null,
         ];
     }

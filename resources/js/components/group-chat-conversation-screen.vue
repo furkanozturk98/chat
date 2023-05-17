@@ -30,7 +30,7 @@
             <i class="material-icons">menu</i>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
               <button
-                v-if="currentMember.type !== 0"
+                v-if="currentMember && currentMember.type !== 0"
                 class="dropdown-item group-member-list"
                 type="button"
                 @click="showAddGroupMemberModal"
@@ -87,7 +87,7 @@
 
             <file-upload
               ref="upload"
-              :post-action="'/api/group-messages?group_id='+groupConversation.id+'&user_id='+currentMember.id"
+              :post-action="postActionUrl"
               :headers="{'Authorization': 'Bearer '+currentUser.api_token}"
               style="cursor:pointer;"
               accept="image/png,image/jpeg"
@@ -130,7 +130,13 @@ export default {
         EditGroupMessageModal,
         GroupMemberListModal,
     },
-    props: ['currentUser',],
+
+    props : {
+        currentUser: {
+            type: Object,
+            default: null
+        },
+    },
 
     data() {
         return {
@@ -150,12 +156,19 @@ export default {
         }
     },
 
+    computed : {
+        postActionUrl() {
+            return '/api/group-messages?group_id='+this.groupConversation?.id+'&user_id='+this.currentMember?.id
+        }
+    },
+
     mounted() {
         this.$eventHub.$on('groupClick', this.groupClicked);
         this.$eventHub.$on('friendClick', this.friendClicked);
         this.$eventHub.$on('nightModeOn', this.nightModeOn);
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
     },
+
     methods: {
 
         inputFile(newFile, oldFile) {
@@ -191,7 +204,7 @@ export default {
             }
 
             this.form.group_id = this.groupConversation.id;
-            this.form.user_id = this.currentMember.id;
+            this.form.user_id = this.currentMember.member.id;
 
             await this.form.post('/api/group-messages');
 
@@ -230,15 +243,18 @@ export default {
         updateBody(text) {
             this.form.message = text;
         },
+
         handleEmojiPicked(emoji) {
             this.form.message = `${
                 this.form.message
             } ${emoji}`;
             this.updateBody(this.form.message);
         },
+
         handleEditorClick() {
             this.focusEditor();
         },
+
         focusEditor() {
             this.$refs.input.focus();
         }

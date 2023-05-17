@@ -22,6 +22,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
+ * @property int|null    $deleted_by
  *
  * @method static Builder|Message newModelQuery()
  * @method static Builder|Message newQuery()
@@ -42,7 +43,7 @@ use Illuminate\Support\Carbon;
  */
 class Message extends Model
 {
-    use HasFactory ,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     public $timestamps = false;
 
@@ -57,6 +58,8 @@ class Message extends Model
         'status',
         'created_at',
         'updated_at',
+        'deleted_by',
+        'deleted_at',
     ];
 
     protected $casts = [

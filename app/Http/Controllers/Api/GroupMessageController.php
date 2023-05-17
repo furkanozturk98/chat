@@ -127,8 +127,8 @@ class GroupMessageController extends Controller
         $groupMember = $this->groupMemberService->getGroupMember($message->group_id);
 
         $message->update([
-            'deleted_by' => $groupMember->id,
-            'deleted_at' >= now(),
+            'deleted_by' => $groupMember->member_id,
+            'deleted_at' => now(),
         ]);
 
         broadcast(new GroupMessageDeleted(

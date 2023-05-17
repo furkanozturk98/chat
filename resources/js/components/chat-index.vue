@@ -262,7 +262,6 @@ export default {
 
                  window.Echo.private(`group.${this.groups[i].id}`)
                     .listen('GroupMessageSend', (e) => {
-                        console.log('group message');
                         this.$eventHub.$emit('group-message-received', e.message);
                     })
                      .listen('GroupMessageEdited', (e) => {

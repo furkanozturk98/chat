@@ -1,7 +1,7 @@
 <template>
   <div id="messageDisplay">
     <group-message-info-modal :current-user="currentUser" />
-    <div v-for="item in items" :key="item.id" class="row no-gutters">
+    <div v-for="item in items" :key="item.id" lass="row">
       <div
         class="col-md-3"
         :class="item.from_id === currentUser.id ? 'offset-md-9':''"
@@ -137,9 +137,9 @@ export default {
         },
 
         groupMessageReceived(message) {
-            if (message.group.id === this.selectedGroup) {
+            if (message.group_id === this.selectedGroup) {
                 this.items.push(message);
-                this.$http.put('/api/group-messages/'+ message.id + '/receive');
+                this.$http.put('/api/messages/'+ message.id + '/receive');
             }
         },
 
