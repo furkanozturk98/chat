@@ -51,7 +51,9 @@ export default {
         },
 
         async submit() {
-            await this.form.post('/api/groups');
+            const response = await this.form.post('/api/groups');
+
+            this.$eventHub.$emit('group-created', response.data);
 
             this.$refs['group'].hide();
 

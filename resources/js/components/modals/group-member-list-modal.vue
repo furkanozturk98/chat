@@ -101,7 +101,6 @@ export default {
                                 });
 
                                 this.members.forEach(item => {
-                                    console.log(item.id)
                                     if (item.id === memberId) {
                                         item.type = 1;
                                     }
@@ -182,9 +181,6 @@ export default {
 
                         this.$http.delete('/api/group-members/' + memberId + '/remove')
                             .then((response) => {
-
-                                console.log(response.data.data);
-
                                 this.$refs['group-member-list'].hide();
 
                                 this.$eventHub.$emit('groupMemberRemove', response.data.data);

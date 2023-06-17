@@ -138,7 +138,6 @@ name: 'GroupInvitesModal',
 
         async approveRequest(id){
             const response = await this.$http.put('/api/group-invites/' + id + '/approve');
-            console.log(response.data.data.group)
 
             this.$eventHub.$emit('group-invite-approved', response.data.data.group);
         },
