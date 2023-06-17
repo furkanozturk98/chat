@@ -31,15 +31,20 @@ import Form from 'form-backend-validation';
 export default {
 name: 'AddGroupMemberModal',
 
-    props: ['selectedGroup'],
+    props : {
+        selectedGroup: {
+            type: Number,
+            default: null
+        },
+    },
 
     data(){
         return {
             form: new Form({
-                    email: null
+                    email: null,
+                    group_id: null
                 },
             ),
-            groupId: null,
         }
     },
 
@@ -53,16 +58,29 @@ name: 'AddGroupMemberModal',
         },
 
         async submit() {
-            await this.form.post('/api/group-invites/' + this.selectedGroup);
+            try {
+                this.form.group_id = this.selectedGroup;
 
-            this.$refs['add-group-member'].hide();
+                await this.form.post('/api/group-invites');
 
-            Vue.$toast.open({
-                message: 'Group Invite is sent!',
-                type: 'success',
-                position: 'top-right',
-                duration: 600
-            });
+                this.$refs['add-group-member'].hide();
+
+                Vue.$toast.open({
+                    message: 'Group Invite is sent!',
+                    type: 'success',
+                    position: 'top-right',
+                    duration: 600
+                });
+            } catch (e) {
+                if (e.response.status !== 422) {
+                    Vue.$toast.open({
+                        message: 'An error occurred!',
+                        type: 'error',
+                        position: 'top-right',
+                        duration: 600
+                    });
+                }
+            }
         },
 
         resetModal() {

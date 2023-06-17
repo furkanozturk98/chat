@@ -66,12 +66,14 @@ name: 'SendFriendRequestModal',
                 });
             }
             catch (e) {
-                Vue.$toast.open({
-                    message: 'An error occurred!',
-                    type: 'error',
-                    position: 'top-right',
-                    duration: 600
-                });
+                if(e.response.status !== 422) {
+                    Vue.$toast.open({
+                        message: 'An error occurred!',
+                        type: 'error',
+                        position: 'top-right',
+                        duration: 600
+                    });
+                }
             }
         },
 
