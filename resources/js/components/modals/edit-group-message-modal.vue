@@ -11,12 +11,12 @@
         <b-form-group
           label="Message"
           label-for="message-input"
-          :invalid-feedback="form.errors.first('content')"
+          :invalid-feedback="form.errors.first('message')"
         >
           <b-form-input
             id="message-input"
-            v-model="form.content"
-            :state="form.errors.has('content') ? false : null"
+            v-model="form.message"
+            :state="form.errors.has('message') ? false : null"
             required
           />
         </b-form-group>
@@ -35,7 +35,7 @@ name: 'EditGroupMessageModal',
     data() {
         return {
             form: new Form({
-                content: null
+                message: null
                 },
             ),
             data: null
@@ -49,16 +49,15 @@ name: 'EditGroupMessageModal',
     methods: {
 
         showEditGroupMessageModal(data) {
-            console.log(data);
             this.$refs['edit-message'].show();
-            this.form.content = data.message;
+            this.form.message = data.message;
             this.data = data;
         },
 
         async submit() {
             const data = {
                 'id' : this.data.id,
-                'message' : this.form.content
+                'message' : this.form.message
             }
 
             await this.form.put('/api/group-messages/' + this.data.id)
@@ -71,7 +70,7 @@ name: 'EditGroupMessageModal',
                         duration: 600
                     });
 
-                    this.$eventHub.$emit('groupMessageEdited',data);
+                    this.$eventHub.$emit('group-message-edited',data);
                 })
                 .catch(() => {
                     Vue.$toast.open({

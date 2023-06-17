@@ -68,9 +68,9 @@ class GroupMessageController extends Controller
      * @param GroupMessageEditFormRequest $request
      * @param Message                     $message
      *
-     * @return GroupMessageResource
+     * @return MessageResource
      */
-    public function update(GroupMessageEditFormRequest $request, Message $message): GroupMessageResource
+    public function update(GroupMessageEditFormRequest $request, Message $message): MessageResource
     {
         $attributes = $request->validated();
 
@@ -80,7 +80,7 @@ class GroupMessageController extends Controller
 
         broadcast(new GroupMessageEdited($message));
 
-        return new GroupMessageResource($message);
+        return new MessageResource($message);
     }
 
     /**
