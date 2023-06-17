@@ -23,11 +23,13 @@ class FriendRequestResource extends JsonResource
             'id'   => $this->id,
             'from' => [
                 'id'    => $this->fromUser->id,
+                'name'  => $this->fromUser->name,
                 'email' => $this->fromUser->email,
                 'about' => $this->fromUser->about,
             ],
             'to' => [
                 'id'    => $this->toUser->id,
+                'name'  => $this->toUser->name,
                 'email' => $this->toUser->email,
                 'about' => $this->toUser->about,
             ],
