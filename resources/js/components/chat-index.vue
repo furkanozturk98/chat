@@ -261,33 +261,35 @@ export default {
         },
 
         listenGroups(){
-
             for (let i=0; i < this.groups.length; i++){
-
-                 window.Echo.private(`group.${this.groups[i].id}`)
-                    .listen('GroupMessageSend', (e) => {
-                        this.$eventHub.$emit('group-message-received', e.message);
-                    })
-                     .listen('GroupMessageEdited', (e) => {
-                        this.$eventHub.$emit('group-message-edited', e.message);
-                    })
-                     .listen('GroupMessageDeleted', (e) => {
-                        this.$eventHub.$emit('group-message-deleted', e.id,e.deleted_by);
-                    });
-
-                window.Echo.private(`group.${this.groups[i].id}.${this.currentUser.id}`)
-                    .listen('GroupMessageSeen', (e) => {
-                        this.$eventHub.$emit('group-message-seen', e);
-                    });
-
+                 this.listenGroup(this.groups[i])
             }
+        },
+
+        listenGroup(group){
+            window.Echo.private(`group.${group.id}`)
+                .listen('GroupMessageSend', (e) => {
+                    this.$eventHub.$emit('group-message-received', e.message);
+                })
+                .listen('GroupMessageEdited', (e) => {
+                    this.$eventHub.$emit('group-message-edited', e.message);
+                })
+                .listen('GroupMessageDeleted', (e) => {
+                    this.$eventHub.$emit('group-message-deleted', e.id,e.deleted_by);
+                });
+
+            window.Echo.private(`group.${group.id}.${this.currentUser.id}`)
+                .listen('GroupMessageSeen', (e) => {
+                    this.$eventHub.$emit('group-message-seen', e);
+                });
         },
 
         pushToGroupList(group){
             // add group to group list if group is not exists in groups list
-            console.log(this.groups.find(g => g.id === group.id) )
             if(this.groups.find(g => g.id === group.id) === undefined) {
                 this.groups.push(group);
+
+                this.listenGroup(group);
             }
         },
 
