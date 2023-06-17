@@ -50,15 +50,15 @@ class FriendRequestService
     /**
      * @param $friendRequest
      *
-     * @return void
+     * @return Friend
      */
-    public function approve($friendRequest): void
+    public function approve($friendRequest): Friend
     {
         $friendRequest->status = FriendRequestStatuses::APPROVED;
         $friendRequest->save();
         $room = Str::random(5);
 
-        Friend::query()
+        $friend = Friend::query()
             ->create([
                 'user_id'   => $friendRequest->from,
                 'friend_id' => $friendRequest->to,
@@ -71,5 +71,7 @@ class FriendRequestService
                 'friend_id' => $friendRequest->from,
                 'room_id'   => $room,
             ]);
+
+        return $friend;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FriendRequestFormRequest;
 use App\Http\Resources\FriendRequestResource;
+use App\Http\Resources\FriendResource;
 use App\Models\FriendRequest;
 use App\Services\FriendRequestService;
 use Illuminate\Http\JsonResponse;
@@ -42,15 +43,13 @@ class FriendRequestController extends Controller
     /**
      * @param FriendRequest $friendRequest
      *
-     * @return JsonResponse
+     * @return FriendResource
      */
-    public function approve(FriendRequest $friendRequest): JsonResponse
+    public function approve(FriendRequest $friendRequest): FriendResource
     {
-        $this->friendRequestService->approve($friendRequest);
+        $friend = $this->friendRequestService->approve($friendRequest);
 
-        return response()->json([
-            'status' => true,
-        ]);
+        return new FriendResource($friend);
     }
 
     /**

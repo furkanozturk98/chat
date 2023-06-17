@@ -16,7 +16,7 @@ class GroupMemberService
     public function createMember(string $groupId, string $memberId): GroupMember
     {
         return GroupMember::query()
-            ->create([
+            ->firstOrCreate([
                 'group_id'  => $groupId,
                 'member_id' => $memberId,
             ]);

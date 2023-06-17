@@ -223,8 +223,8 @@ export default {
 
         this.$eventHub.$on('friendRequestSent', this.getFriendRequests);
 
-        this.$eventHub.$on('friendRequestApproved',this.friendRequestApproved);
-        this.$eventHub.$on('groupInviteApproved',this.groupInviteApproved);
+        this.$eventHub.$on('friend-request-approved',this.friendRequestApproved);
+        this.$eventHub.$on('group-invite-approved',this.groupInviteApproved);
         this.$eventHub.$on('groupMemberRemove',this.groupMemberRemove);
 
         this.nightMode = (localStorage.getItem('nightMode') === 'true')
@@ -246,7 +246,11 @@ export default {
         },
 
         friendRequestApproved(friend){
-            this.friends.push(friend);
+            // add friend to friends list if is not exists in friends list
+            console.log(friend);
+            if(this.friends.find(f => f.friend.id === friend.id) === undefined) {
+                this.friends.push(friend);
+            }
         },
 
         async getGroups(){
@@ -280,7 +284,11 @@ export default {
         },
 
         groupInviteApproved(group){
-            this.groups.push(group);
+            // add group to group list if group is not exists in groups list
+            console.log(this.groups.find(g => g.id === group.id) )
+            if(this.groups.find(g => g.id === group.id) === undefined) {
+                this.groups.push(group);
+            }
         },
 
         groupMemberRemove(groupMember){

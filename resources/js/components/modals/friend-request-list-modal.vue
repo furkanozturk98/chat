@@ -156,7 +156,7 @@ export default {
         async approveRequest(id){
             const response = await this.form.put('/api/friend-requests/' + id + '/approve');
 
-            this.$eventHub.$emit('friendRequestApproved', response.data);
+            this.$eventHub.$emit('friend-request-approved', response.data);
         },
 
         reject(id) {
