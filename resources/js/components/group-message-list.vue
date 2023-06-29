@@ -1,10 +1,10 @@
 <template>
   <div id="messageDisplay">
     <group-message-info-modal :current-user="currentUser" />
-    <div v-for="item in items" :key="item.id" lass="row">
+    <div v-for="item in items" :key="item.id" class="row">
       <div
-        class="col-md-3"
-        :class="item.from_id === currentUser.id ? 'offset-md-9':''"
+        class="col-md-4"
+        :class="item.from_id === currentUser.id ? 'offset-md-8':''"
       >
         <div
           class="chat-bubble"

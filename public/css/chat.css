@@ -134,7 +134,9 @@ hr {
     border-radius: 9px;
     position: relative;
     animation: fadeIn 1s ease-in;
+    word-wrap: break-word
 }
+
 .chat-bubble:after {
     content: '';
     position: absolute;
@@ -170,9 +172,15 @@ hr {
         opacity: 1;
     }
 }
-.offset-md-9 .chat-bubble {
+.offset-md-8 .chat-bubble {
     background: #74b9ff;
     color: #fff;
+}
+
+.messages {
+    overflow-y:scroll;
+    position:relative;
+    height: 61vh;
 }
 
 .chat-box-tray {
