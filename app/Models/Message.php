@@ -72,6 +72,11 @@ class Message extends Model
         return $this->belongsTo(User::class, 'from');
     }
 
+    public function fromMember()
+    {
+        return $this->belongsTo(GroupMember::class, 'from', 'member_id', 'group_id');
+    }
+
     public function toUser()
     {
         return $this->belongsTo(User::class, 'to');
