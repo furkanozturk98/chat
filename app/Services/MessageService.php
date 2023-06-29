@@ -23,7 +23,7 @@ class MessageService
      */
     public function findById(int $messageId): ?Message
     {
-        return Message::find($messageId)->first();
+        return Message::find($messageId);
     }
 
     /**
