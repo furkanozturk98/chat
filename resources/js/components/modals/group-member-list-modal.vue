@@ -221,7 +221,7 @@ export default {
                 .then(value => {
                         if (value) {
 
-                            this.$http.put('/api/group-member' + memberId + '/dismiss')
+                            this.$http.put('/api/group-members/' + memberId + '/dismiss')
 
                                 .then(() => {
                                     this.$refs['group-member-list'].hide();
@@ -262,7 +262,7 @@ export default {
         },
 
         async fetchFriends() {
-            const response = await this.$http.get('/api/friend-list');
+            const response = await this.$http.get('/api/friends');
             this.friends = response.data.data;
         }
     }
